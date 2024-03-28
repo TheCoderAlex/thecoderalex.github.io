@@ -1,0 +1,16 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>Blog - 标签 - 好好学习</title>
+    <link>https://alextang.top/tags/blog/</link>
+    <description>Blog - 标签 - 好好学习</description>
+    <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>alextang@sdu.edu.cn (alextang)</managingEditor>
+      <webMaster>alextang@sdu.edu.cn (alextang)</webMaster><lastBuildDate>Fri, 01 Sep 2023 14:30:02 &#43;0800</lastBuildDate><atom:link href="https://alextang.top/tags/blog/" rel="self" type="application/rss+xml" /><item>
+  <title>Hello World</title>
+  <link>https://alextang.top/articles/2023/09/hello-world/</link>
+  <pubDate>Fri, 01 Sep 2023 14:30:02 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/09/hello-world/</guid>
+  <description><![CDATA[<p>This is the post for functional testings.</p>]]></description>
+</item>
+</channel>
+</rss>

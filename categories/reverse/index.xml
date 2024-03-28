@@ -1,0 +1,32 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>Reverse - 分类 - 好好学习</title>
+    <link>https://alextang.top/categories/reverse/</link>
+    <description>Reverse - 分类 - 好好学习</description>
+    <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>alextang@sdu.edu.cn (alextang)</managingEditor>
+      <webMaster>alextang@sdu.edu.cn (alextang)</webMaster><lastBuildDate>Mon, 18 Sep 2023 08:21:32 &#43;0800</lastBuildDate><atom:link href="https://alextang.top/categories/reverse/" rel="self" type="application/rss+xml" /><item>
+  <title>IDA快速上手</title>
+  <link>https://alextang.top/articles/2023/09/ida%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B/</link>
+  <pubDate>Mon, 18 Sep 2023 08:21:32 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/09/ida%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B/</guid>
+  <description><![CDATA[快速找到程序入口 当函数列表中找不到main时，在Exports导出表中找到start入口。 显示每条指令的字节码 Options-General-Disassembly 效果： 折叠长段变量声明 右键，]]></description>
+</item>
+<item>
+  <title>xctf-666-Reverse</title>
+  <link>https://alextang.top/articles/2023/09/xctf-666-reverse/</link>
+  <pubDate>Sun, 17 Sep 2023 20:57:27 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/09/xctf-666-reverse/</guid>
+  <description><![CDATA[0x01 查壳/脱壳 使用Die工具，发现是64位ELF，无壳。 0x01 反编译 IDA64反编译结果如下，我们直接进入含有“flag{This_1s_f4ck]]></description>
+</item>
+<item>
+  <title>Reverse入门2题</title>
+  <link>https://alextang.top/articles/2023/09/reverse%E5%85%A5%E9%97%A82%E9%A2%98/</link>
+  <pubDate>Sun, 17 Sep 2023 17:33:26 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/09/reverse%E5%85%A5%E9%97%A82%E9%A2%98/</guid>
+  <description><![CDATA[0x00 题目概述 Reverse1 Reverse2 两题具有很高的相似程度，可以放在一起练习。（这里主要以Re2为例） 0x01 查壳/脱壳 分析程序前的必备操作。使用Win下的Die分析：]]></description>
+</item>
+</channel>
+</rss>

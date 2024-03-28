@@ -1,0 +1,89 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>WriteUp - 标签 - 好好学习</title>
+    <link>https://alextang.top/tags/writeup/</link>
+    <description>WriteUp - 标签 - 好好学习</description>
+    <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>alextang@sdu.edu.cn (alextang)</managingEditor>
+      <webMaster>alextang@sdu.edu.cn (alextang)</webMaster><lastBuildDate>Fri, 26 Jan 2024 21:55:50 &#43;0800</lastBuildDate><atom:link href="https://alextang.top/tags/writeup/" rel="self" type="application/rss+xml" /><item>
+  <title>HIT青训营结营比赛Writeup</title>
+  <link>https://alextang.top/articles/2024/01/hitctfwriteup/</link>
+  <pubDate>Fri, 26 Jan 2024 21:55:50 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2024/01/hitctfwriteup/</guid>
+  <description><![CDATA[0x01 签到 没什么好说的 0x02 mix 这题大概的意思是给一个128*128的数组，找出其中异或和为1（128位全为1）的某些行。这里直接搜索的话大概要$2^]]></description>
+</item>
+<item>
+  <title>2023强网杯Pwn-WP</title>
+  <link>https://alextang.top/articles/2023/12/qwb2023pwn/</link>
+  <pubDate>Tue, 19 Dec 2023 17:04:50 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/12/qwb2023pwn/</guid>
+  <description><![CDATA[这里只补一道Pwn，就是强网先锋的ez_fmt。这题可以说非常可惜，在最后半小时想到正确的思路，可是没时间写完了。当然，这题的设限其实非常多]]></description>
+</item>
+<item>
+  <title>鹏城杯2023WriteUp-Pwn</title>
+  <link>https://alextang.top/articles/2023/11/pcb2023/</link>
+  <pubDate>Mon, 06 Nov 2023 20:05:43 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/11/pcb2023/</guid>
+  <description><![CDATA[<p>这个鹏城杯才是我真正意义上的第一场CTF。虽然之前有过校赛，但是校赛上简单题非常多，还是可以混混分的。这场应该算是像样的CTF（甚至还有点恶心），直接给我虐昏了。只能赛后补补题了。</p>
+<p>而且比赛当天感冒了，当然这不是关键问题。我学的内容还是比较少的，先把能补的补了，持续更新。</p>]]></description>
+</item>
+<item>
+  <title>SUSCTF2023-东南大学校赛WriteUp</title>
+  <link>https://alextang.top/articles/2023/10/susctf2023-%E4%B8%9C%E5%8D%97%E5%A4%A7%E5%AD%A6%E6%A0%A1%E8%B5%9Bwriteup/</link>
+  <pubDate>Mon, 16 Oct 2023 12:00:00 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/10/susctf2023-%E4%B8%9C%E5%8D%97%E5%A4%A7%E5%AD%A6%E6%A0%A1%E8%B5%9Bwriteup/</guid>
+  <description><![CDATA[Misc 0x01 旺旺的课程表 首先根据提示《死亡之链》和图片中的时间信息猜测是夏多密码。 根据表中的数字判断总共16个钟表，然后根据每个数字所在的位置的时间]]></description>
+</item>
+<item>
+  <title>NewStarCTF2023-Week2-Pwn</title>
+  <link>https://alextang.top/articles/2023/10/newstarctf2023-week2-pwn/</link>
+  <pubDate>Wed, 11 Oct 2023 08:58:32 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/10/newstarctf2023-week2-pwn/</guid>
+  <description><![CDATA[ret2libc 在解题之前先讲下32位和64位程序调用函数的区别： 32位调用方式 栈自顶而下分别是：被调函数，被调函数的返回地址，参数1，参数2，参数3（参]]></description>
+</item>
+<item>
+  <title>NewStarCTF2023-Week2-Web(AK)</title>
+  <link>https://alextang.top/articles/2023/10/newstarctf2023-week2-web/</link>
+  <pubDate>Tue, 10 Oct 2023 14:30:50 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/10/newstarctf2023-week2-web/</guid>
+  <description><![CDATA[游戏高手 这里看到提示，要分数达到100000分才有答案。 那么就要找哪里记录的分数。F12查看资源，发现有一个app_v2.js的js文件很可]]></description>
+</item>
+<item>
+  <title>NewStartCTF2023-Week2-Reverse</title>
+  <link>https://alextang.top/articles/2023/10/newstartctf2023-week2-reverse/</link>
+  <pubDate>Tue, 10 Oct 2023 10:11:49 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/10/newstartctf2023-week2-reverse/</guid>
+  <description><![CDATA[PZthon 首先放到Die里面查壳： 壳没查到，但是发现使用PyInstaller打包的，于是这题就是Python逆向的思路。由于网上所提供的大部分工具]]></description>
+</item>
+<item>
+  <title>NewStarCTF2023-Week1-Misc</title>
+  <link>https://alextang.top/articles/2023/10/newstarctf2023-week1-misc/</link>
+  <pubDate>Wed, 04 Oct 2023 15:35:40 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/10/newstarctf2023-week1-misc/</guid>
+  <description><![CDATA[CyberChef&rsquo;s Secret 实际上是Base加密的套娃，这里根据提示使用cyberchef的magic方法 直接得flag 机密图片 不会做。看wp得知是LSB隐写。关于]]></description>
+</item>
+<item>
+  <title>NewStarCTF2023-Week1-Pwn</title>
+  <link>https://alextang.top/articles/2023/10/newstarctf2023-week1-pwn/</link>
+  <pubDate>Tue, 03 Oct 2023 11:00:40 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/10/newstarctf2023-week1-pwn/</guid>
+  <description><![CDATA[ret2text 首先checksec 发现程序开启GOT完全只读和栈不可执行，但是没有开启随机化和Canary。 扔进ida64看下： 发现read处存在溢出（]]></description>
+</item>
+<item>
+  <title>NewStarCTF2023-Week1-Web</title>
+  <link>https://alextang.top/articles/2023/10/newstarctf2023-week1-web/</link>
+  <pubDate>Mon, 02 Oct 2023 10:41:00 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/10/newstarctf2023-week1-web/</guid>
+  <description><![CDATA[写在前面 Web题目总共7题，截至10-1日晚本人做题情况为： 题目还是比较基础的，RCE的PHP非法字符是真的没有接触过，这也是比较有收获的一]]></description>
+</item>
+</channel>
+</rss>

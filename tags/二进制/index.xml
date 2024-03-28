@@ -1,0 +1,88 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>二进制 - 标签 - 好好学习</title>
+    <link>https://alextang.top/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6/</link>
+    <description>二进制 - 标签 - 好好学习</description>
+    <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>alextang@sdu.edu.cn (alextang)</managingEditor>
+      <webMaster>alextang@sdu.edu.cn (alextang)</webMaster><lastBuildDate>Fri, 03 Nov 2023 16:07:37 &#43;0800</lastBuildDate><atom:link href="https://alextang.top/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6/" rel="self" type="application/rss+xml" /><item>
+  <title>AdvanceROP-ret2dlresolve</title>
+  <link>https://alextang.top/articles/2023/11/advancerop-ret2dlresolve/</link>
+  <pubDate>Fri, 03 Nov 2023 16:07:37 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/11/advancerop-ret2dlresolve/</guid>
+  <description><![CDATA[首先要对延迟绑定机制做一个补充，即在延迟绑定中使用的表的名称和功能。 ELF JMPREL Relocation Table elf-rel函数重定位表，即ELF程序的.rel.plt段。该]]></description>
+</item>
+<item>
+  <title>ROP-BROP</title>
+  <link>https://alextang.top/articles/2023/11/rop-brop/</link>
+  <pubDate>Thu, 02 Nov 2023 16:32:10 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/11/rop-brop/</guid>
+  <description><![CDATA[BROP即Blind ROP。如果当题目没有给出二进制文件的时候，就得通过BROP的方式盲打。大概的思路如下： （确定有栈溢出的存在）通过依次增]]></description>
+</item>
+<item>
+  <title>ROP-ret2csu</title>
+  <link>https://alextang.top/articles/2023/11/rop-ret2csu/</link>
+  <pubDate>Thu, 02 Nov 2023 16:28:47 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/11/rop-ret2csu/</guid>
+  <description><![CDATA[_libc_csu_init是64位程序几乎必有的一个函数，用来对libc.so进行初始化。该函数会对一些常用的寄存器进行初始化。如下所示：]]></description>
+</item>
+<item>
+  <title>校赛Pwn复盘</title>
+  <link>https://alextang.top/articles/2023/10/%E6%A0%A1%E8%B5%9Bpwn%E5%A4%8D%E7%9B%98/</link>
+  <pubDate>Tue, 31 Oct 2023 18:15:41 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/10/%E6%A0%A1%E8%B5%9Bpwn%E5%A4%8D%E7%9B%98/</guid>
+  <description><![CDATA[random 伪随机数，这个没用种子的话输出是一样的 orw 本质是读取一段shellcode后直接执行，问题在于有沙箱机制（看题解知道是seccomp机制） 这]]></description>
+</item>
+<item>
+  <title>NISACTF 2022 ReorPwn?</title>
+  <link>https://alextang.top/articles/2023/09/re-or-pwn/</link>
+  <pubDate>Sun, 24 Sep 2023 15:19:51 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/09/re-or-pwn/</guid>
+  <description><![CDATA[首先checksec： 我靠，除了栈保护都开了（RELRO：禁止GOT表写入；NX：栈不可执行；PIE：地址随机化），直觉告诉我这题不会是Pw]]></description>
+</item>
+<item>
+  <title>SWPUCTF 2021 新生赛 gift_pwn</title>
+  <link>https://alextang.top/articles/2023/09/gift-pwn/</link>
+  <pubDate>Sun, 24 Sep 2023 10:35:03 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/09/gift-pwn/</guid>
+  <description><![CDATA[思路 首先checksec： 64位，只开启了NX。 反编译，发下入口就是溢出函数: 溢出距离0x10。同时发现后门函数： 地址是：0x4005b6 exp]]></description>
+</item>
+<item>
+  <title>SWPUCTF 2021 新生赛 nc签到</title>
+  <link>https://alextang.top/articles/2023/09/swpuctf-2021-%E6%96%B0%E7%94%9F%E8%B5%9B-nc%E7%AD%BE%E5%88%B0/</link>
+  <pubDate>Sun, 24 Sep 2023 10:21:17 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/09/swpuctf-2021-%E6%96%B0%E7%94%9F%E8%B5%9B-nc%E7%AD%BE%E5%88%B0/</guid>
+  <description><![CDATA[思路 根据题目给出的代码： 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 import os art = &#39;&#39;&#39; (( &#34;####@@!!$$ )) `#####@@!$$` )) (( &#39;####@!!$: (( ,####@!!$: )) .###@!!$: `##@@!$: `#@!!$ !@# `#@!$: @#$ #$ `#@!$: !@! &#39;@!$: &#39;`\ &#34;!$: /`&#39;]]></description>
+</item>
+<item>
+  <title>Pwn-ROP-ret2libc-高级</title>
+  <link>https://alextang.top/articles/2023/09/pwn-rop-ret2libc-%E9%AB%98%E7%BA%A7/</link>
+  <pubDate>Sat, 23 Sep 2023 21:12:36 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/09/pwn-rop-ret2libc-%E9%AB%98%E7%BA%A7/</guid>
+  <description><![CDATA[这里以 bamboofox 中的 ret2libc3 为例 点击下载: ret2libc3 在例 2 的基础上，再次将 system 函数的地址去掉。此时，我们需要同时找到 system 函数地址与 /bin/sh 字符串的地址。首先，查看安全保护 1]]></description>
+</item>
+<item>
+  <title>Pwn-ROP-ret2libc-初级</title>
+  <link>https://alextang.top/articles/2023/09/pwn-rop-ret2libc-%E5%88%9D%E7%BA%A7/</link>
+  <pubDate>Sat, 23 Sep 2023 11:15:41 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/09/pwn-rop-ret2libc-%E5%88%9D%E7%BA%A7/</guid>
+  <description><![CDATA[ret2libc原理 ret2libc 即控制函数的执行 libc 中的函数，通常是返回至某个函数的 plt 处或者函数的具体位置 (即函数对应的 got 表项的内容)。一般情况下，我们]]></description>
+</item>
+<item>
+  <title>Pwn-ROP-ret2systemcall</title>
+  <link>https://alextang.top/articles/2023/09/pwn-rop-ret2systemcall/</link>
+  <pubDate>Fri, 22 Sep 2023 19:46:37 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/09/pwn-rop-ret2systemcall/</guid>
+  <description><![CDATA[原理 re to syscall，就是通过调用系统函数以达到getshell的目的。具体的说，让程序调用execve(&quot;/bin/sh&qu]]></description>
+</item>
+</channel>
+</rss>

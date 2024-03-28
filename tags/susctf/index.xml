@@ -1,0 +1,16 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>SUSCTF - 标签 - 好好学习</title>
+    <link>https://alextang.top/tags/susctf/</link>
+    <description>SUSCTF - 标签 - 好好学习</description>
+    <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>alextang@sdu.edu.cn (alextang)</managingEditor>
+      <webMaster>alextang@sdu.edu.cn (alextang)</webMaster><lastBuildDate>Mon, 16 Oct 2023 12:00:00 &#43;0800</lastBuildDate><atom:link href="https://alextang.top/tags/susctf/" rel="self" type="application/rss+xml" /><item>
+  <title>SUSCTF2023-东南大学校赛WriteUp</title>
+  <link>https://alextang.top/articles/2023/10/susctf2023-%E4%B8%9C%E5%8D%97%E5%A4%A7%E5%AD%A6%E6%A0%A1%E8%B5%9Bwriteup/</link>
+  <pubDate>Mon, 16 Oct 2023 12:00:00 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/10/susctf2023-%E4%B8%9C%E5%8D%97%E5%A4%A7%E5%AD%A6%E6%A0%A1%E8%B5%9Bwriteup/</guid>
+  <description><![CDATA[Misc 0x01 旺旺的课程表 首先根据提示《死亡之链》和图片中的时间信息猜测是夏多密码。 根据表中的数字判断总共16个钟表，然后根据每个数字所在的位置的时间]]></description>
+</item>
+</channel>
+</rss>

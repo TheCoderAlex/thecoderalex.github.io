@@ -1,0 +1,16 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>IDA - 标签 - 好好学习</title>
+    <link>https://alextang.top/tags/ida/</link>
+    <description>IDA - 标签 - 好好学习</description>
+    <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>alextang@sdu.edu.cn (alextang)</managingEditor>
+      <webMaster>alextang@sdu.edu.cn (alextang)</webMaster><lastBuildDate>Mon, 18 Sep 2023 08:21:32 &#43;0800</lastBuildDate><atom:link href="https://alextang.top/tags/ida/" rel="self" type="application/rss+xml" /><item>
+  <title>IDA快速上手</title>
+  <link>https://alextang.top/articles/2023/09/ida%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B/</link>
+  <pubDate>Mon, 18 Sep 2023 08:21:32 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/09/ida%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B/</guid>
+  <description><![CDATA[快速找到程序入口 当函数列表中找不到main时，在Exports导出表中找到start入口。 显示每条指令的字节码 Options-General-Disassembly 效果： 折叠长段变量声明 右键，]]></description>
+</item>
+</channel>
+</rss>

@@ -1,0 +1,40 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>语法 - 标签 - 好好学习</title>
+    <link>https://alextang.top/tags/%E8%AF%AD%E6%B3%95/</link>
+    <description>语法 - 标签 - 好好学习</description>
+    <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>alextang@sdu.edu.cn (alextang)</managingEditor>
+      <webMaster>alextang@sdu.edu.cn (alextang)</webMaster><lastBuildDate>Mon, 25 Mar 2024 21:58:50 &#43;0800</lastBuildDate><atom:link href="https://alextang.top/tags/%E8%AF%AD%E6%B3%95/" rel="self" type="application/rss+xml" /><item>
+  <title>Java IO流</title>
+  <link>https://alextang.top/articles/2024/03/java-io%E6%B5%81/</link>
+  <pubDate>Mon, 25 Mar 2024 21:58:50 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2024/03/java-io%E6%B5%81/</guid>
+  <description><![CDATA[目录 IO流基础: 关联其他文件的备注, IO流概述和分类 FileWriter: FileWriter概述, 构造方法和成员方法, FileWriter写数据的方法, Fil]]></description>
+</item>
+<item>
+  <title>Java集合与数据结构</title>
+  <link>https://alextang.top/articles/2024/03/java%E9%9B%86%E5%90%88%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</link>
+  <pubDate>Mon, 25 Mar 2024 21:57:50 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2024/03/java%E9%9B%86%E5%90%88%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</guid>
+  <description><![CDATA[目录 ArrayList: 集合类, ArrayList, 构造方法, 添加方法, 增删改查方法, 集合遍历 集合类: 集合类的体系结构, Collection常用功能, 迭代器与并发修改异常, 泛型]]></description>
+</item>
+<item>
+  <title>Java常用api</title>
+  <link>https://alextang.top/articles/2024/03/java%E5%B8%B8%E7%94%A8api/</link>
+  <pubDate>Mon, 25 Mar 2024 21:56:50 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2024/03/java%E5%B8%B8%E7%94%A8api/</guid>
+  <description><![CDATA[目录 API概述: API概述，Scanner获取字符串 String类: String概述, 构造方法(4种)及对比, 判断功能(4种), 获取功能(5]]></description>
+</item>
+<item>
+  <title>Java基础语法</title>
+  <link>https://alextang.top/articles/2024/03/java%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/</link>
+  <pubDate>Mon, 25 Mar 2024 21:55:50 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2024/03/java%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/</guid>
+  <description><![CDATA[目录 注释：单行、多行、文档、嵌套 关键字：定义、特点 标识符：组成规则、命名规范 常量：常量分类 变量：概述、定义格式、定义注意事项 计算机存储单元：]]></description>
+</item>
+</channel>
+</rss>

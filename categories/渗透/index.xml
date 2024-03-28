@@ -1,0 +1,16 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>渗透 - 分类 - 好好学习</title>
+    <link>https://alextang.top/categories/%E6%B8%97%E9%80%8F/</link>
+    <description>渗透 - 分类 - 好好学习</description>
+    <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>alextang@sdu.edu.cn (alextang)</managingEditor>
+      <webMaster>alextang@sdu.edu.cn (alextang)</webMaster><lastBuildDate>Sun, 03 Sep 2023 22:17:25 &#43;0800</lastBuildDate><atom:link href="https://alextang.top/categories/%E6%B8%97%E9%80%8F/" rel="self" type="application/rss+xml" /><item>
+  <title>DC-1靶机渗透实战</title>
+  <link>https://alextang.top/articles/2023/09/dc-1%E9%9D%B6%E6%9C%BA%E6%B8%97%E9%80%8F%E5%AE%9E%E6%88%98/</link>
+  <pubDate>Sun, 03 Sep 2023 22:17:25 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/09/dc-1%E9%9D%B6%E6%9C%BA%E6%B8%97%E9%80%8F%E5%AE%9E%E6%88%98/</guid>
+  <description><![CDATA[0x00 DC-1介绍 DC-1是一个专门建造的易受攻击的实验室，目的是在渗透测试领域获得经验。 它旨在对初学者来说是一个挑战，但它的难易程度取决于您的]]></description>
+</item>
+</channel>
+</rss>

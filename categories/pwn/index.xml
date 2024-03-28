@@ -1,0 +1,89 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>Pwn - 分类 - 好好学习</title>
+    <link>https://alextang.top/categories/pwn/</link>
+    <description>Pwn - 分类 - 好好学习</description>
+    <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>alextang@sdu.edu.cn (alextang)</managingEditor>
+      <webMaster>alextang@sdu.edu.cn (alextang)</webMaster><lastBuildDate>Tue, 19 Dec 2023 17:04:50 &#43;0800</lastBuildDate><atom:link href="https://alextang.top/categories/pwn/" rel="self" type="application/rss+xml" /><item>
+  <title>2023强网杯Pwn-WP</title>
+  <link>https://alextang.top/articles/2023/12/qwb2023pwn/</link>
+  <pubDate>Tue, 19 Dec 2023 17:04:50 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/12/qwb2023pwn/</guid>
+  <description><![CDATA[这里只补一道Pwn，就是强网先锋的ez_fmt。这题可以说非常可惜，在最后半小时想到正确的思路，可是没时间写完了。当然，这题的设限其实非常多]]></description>
+</item>
+<item>
+  <title>Stack Smash Attack</title>
+  <link>https://alextang.top/articles/2023/12/stack_smash/</link>
+  <pubDate>Wed, 13 Dec 2023 16:19:02 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/12/stack_smash/</guid>
+  <description><![CDATA[Stack Smash Stack Smash是一种利用Canary机制本身的缺陷达到信息泄露效果的一种栈溢出利用方式。该方法不需要绕过Canary保护就可以泄露内存或栈]]></description>
+</item>
+<item>
+  <title>彻底解决Glibc版本问题</title>
+  <link>https://alextang.top/articles/2023/12/cglibc/</link>
+  <pubDate>Tue, 12 Dec 2023 20:04:40 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/12/cglibc/</guid>
+  <description><![CDATA[由于不同版本的libc功能差异大，甚至无法兼容运行。同时，随意的更改系统libc版本会导致系统的崩溃。下面就Pwn有关堆利用的题目中涉及到切]]></description>
+</item>
+<item>
+  <title>Fastbin Attack</title>
+  <link>https://alextang.top/articles/2023/12/fastbin_attack/</link>
+  <pubDate>Tue, 12 Dec 2023 15:05:40 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/12/fastbin_attack/</guid>
+  <description><![CDATA[关于Fastbin机制 在Glibc 2.25及之前的版本中，如果free的chunk大小小于get_max_fast()，也就是全局变量glo]]></description>
+</item>
+<item>
+  <title>堆溢出利用</title>
+  <link>https://alextang.top/articles/2023/12/heap_overflow/</link>
+  <pubDate>Mon, 11 Dec 2023 17:06:13 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/12/heap_overflow/</guid>
+  <description><![CDATA[Heap Overflow 堆溢出的概念其实和栈溢出、缓冲区溢出的概念非常相似，而且就连利用方式也非常相似，因为chunk之间是连续的。那么只要有read或者get]]></description>
+</item>
+<item>
+  <title>堆基础</title>
+  <link>https://alextang.top/articles/2023/12/heap_intro/</link>
+  <pubDate>Thu, 07 Dec 2023 19:31:34 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/12/heap_intro/</guid>
+  <description><![CDATA[本节内容基于Glibc 2.25版本 什么是堆 堆（chunk）内存是一种允许程序在运行过程中动态分配和使用的内存区域。相比较于栈内存和全局内存，]]></description>
+</item>
+<item>
+  <title>部分写固定思路</title>
+  <link>https://alextang.top/articles/2023/11/partial_overwrite/</link>
+  <pubDate>Fri, 10 Nov 2023 11:21:55 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/11/partial_overwrite/</guid>
+  <description><![CDATA[我们知道, 在开启了随机化（ASLR，PIE）后, 无论高位的地址如何变化，低 12 位的页内偏移始终是固定的, 也就是说如果我们能更改低位的偏移, 就可]]></description>
+</item>
+<item>
+  <title>格式化字符串漏洞总结</title>
+  <link>https://alextang.top/articles/2023/11/fmt_str/</link>
+  <pubDate>Thu, 09 Nov 2023 08:41:47 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/11/fmt_str/</guid>
+  <description><![CDATA[<p>之前大大小小的题目中都遇到了格式化字符串漏洞，但是长时间不做还是会有点懵逼</p>]]></description>
+</item>
+<item>
+  <title>鹏城杯2023WriteUp-Pwn</title>
+  <link>https://alextang.top/articles/2023/11/pcb2023/</link>
+  <pubDate>Mon, 06 Nov 2023 20:05:43 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/11/pcb2023/</guid>
+  <description><![CDATA[<p>这个鹏城杯才是我真正意义上的第一场CTF。虽然之前有过校赛，但是校赛上简单题非常多，还是可以混混分的。这场应该算是像样的CTF（甚至还有点恶心），直接给我虐昏了。只能赛后补补题了。</p>
+<p>而且比赛当天感冒了，当然这不是关键问题。我学的内容还是比较少的，先把能补的补了，持续更新。</p>]]></description>
+</item>
+<item>
+  <title>AdvanceROP-ret2dlresolve</title>
+  <link>https://alextang.top/articles/2023/11/advancerop-ret2dlresolve/</link>
+  <pubDate>Fri, 03 Nov 2023 16:07:37 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/11/advancerop-ret2dlresolve/</guid>
+  <description><![CDATA[首先要对延迟绑定机制做一个补充，即在延迟绑定中使用的表的名称和功能。 ELF JMPREL Relocation Table elf-rel函数重定位表，即ELF程序的.rel.plt段。该]]></description>
+</item>
+</channel>
+</rss>
