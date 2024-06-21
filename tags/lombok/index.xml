@@ -1,0 +1,16 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>Lombok - 标签 - 好好学习</title>
+    <link>https://alextang.top/tags/lombok/</link>
+    <description>Lombok - 标签 - 好好学习</description>
+    <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>alextang@sdu.edu.cn (alextang)</managingEditor>
+      <webMaster>alextang@sdu.edu.cn (alextang)</webMaster><lastBuildDate>Sun, 31 Mar 2024 22:32:24 &#43;0800</lastBuildDate><atom:link href="https://alextang.top/tags/lombok/" rel="self" type="application/rss+xml" /><item>
+  <title>Lombok</title>
+  <link>https://alextang.top/articles/2024/03/lombok/</link>
+  <pubDate>Sun, 31 Mar 2024 22:32:24 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2024/03/lombok/</guid>
+  <description><![CDATA[使用Lombok 我们发现，在以往编写项目时，尤其是在类进行类内部成员字段封装时，需要编写大量的get/set方法，这不仅使得我们类定义中充满]]></description>
+</item>
+</channel>
+</rss>

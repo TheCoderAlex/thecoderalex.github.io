@@ -1,0 +1,16 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>Stack - 标签 - 好好学习</title>
+    <link>https://alextang.top/tags/stack/</link>
+    <description>Stack - 标签 - 好好学习</description>
+    <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>alextang@sdu.edu.cn (alextang)</managingEditor>
+      <webMaster>alextang@sdu.edu.cn (alextang)</webMaster><lastBuildDate>Wed, 13 Dec 2023 16:19:02 &#43;0800</lastBuildDate><atom:link href="https://alextang.top/tags/stack/" rel="self" type="application/rss+xml" /><item>
+  <title>Stack Smash Attack</title>
+  <link>https://alextang.top/articles/2023/12/stack_smash/</link>
+  <pubDate>Wed, 13 Dec 2023 16:19:02 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/12/stack_smash/</guid>
+  <description><![CDATA[Stack Smash Stack Smash是一种利用Canary机制本身的缺陷达到信息泄露效果的一种栈溢出利用方式。该方法不需要绕过Canary保护就可以泄露内存或栈]]></description>
+</item>
+</channel>
+</rss>

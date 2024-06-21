@@ -1,0 +1,16 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>WriteUps - 分类 - 好好学习</title>
+    <link>https://alextang.top/categories/writeups/</link>
+    <description>WriteUps - 分类 - 好好学习</description>
+    <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>alextang@sdu.edu.cn (alextang)</managingEditor>
+      <webMaster>alextang@sdu.edu.cn (alextang)</webMaster><lastBuildDate>Fri, 26 Jan 2024 21:55:50 &#43;0800</lastBuildDate><atom:link href="https://alextang.top/categories/writeups/" rel="self" type="application/rss+xml" /><item>
+  <title>HIT青训营结营比赛Writeup</title>
+  <link>https://alextang.top/articles/2024/01/hitctfwriteup/</link>
+  <pubDate>Fri, 26 Jan 2024 21:55:50 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2024/01/hitctfwriteup/</guid>
+  <description><![CDATA[0x01 签到 没什么好说的 0x02 mix 这题大概的意思是给一个128*128的数组，找出其中异或和为1（128位全为1）的某些行。这里直接搜索的话大概要$2^]]></description>
+</item>
+</channel>
+</rss>

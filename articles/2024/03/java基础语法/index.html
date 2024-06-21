@@ -1,0 +1,1649 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>Java基础语法 - 好好学习</title><meta name="author" content="alextang">
+<meta name="author-link" content="">
+<meta name="description" content="目录 注释：单行、多行、文档、嵌套 关键字：定义、特点 标识符：组成规则、命名规范 常量：常量分类 变量：概述、定义格式、定义注意事项 计算机存储单元：" /><meta name="keywords" content='Java, 语法' />
+  <meta itemprop="name" content="Java基础语法">
+  <meta itemprop="description" content="目录 注释：单行、多行、文档、嵌套 关键字：定义、特点 标识符：组成规则、命名规范 常量：常量分类 变量：概述、定义格式、定义注意事项 计算机存储单元：">
+  <meta itemprop="datePublished" content="2024-03-25T21:55:50+08:00">
+  <meta itemprop="dateModified" content="2024-03-25T21:55:50+08:00">
+  <meta itemprop="wordCount" content="10730">
+  <meta itemprop="keywords" content="Java,语法"><meta property="og:url" content="https://alextang.top/articles/2024/03/java%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/">
+  <meta property="og:site_name" content="好好学习">
+  <meta property="og:title" content="Java基础语法">
+  <meta property="og:description" content="目录 注释：单行、多行、文档、嵌套 关键字：定义、特点 标识符：组成规则、命名规范 常量：常量分类 变量：概述、定义格式、定义注意事项 计算机存储单元：">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-03-25T21:55:50+08:00">
+    <meta property="article:modified_time" content="2024-03-25T21:55:50+08:00">
+    <meta property="article:tag" content="Java">
+    <meta property="article:tag" content="语法">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Java基础语法">
+  <meta name="twitter:description" content="目录 注释：单行、多行、文档、嵌套 关键字：定义、特点 标识符：组成规则、命名规范 常量：常量分类 变量：概述、定义格式、定义注意事项 计算机存储单元：">
+      <meta name="twitter:site" content="@a1extang">
+<meta name="application-name" content="a1extang">
+<meta name="apple-mobile-web-app-title" content="a1extang"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" href="https://alextang.top/articles/2024/03/java%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/" /><link rel="prev" href="https://alextang.top/articles/2024/03/jdbc-1/" /><link rel="next" href="https://alextang.top/articles/2024/03/java%E5%B8%B8%E7%94%A8api/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Java基础语法",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https:\/\/alextang.top\/articles\/2024\/03\/java%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95\/"
+    },"genre": "posts","keywords": "Java, 语法","wordcount":  10730 ,
+    "url": "https:\/\/alextang.top\/articles\/2024\/03\/java%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95\/","datePublished": "2024-03-25T21:55:50+08:00","dateModified": "2024-03-25T21:55:50+08:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "alextang"
+      },"description": ""
+  }
+  </script></head>
+  <body data-header-desktop="sticky" data-header-mobile="auto"><script>(window.localStorage?.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('data-theme', 'dark');</script><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="好好学习"><span class="header-title-text">a1extang</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/posts/"
+                
+                
+              ><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden="true"></i> 文章</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/categories/"
+                
+                
+              ><i class="fa-solid fa-th fa-fw fa-sm" aria-hidden="true"></i> 分类</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/tags/"
+                
+                
+              ><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden="true"></i> 标签</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/about/"
+                title="关于"
+                
+              ><i class="fas fa-user fa-fw fa-sm" aria-hidden="true"></i> 关于</a></li><li class="menu-item delimiter"></li><li class="menu-item search" id="search-desktop">
+            <input type="text" placeholder="搜索文章标题或内容……" id="search-input-desktop">
+            <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+              <i class="fa-solid fa-search fa-fw" aria-hidden="true"></i>
+            </a>
+            <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+              <i class="fa-solid fa-times-circle fa-fw" aria-hidden="true"></i>
+            </a>
+            <span class="search-button search-loading" id="search-loading-desktop">
+              <i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+            </span>
+          </li><li class="menu-item theme-switch" title="切换主题">
+          <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+        </li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="好好学习"><span class="header-title-text">a1extang</span></a><span class="header-subtitle"></span></div>
+      <div class="menu-toggle" id="menu-toggle-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="search-wrapper">
+            <div class="search mobile" id="search-mobile">
+              <input type="text" placeholder="搜索文章标题或内容……" id="search-input-mobile">
+              <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                <i class="fa-solid fa-search fa-fw" aria-hidden="true"></i>
+              </a>
+              <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                <i class="fa-solid fa-times-circle fa-fw" aria-hidden="true"></i>
+              </a>
+              <span class="search-button search-loading" id="search-loading-mobile">
+                <i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+              </span>
+            </div>
+            <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+              取消
+            </a>
+          </li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/posts/"
+                  
+                  
+                ><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden="true"></i> 文章</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/categories/"
+                  
+                  
+                ><i class="fa-solid fa-th fa-fw fa-sm" aria-hidden="true"></i> 分类</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/tags/"
+                  
+                  
+                ><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden="true"></i> 标签</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/about/"
+                  title="关于"
+                  
+                ><i class="fas fa-user fa-fw fa-sm" aria-hidden="true"></i> 关于</a></li><li class="menu-item menu-system">
+          <span class="menu-system-item theme-switch" title="切换主题"><i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i></span></li>
+      </ul>
+    </nav>
+  </div>
+</header><div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+  </div>
+  <div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+  </div><main class="container"><aside class="toc" id="toc-auto"><h2 class="toc-title">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down fa-fw" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside>
+
+  <aside class="aside-custom">
+    </aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>Java基础语法</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=large 2x" sizes="auto" data-title="alextang" data-alt="alextang" class="avatar" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/>&nbsp;alextang</span></span>
+          <span class="post-category">收录于 <a href="/categories/java/"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Java</a></span></div>
+      <div class="post-meta-line"><span title="发布于 2024-03-25 21:55:50"><i class="fa-regular fa-calendar-alt fa-fw me-1" aria-hidden="true"></i><time datetime="2024-03-25">2024-03-25</time></span>&nbsp;<span title="更新于 2024-03-25 21:55:50"><i class="fa-regular fa-edit fa-fw me-1" aria-hidden="true"></i><time datetime="2024-03-25">2024-03-25</time></span>&nbsp;<span title="10730 字"><i class="fa-solid fa-pencil-alt fa-fw me-1" aria-hidden="true"></i>约 10800 字</span>&nbsp;<span><i class="fa-regular fa-clock fa-fw me-1" aria-hidden="true"></i>预计阅读 22 分钟</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#目录">目录</a></li>
+      </ul>
+    </li>
+    <li><a href="#注释">注释</a>
+      <ul>
+        <li><a href="#返回目录目录"><a href="#%E7%9B%AE%E5%BD%95">返回目录</a></a></li>
+      </ul>
+    </li>
+    <li><a href="#关键字">关键字</a>
+      <ul>
+        <li><a href="#返回目录目录-1"><a href="#%E7%9B%AE%E5%BD%95">返回目录</a></a></li>
+      </ul>
+    </li>
+    <li><a href="#标识符">标识符</a>
+      <ul>
+        <li><a href="#返回目录目录-2"><a href="#%E7%9B%AE%E5%BD%95">返回目录</a></a></li>
+      </ul>
+    </li>
+    <li><a href="#常量">常量</a>
+      <ul>
+        <li><a href="#返回目录目录-3"><a href="#%E7%9B%AE%E5%BD%95">返回目录</a></a></li>
+      </ul>
+    </li>
+    <li><a href="#变量">变量</a>
+      <ul>
+        <li><a href="#返回目录目录-4"><a href="#%E7%9B%AE%E5%BD%95">返回目录</a></a></li>
+      </ul>
+    </li>
+    <li><a href="#计算机存储单元">计算机存储单元</a>
+      <ul>
+        <li><a href="#返回目录目录-5"><a href="#%E7%9B%AE%E5%BD%95">返回目录</a></a></li>
+      </ul>
+    </li>
+    <li><a href="#数据类型">数据类型</a>
+      <ul>
+        <li><a href="#java语言是强类型语言">Java语言是强类型语言</a></li>
+        <li><a href="#常见数据类型基本数据类型--引用数据类型">常见数据类型：基本数据类型 + 引用数据类型</a></li>
+        <li><a href="#数据类型转换显式隐式">数据类型转换：显式/隐式</a></li>
+        <li><a href="#返回目录目录-6"><a href="#%E7%9B%AE%E5%BD%95">返回目录</a></a></li>
+      </ul>
+    </li>
+    <li><a href="#运算符">运算符</a>
+      <ul>
+        <li><a href="#定义">定义</a></li>
+        <li><a href="#算术运算符">算术运算符</a>
+          <ul>
+            <li><a href="#注意python没有这样的自增是按照正常写aa1或者a1">注意：Python没有这样的自增，是按照正常写<code>a=a+1;</code>，或者<code>a+=1</code></a></li>
+          </ul>
+        </li>
+        <li><a href="#赋值运算符">赋值运算符</a></li>
+        <li><a href="#关系运算符">关系运算符</a></li>
+        <li><a href="#逻辑运算符">逻辑运算符</a></li>
+        <li><a href="#三元运算符">三元运算符</a></li>
+        <li><a href="#位运算符">位运算符</a></li>
+        <li><a href="#经典面试题两个整数互换">经典面试题：两个整数互换</a></li>
+        <li><a href="#运算符优先级httpswwwcnblogscomanliuxp12342676html"><a href="https://www.cnblogs.com/anliux/p/12342676.html">运算符优先级</a></a></li>
+        <li><a href="#返回目录目录-7"><a href="#%E7%9B%AE%E5%BD%95">返回目录</a></a></li>
+      </ul>
+    </li>
+    <li><a href="#程序流程控制">程序流程控制</a>
+      <ul>
+        <li><a href="#顺序结构">顺序结构</a></li>
+        <li><a href="#选择结构">选择结构：</a></li>
+        <li><a href="#循环结构">循环结构：</a></li>
+        <li><a href="#返回目录目录-8"><a href="#%E7%9B%AE%E5%BD%95">返回目录</a></a></li>
+      </ul>
+    </li>
+    <li><a href="#数组">数组</a>
+      <ul>
+        <li><a href="#一维数组">一维数组</a></li>
+        <li><a href="#二维数组">二维数组</a></li>
+        <li><a href="#数组初始化问题">数组初始化问题：</a></li>
+        <li><a href="#地址值概述">地址值概述</a>
+          <ul>
+            <li><a href="#注打印数组名特例----char-chs">注：打印数组名特例 &ndash; <code>char[] chs</code></a></li>
+          </ul>
+        </li>
+        <li><a href="#数组常见问题">数组常见问题：</a></li>
+        <li><a href="#返回目录目录-9"><a href="#%E7%9B%AE%E5%BD%95">返回目录</a></a></li>
+      </ul>
+    </li>
+    <li><a href="#java内存分配">java内存分配</a>
+      <ul>
+        <li><a href="#分类">分类：</a></li>
+        <li><a href="#栈存储局部变量">栈：存储局部变量。</a></li>
+        <li><a href="#堆存储new出来的东西实体对象">堆：存储new出来的东西，实体、对象。</a></li>
+        <li><a href="#数组内存">数组内存：</a></li>
+        <li><a href="#返回目录目录-10"><a href="#%E7%9B%AE%E5%BD%95">返回目录</a></a></li>
+      </ul>
+    </li>
+    <li><a href="#方法">方法</a>
+      <ul>
+        <li><a href="#方法概述">方法概述</a></li>
+        <li><a href="#方法的格式">方法的格式：</a></li>
+        <li><a href="#写方法">写方法</a></li>
+        <li><a href="#方法的调用">方法的调用</a></li>
+        <li><a href="#方法的重载">方法的重载</a></li>
+        <li><a href="#方法参数传递问题">方法参数传递问题</a></li>
+        <li><a href="#返回目录目录-11"><a href="#%E7%9B%AE%E5%BD%95">返回目录</a></a></li>
+      </ul>
+    </li>
+    <li><a href="#基础语法练习">基础语法练习</a>
+      <ul>
+        <li><a href="#录入月份输出对应季节">录入月份输出对应季节</a></li>
+        <li><a href="#斐波那契数列问题">斐波那契数列问题</a></li>
+        <li><a href="#评委打分问题">评委打分问题</a></li>
+        <li><a href="#数组元素反转">数组元素反转</a></li>
+        <li><a href="#数组基本查找">数组基本查找</a></li>
+        <li><a href="#加密数字">加密数字</a></li>
+        <li><a href="#返回目录目录-12"><a href="#%E7%9B%AE%E5%BD%95">返回目录</a></a></li>
+        <li><a href="#end">END</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><h3 id="目录">目录</h3>
+<!--GFM-TOC -->
+<ul>
+<li><a href="#%e6%b3%a8%e9%87%8a">注释</a>：单行、多行、文档、嵌套</li>
+<li><a href="#%e5%85%b3%e9%94%ae%e5%ad%97">关键字</a>：定义、特点</li>
+<li><a href="#%e6%a0%87%e8%af%86%e7%ac%a6">标识符</a>：组成规则、命名规范</li>
+<li><a href="#%e5%b8%b8%e9%87%8f">常量</a>：常量分类</li>
+<li><a href="#%e5%8f%98%e9%87%8f">变量</a>：概述、定义格式、定义注意事项</li>
+<li><a href="#%e8%ae%a1%e7%ae%97%e6%9c%ba%e5%ad%98%e5%82%a8%e5%8d%95%e5%85%83">计算机存储单元</a>：bit-B-KB-MB-GB-TB-&hellip;</li>
+<li><a href="#%e6%95%b0%e6%8d%ae%e7%b1%bb%e5%9e%8b">数据类型</a>：基本数据类型、引用数据类型、类型转换：显式隐式</li>
+<li><a href="#%e8%bf%90%e7%ae%97%e7%ac%a6">运算符</a>：算术运算符、赋值运算符、关系运算符、逻辑运算符、三元运算符、位运算符</li>
+<li><a href="#%e7%a8%8b%e5%ba%8f%e6%b5%81%e7%a8%8b%e6%8e%a7%e5%88%b6">程序流程控制</a>：顺序结构、选择结构(if,switch)、循环结构(for,while,do…while)</li>
+<li><a href="#%e6%95%b0%e7%bb%84">数组</a>：一维数组、二维数组、数组初始化、对象地址值、数组常见问题</li>
+<li><a href="#java%e5%86%85%e5%ad%98%e5%88%86%e9%85%8d">java内存分配</a>：5片内存区、栈、堆、数组示例图解</li>
+<li><a href="#%e6%96%b9%e6%b3%95">方法</a>：方法概述、方法格式、写方法、方法调用、方法重载、方法参数传递问题</li>
+<li><a href="#%e5%9f%ba%e7%a1%80%e8%af%ad%e6%b3%95%e7%bb%83%e4%b9%a0">基础语法练习</a>：月份对应季节、斐波那契数列、数组元素反转、加密数字</li>
+</ul>
+<!--GFM-TOC -->
+<h2 id="注释">注释</h2>
+<ul>
+<li>单行注释: <code>//注释文字</code></li>
+<li>多行注释: <code>/* 注释文字 */</code>
+<ul>
+<li>eclipse中，输入<code>/*</code>之后直接回车即可显示多行注释，并且光标定位在可输入注释位置。</li>
+</ul>
+</li>
+<li>文档注释: <code>/** 注释文字 */</code></li>
+<li>注释的作用: 解释说明程序，提高程序的阅读性</li>
+<li>注释的嵌套：
+<ul>
+<li>单行可以相互嵌套，多行可以嵌套单行，多行不可嵌套多行。</li>
+</ul>
+</li>
+</ul>
+<!--GFM-TOC -->
+<ul>
+<li>
+<h3 id="返回目录目录"><a href="#%e7%9b%ae%e5%bd%95">返回目录</a></h3>
+</li>
+</ul>
+<!--GFM-TOC -->
+<h2 id="关键字">关键字</h2>
+<ul>
+<li>关键字：被Java语言赋予特定含义的单词</li>
+<li>关键字特点：
+<ul>
+<li>全部小写；</li>
+<li>常见的代码编辑器会对关键字有特殊的颜色标记。</li>
+<li>熟悉常见关键字，可以会考查：
+<ul>
+<li>数据类型，数据类型值，修饰符，类类关系，实例相关，异常处理，包等。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<!--GFM-TOC -->
+<ul>
+<li>
+<h3 id="返回目录目录-1"><a href="#%e7%9b%ae%e5%bd%95">返回目录</a></h3>
+</li>
+</ul>
+<!--GFM-TOC -->
+<h2 id="标识符">标识符</h2>
+<ul>
+<li>作用：包,类,方法,变量等的命名</li>
+<li>组成规则
+<ul>
+<li>由字符(字母汉字数字)，下划线_，美元符$组成
+<ul>
+<li>字符：unicode字符集，包括英文大小写字母，中文字符，数字字符等；不建议使用中文字符。</li>
+</ul>
+</li>
+<li>不能以数字开头(美元符号、下划线都可以)；</li>
+<li>不能是Java中的关键字。</li>
+</ul>
+</li>
+<li>命名规则：见名知意
+<ul>
+<li>包(文件夹) ：全部小写，多级包用点隔开。xxxyyyzzz，com.itheima。</li>
+<li>类：每个单词首字母大写。XxxYyyZzz。</li>
+<li>变量或者方法：第一个单词首字母小写，从第二个单词开始每个单词首字母大写。xxxYyyZzz。</li>
+</ul>
+</li>
+<li>java源码命名：java文件名应与代码中public类的名字相同。</li>
+</ul>
+<!--GFM-TOC -->
+<ul>
+<li>
+<h3 id="返回目录目录-2"><a href="#%e7%9b%ae%e5%bd%95">返回目录</a></h3>
+</li>
+</ul>
+<!--GFM-TOC -->
+<h2 id="常量">常量</h2>
+<ul>
+<li>常量：在程序执行的过程中，其值不可以发生改变的量。</li>
+<li>常量分类：
+<ul>
+<li>字符串常量(&quot;&quot;)；整数常量；小数常量；字符常量(&rsquo;&rsquo;)；布尔常量(true和false)；空常量(null)。</li>
+</ul>
+</li>
+</ul>
+<!--GFM-TOC -->
+<ul>
+<li>
+<h3 id="返回目录目录-3"><a href="#%e7%9b%ae%e5%bd%95">返回目录</a></h3>
+</li>
+</ul>
+<!--GFM-TOC -->
+<h2 id="变量">变量</h2>
+<ul>
+<li>变量概述：在程序执行的过程中，在某个范围内其值可以发生改变的量
+<ul>
+<li>本质讲：变量是内存中的一小块区域。(配合图示食用)</li>
+<li>区域限定：用数据类型限定 (eg. 苹果的价格是数字，不能是字符串..)</li>
+<li>区域名称：变量名。</li>
+<li>区域内容：初始化值。</li>
+</ul>
+</li>
+<li>变量定义格式：
+<ul>
+<li><code>数据类型 变量名 = 初始化值;</code></li>
+<li><code>数据类型 变量名; 变量名 = 初始化值;</code></li>
+</ul>
+</li>
+<li>变量定义的注意事项：
+<ul>
+<li>变量未赋值，不能直接使用；(否则会报错’未初始化‘)</li>
+<li>注意精度：定义long型或float型需要在数字末尾加L或F标记；</li>
+<li>注意范围：变量只在所属范围内有效，范围用大括号划分(代码块)；</li>
+<li>同一范围内，变量名不能重复；</li>
+<li>同一行可以定义多个变量，但是不建议 (看起来更清楚一些)。</li>
+</ul>
+</li>
+<li>关于变量与代码块的测试：
+<ul>
+<li>
+<p>不能同名，但代码块中的变量不能在代码块外使用</p>
+<div class="highlight" id="id-1"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="c1">//测试1：代码块内外变量重名</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kt">int</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">123</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="kt">int</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">456</span><span class="p">;</span><span class="w"> </span><span class="c1">//会报错，提示重名 (虽然是在代码块内外，但第二个a定义时，已经有a这个变量名存在了)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">b</span><span class="p">);</span></span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight" id="id-2"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="c1">//测试2：在代码块以外使用变量</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kt">int</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">123</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="kt">int</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">456</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">b</span><span class="p">);</span><span class="w"> </span><span class="o">//</span><span class="n">会报错</span><span class="err">，</span><span class="n">提示找不到符号</span></span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+</li>
+</ul>
+<!--GFM-TOC -->
+<ul>
+<li>
+<h3 id="返回目录目录-4"><a href="#%e7%9b%ae%e5%bd%95">返回目录</a></h3>
+</li>
+</ul>
+<!--GFM-TOC -->
+<h2 id="计算机存储单元">计算机存储单元</h2>
+<ul>
+<li>变量是内存中的小容器，用来存储数据。</li>
+<li>计算机存储设备的最小信息单元叫“位（bit）”，又称“比特位”，通常用小写的字母b表示。</li>
+<li>计算机最小的存储单元叫“字节（byte）”，通常用大写字母B表示，字节是由连续的8个位组成。</li>
+<li>除了字节外的一些常用的存储单位：1024进率 (特殊: 1B=8bit)
+<ul>
+<li>bit-B-KB-MB-GB-TB-&hellip;</li>
+</ul>
+</li>
+</ul>
+<!--GFM-TOC -->
+<ul>
+<li>
+<h3 id="返回目录目录-5"><a href="#%e7%9b%ae%e5%bd%95">返回目录</a></h3>
+</li>
+</ul>
+<!--GFM-TOC -->
+<h2 id="数据类型">数据类型</h2>
+<ul>
+<li>
+<h3 id="java语言是强类型语言">Java语言是强类型语言</h3>
+<ul>
+<li>对于每一种数据都给出了明确的数据类型；</li>
+<li>不同的数据类型：分配不同的内存空间，表示不同的数据大小。</li>
+</ul>
+</li>
+<li>
+<h3 id="常见数据类型基本数据类型--引用数据类型">常见数据类型：基本数据类型 + 引用数据类型</h3>
+<ul>
+<li>基本数据类型：4类8种
+<ul>
+<li>整数：byte-1，short-2，int-4，long-8；</li>
+<li>浮点数：float-4，double-8；</li>
+<li>字符：char-2；</li>
+<li>布尔：boolean-1；</li>
+<li>注：数字表示所占字节数</li>
+</ul>
+</li>
+<li>引用数据类型：类，数组，接口。</li>
+<li>整数默认int型，浮点数默认double型。</li>
+<li>long类型定义时在数字末尾加L，float类型定义时在数字末尾加F(可小写，建议大写，更清晰)。
+<ul>
+<li>否则会报错：整数不加L默认int类型，会报错’过大的整数‘；float不加F默认double类型，会报错’可能损失精度‘。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h3 id="数据类型转换显式隐式">数据类型转换：显式/隐式</h3>
+<ul>
+<li>隐式转换/默认转换：
+<ul>
+<li>一般由小到大</li>
+<li>运算时，存在更高级类型则自动提升：byte,short,char—&gt;int—&gt;long—&gt;float—&gt;double</li>
+<li>byte,short,char相互之间不转换，他们参与运算首先转换为int类型</li>
+<li>boolean类型不能转换为其他的数据类型</li>
+</ul>
+</li>
+<li>显式转换/强制转换：
+<ul>
+<li>一般由大到小；可能会损失精度。</li>
+<li>格式：<code>目标类型 变量名=(目标类型)(被转换的数据);</code></li>
+<li>例如：<code>byte d = (byte)(a+b);</code></li>
+<li>建议：数据做运算，结果应该是什么类型就用什么类型接受，不要随意转换类型，否则会有精度的损失。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<!--GFM-TOC -->
+<ul>
+<li>
+<h3 id="返回目录目录-6"><a href="#%e7%9b%ae%e5%bd%95">返回目录</a></h3>
+</li>
+</ul>
+<!--GFM-TOC -->
+<h2 id="运算符">运算符</h2>
+<ul>
+<li>
+<h3 id="定义">定义</h3>
+<ul>
+<li>运算符：对常量和变量进行操作的符号称为运算符.</li>
+<li>表达式：用运算符把常量或者变量连接起来符合java语法的式子就可以称为表达式。
+<ul>
+<li>不同运算符连接的式子体现的是不同类型的表达式。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h3 id="算术运算符">算术运算符</h3>
+<ul>
+<li>加减乘除 <code>+,-,*,/</code> ：
+<ul>
+<li>加减乘正常；</li>
+<li>除法：注意int相除只能得到int，要想得到小数，就必须有浮点型参与运算。</li>
+</ul>
+</li>
+<li>取余 <code>%</code>：
+<ul>
+<li>整除的余数；</li>
+<li>应用1：对2取余结果为0或1，可以实现开关算法切换；</li>
+<li>应用2：任何数对某数取余，结果必小于被取余数，可以实现将结果控制在某数范围内。</li>
+</ul>
+</li>
+<li>取模与取余：
+<ul>
+<li>Java中取余和取模是不同的，取余是<code>%</code>，而取模是<code>Math.FloorMod()</code>; c和c++中取模为<code>%</code>，而Python中取模为<code>%</code>。</li>
+<li>取余，遵循尽可能让商向0靠近的原则; 取模，遵循尽可能让商向负无穷靠近的原则(fix()和floor()两个函数的不同)</li>
+<li>当a b同正负，则结果一致；当a和b不同正负，则取余结果正负同a，取模结果正负同b。</li>
+<li>示例：
+<ul>
+<li><code>7 % 4 = 3</code>, <code>Math.FloorMod(7,4)=3</code>;</li>
+<li><code>(-7) % (-4) = -3</code>, <code>Math.FloorMod(-7,-4) = -3</code>.</li>
+<li><code>7 % (-4) = 3</code>, <code>Math.floorMod(7, -4) = -1</code>;</li>
+<li><code>(-7) % 4 = -3</code>, <code>Math.floorMod(-7, 4) = 1</code>.</li>
+<li>注：7 % (-4) = (-4)(-1)+3, 而 Math.FloorMod(7,-4) = (-4)(-2)+(-1)</li>
+</ul>
+</li>
+<li>参考链接：<a href="https://www.cnblogs.com/doondo/p/14678204.html"target="_blank" rel="external nofollow noopener noreferrer">Java取模和取余，你真的弄懂了吗？</a></li>
+</ul>
+</li>
+<li>加号 <code>+</code>：
+<ul>
+<li>数值变量相加是加法运算。</li>
+<li>字符参与加法运算：字符在计算机中存储的数据值来参与运算；
+<ul>
+<li>常见字符值：<code>A-65</code>,<code>a-97</code>, <code>0-48</code></li>
+</ul>
+</li>
+<li>字符串参与加法运算：和其他类型的数据做拼接，结果是字符串类型的。</li>
+<li>示例：
+<ul>
+<li>设置<code>int a = 10, b = 20;</code></li>
+<li>则<code>打印(&quot;hello&quot; + a)</code>，结果是<code>hello10</code>，直接拼接；</li>
+<li>则<code>打印(&quot;hello&quot; + a + b)</code>，结果是<code>hello1020</code>，直接拼接；</li>
+<li>则<code>打印(a + b + &quot;hello&quot;)</code>，结果是<code>30hello</code>，从左往右，先计算后拼接。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>自增自减 <code>++--</code>：
+<ul>
+<li><code>++--</code>可以放在变量的左侧或者右侧，均可。</li>
+<li>单独使用时，放在左右，结果没有区别；</li>
+<li>参与其他运算时：
+<ul>
+<li><code>a++</code>：先拿变量做操作运算，后变量自增自减；
+<ul>
+<li>注：内存表示中，(b=a++为例) 会先取出变量初始值存起来，然后进行运算即a+=1，然后把存起来的初始值赋值给b。</li>
+</ul>
+</li>
+<li><code>++a</code>: 先变量自增自减，后拿变量做操作运算。</li>
+<li>注：简单记忆为”谁(指变量或加加减减)在前先操作谁“ eg. ，变量在前运算后自增自减，符号在前先自增自减。</li>
+</ul>
+</li>
+<li>
+<h4 id="注意python没有这样的自增是按照正常写aa1或者a1">注意：Python没有这样的自增，是按照正常写<code>a=a+1;</code>，或者<code>a+=1</code></h4>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h3 id="赋值运算符">赋值运算符</h3>
+<ul>
+<li>基本赋值运算符：<code>=</code>
+<ul>
+<li>与逻辑运算符等等于<code>==</code>区别。</li>
+</ul>
+</li>
+<li>扩展赋值运算符：<code>+=, -=, *=, /=,...</code>
+<ul>
+<li>注意：此类运算符隐含强制类型转换，&lt;即强制转换为左侧的数据类型&gt;。(潜在考点，可能见于笔试小题)</li>
+<li>示例：<code>byte a;</code>时：<code>a+=10;</code>相当于<code>a=(a的数据类型)(a+10);</code>，但<code>a=a+10</code>就可能因为数据类型不一致而报错。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h3 id="关系运算符">关系运算符</h3>
+<ul>
+<li>符号包含：<code>==,!=,&gt;,&gt;=,&lt;,&lt;=</code></li>
+<li>结果类型：关系运算符的结果都是boolean型，true或false。</li>
+<li>注意：关系运算符“==”不能误写成“=” 。
+<ul>
+<li><code>输出(a==b)</code>: 判断a与b是否相等，然后输出比较结果。</li>
+<li><code>输出(a=b)</code>: 把b的值赋值给a，然后将a的值输出。</li>
+<li>注意：如果在布尔型变量位置出现<code>a=b</code>，要知道此处的结果。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h3 id="逻辑运算符">逻辑运算符</h3>
+<ul>
+<li>逻辑运算符用于连接关系表达式
+<ul>
+<li>注意：在Java中不可以写成<code>3&lt;x&lt;6</code>，应该写成<code>x&gt;3 &amp;&amp; x&lt;6</code>。</li>
+</ul>
+</li>
+<li>符号包含：<code>&amp;,|,^,!,&amp;&amp;,||</code>
+<ul>
+<li>与运算<code>&amp;</code>：一假即假，全真才真。</li>
+<li>或运算<code>|</code>：一真即真，全假才假。</li>
+<li>异或运算<code>^</code>：相同为假，不同为真。(异或即求异)</li>
+<li>非运算<code>!</code>：只连接一个，转为反面 (注：!!可两个以上相连使用不会报错)。</li>
+</ul>
+</li>
+<li>短路：双与双或
+<ul>
+<li>结果与&quot;单与&quot;和&quot;单或&quot;一样。</li>
+<li><code>&amp;</code>：两边都参与运算；<code>&amp;&amp;</code>：左为false时，右边不执行。</li>
+<li><code>|</code>：两边都参与运算；<code>||</code>：左为true时，右边不执行。</li>
+</ul>
+</li>
+<li>示例：
+<div class="highlight" id="id-3"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kt">int</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">10</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">20</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">((</span><span class="n">a</span><span class="o">++</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">10</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">b</span><span class="o">++</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">20</span><span class="p">));</span><span class="c1">//先算a与10的比较，后a++，不成立则短路，false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">a</span><span class="p">);</span><span class="c1">//a=11</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">b</span><span class="p">);</span><span class="o">//</span><span class="n">b</span><span class="o">=</span><span class="n">20</span><span class="w"> </span><span class="n">短路未执行</span><span class="err">，</span><span class="n">因此不变</span></span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+</li>
+<li>
+<h3 id="三元运算符">三元运算符</h3>
+<ul>
+<li>格式：<code>(关系表达式)?表达式1：表达式2；</code>
+<ul>
+<li>如果条件为true，运算后的结果是表达式1；</li>
+<li>如果条件为false，运算后的结果是表达式2；</li>
+</ul>
+</li>
+<li>获取两个数中大数：
+<ul>
+<li><code>z = (x&gt;y)?x:y;//z变量存储的就是两个数的大数。</code></li>
+</ul>
+</li>
+<li>比较两个整数是否相同：
+<ul>
+<li><code>boolean b = (a==b) ? true : false;</code></li>
+<li><code>boolean b = (a==b); //其实这样写就可以了，上一行是为了演示三元运算符</code></li>
+</ul>
+</li>
+<li>获取三个数中的最大值：
+<div class="highlight" id="id-4"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kt">int</span><span class="w"> </span><span class="n">temp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="o">&gt;</span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">a</span><span class="p">:</span><span class="w"> </span><span class="n">b</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kt">int</span><span class="w"> </span><span class="n">max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">temp</span><span class="o">&gt;</span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">temp</span><span class="p">:</span><span class="w"> </span><span class="n">c</span><span class="p">;</span></span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+</li>
+<li>
+<h3 id="位运算符">位运算符</h3>
+<ul>
+<li>左移和右移：
+<ul>
+<li>左移：二进制位向左移动，相当于乘以2的次幂运算，移动几位就是几次幂。</li>
+<li>右移：二进制位向右移动，相当于除以2的次幂运算，移动几位就是几次幂。（整除）</li>
+<li>好处：运算速度快；弊端：只能操作2的倍数。</li>
+</ul>
+</li>
+<li>右移和无符号右移：
+<ul>
+<li>右移：最高位补位原则是，原最高位是什么，就补什么；</li>
+<li>无符号右移：空位补0。</li>
+<li>无符号右移：不用于做除法，用于获取二进制中的某些位。</li>
+</ul>
+</li>
+<li>与<code>&amp;</code>、或<code>|</code>：同逻辑运算符的位运算。</li>
+<li>异或<code>^</code>：位相同取1，不同取0。
+<ul>
+<li>性质：<code>a^b^b=a;</code>，可以用于简单加密。</li>
+</ul>
+</li>
+<li>反码<code>~</code>：二进制的每一位，0变成1，1变成0
+<ul>
+<li>当n为正数时，<code>~(n) = -(n+1)</code></li>
+<li>当n为负数时，<code>~(-n) = |n| - 1</code>，忽略负号。</li>
+<li>例如：<code>~6+1 = -6;</code>，<code>~(-3) = 2</code></li>
+</ul>
+</li>
+<li>
+<h3 id="经典面试题两个整数互换">经典面试题：两个整数互换</h3>
+<ul>
+<li>三种方法：通过第三方变量；通过和；通过异或。</li>
+<li>第三方：<code>temp = a; a = b; b = temp</code></li>
+<li>通过和(可能超出范围，慎用)：<code>a = a+b; b = a-b; a = a-b; //和-自己=另一个数</code></li>
+<li>通过异或：<code>a=a^b; b=a^b; a=a^b; //a^b^b=a</code>
+<ul>
+<li><code>a=a^b;</code></li>
+<li><code>b=a^b=(a^b)^b=a;</code></li>
+<li><code>a=a^b=(a^b)^a=(b^a)^a=b;</code> (根据两数异或的原理，可知交换律符合，故可得)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h3 id="运算符优先级httpswwwcnblogscomanliuxp12342676html"><a href="https://www.cnblogs.com/anliux/p/12342676.html"target="_blank" rel="external nofollow noopener noreferrer">运算符优先级</a></h3>
+<ul>
+<li>括号&gt;符号&gt;乘除加减&gt;位移&gt;逻辑大于小于&gt;逻辑等等于&gt;与或非&gt;双与双非&gt;三目&gt;赋值(=、某=)</li>
+<li>
+<img width="469" alt="1265453-20200221193113530-594239145" src="https://github.com/anliux/JAVALearning/assets/32152091/b8746d47-3813-4a84-adb2-9bdd8c387922">
+</li>
+</ul>
+</li>
+</ul>
+<!--GFM-TOC -->
+<ul>
+<li>
+<h3 id="返回目录目录-7"><a href="#%e7%9b%ae%e5%bd%95">返回目录</a></h3>
+</li>
+</ul>
+<!--GFM-TOC -->
+<h2 id="程序流程控制">程序流程控制</h2>
+<ul>
+<li>
+<h3 id="顺序结构">顺序结构</h3>
+<ul>
+<li>按照代码的先后顺序，依次执行。</li>
+</ul>
+</li>
+<li>
+<h3 id="选择结构">选择结构：</h3>
+<ul>
+<li>控制语句体的执行与否，又叫分支结构，有if和switch两种。</li>
+<li>if语句：
+<ul>
+<li>格式1：一种情况的判断
+<ul>
+<li>首先执行关系表达式；如果true，就执行语句体；否则为false，则不执行语句体。</li>
+</ul>
+<div class="highlight" id="id-5"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="k">if</span><span class="p">(</span><span class="n">关系表达式</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">{</span><span class="w">  </span><span class="n">语句体</span><span class="w">  </span><span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li>格式2：两种情况的判断
+<ul>
+<li>首先执行关系表达式；如果true，就执行语句体1；否则为false，则执行语句体2。</li>
+</ul>
+<div class="highlight" id="id-6"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="k">if</span><span class="p">(</span><span class="n">关系表达式</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">{</span><span class="w">  </span><span class="n">语句体1</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">else</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">{</span><span class="w"> </span><span class="n">语句体2</span><span class="p">;</span><span class="w"> </span><span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li>格式3：多种情况的判断
+- 首先执行关系表达式1，为true则执行语句体1；否则执行表达式2，为true则执行语句体2；&hellip;；否则，执行语句体n+1.
+- 注意：是判断就可能为false，因此若语句体都是对相同变量赋值，如果语句体n+1为空，则会编译报错，需要完善。
+<div class="highlight" id="id-7"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="k">if</span><span class="p">(</span><span class="n">关系表达式1</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">{</span><span class="n">语句体1</span><span class="p">;}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">关系表达式2</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">{</span><span class="n">语句体2</span><span class="p">;}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="err">…</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">else</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">{</span><span class="n">语句体n</span><span class="o">+</span><span class="n">1</span><span class="p">;}</span></span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+</li>
+<li>switch语句：
+<ul>
+<li>关键字：switch，case，default，break。</li>
+<li>格式：
+<div class="highlight" id="id-8"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">switch</span><span class="p">(</span><span class="n">表达式</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="n">值1</span><span class="err">：</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="n">语句体1</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">break</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="n">值2</span><span class="err">：</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="n">语句体2</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">break</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="err">…</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">default</span><span class="err">：</span><span class="w">	
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="n">语句体n</span><span class="o">+</span><span class="n">1</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">break</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li>表达式的取值：byte,short,int,char, JDK5以后可以是枚举, JDK7以后可以是String；</li>
+<li>case后面的值：要和表达式进行比较的值；
+<ul>
+<li>注意：case标签不能重复，重复产生了不确定性。</li>
+</ul>
+</li>
+<li>语句体部分可以是一条或多条语句；</li>
+<li>break表示中断，结束的意思，可以结束switch语句；
+<ul>
+<li>注意：如果没有break，则运行到switch语句的最后结束。</li>
+</ul>
+</li>
+<li>default语句表示所有情况都不匹配的时候，就执行该处的内容，和if语句的else相似。
+<ul>
+<li>注意：无论摆放位置如何，都是按照<code>case-&gt;default</code>的顺序。</li>
+</ul>
+</li>
+<li>执行流程：计算表达式；将结果与case后的值比较，遇break结束；都不匹配，则执行default。
+<ul>
+<li>注意：找到某case或从default执行时，到break或switch末尾结束。</li>
+<li>如果某case没break，则继续向下执行下面的case的内容直到遇到break或switch末尾。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h3 id="循环结构">循环结构：</h3>
+<ul>
+<li>控制语句体循环，直到不再满足循环条件</li>
+<li>循环语句的组成：
+<ul>
+<li>初始化语句，判断条件语句，循环体语句，控制条件语句。</li>
+</ul>
+</li>
+<li>三种：for, while, do…while</li>
+<li>for语句：
+<ul>
+<li>格式：
+<div class="highlight" id="id-9"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="k">for</span><span class="p">(</span><span class="n">初始化语句</span><span class="p">;</span><span class="n">判断条件语句</span><span class="p">;</span><span class="n">控制条件语句</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">{</span><span class="n">循环体语句</span><span class="p">;}</span></span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li>执行流程：
+<ul>
+<li>初始化；判断条件语句，false则结束循环，否则继续；循环体语句；控制条件语句；重新执行判断条件语句。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>示例：
+<ul>
+<li>水仙花数是指一个三位数，其各位数字的立方和等于该数本身。
+<ul>
+<li>隐含了范围是100-999，因此<code>for(int i=100;i&lt;1000;i++){...}</code></li>
+</ul>
+</li>
+<li>个位：153%10；十位：153/10%10；百位：153/10/10%10。</li>
+<li>PS: 水仙花数一共有4个 (153, 370, 371, 407).</li>
+</ul>
+</li>
+<li>while循环：
+<ul>
+<li>格式：
+<div class="highlight" id="id-10"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">初始化语句</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">while</span><span class="p">(</span><span class="n">判断条件语句</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="n">循环体语句</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	  </span><span class="n">控制条件语句</span><span class="p">;</span><span class="w">  </span><span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+</li>
+<li>do-while循环：
+<ul>
+<li>格式：注意，while后面还有分号的。
+<div class="highlight" id="id-11"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">初始化语句</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">do</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">循环体语句</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">控制条件语句</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="k">while</span><span class="p">((</span><span class="n">判断条件语句</span><span class="p">);</span></span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+</li>
+<li>三种循环的区别：
+<ul>
+<li>do…while循环至少会执行一次循环体。</li>
+<li>for循环和while循环只有在条件成立的时候才会去执行循环体</li>
+<li>for循环语句和while循环语句的小区别：
+<ul>
+<li>控制条件语句所控制的那个变量，在for循环结束后，就不能再被访问到了，而while循环结束还可以继续使用；</li>
+<li>因此，如果想继续使用，就用while，否则推荐使用for。</li>
+<li>此处注意：变量有效范围。</li>
+</ul>
+</li>
+<li>三种循环选取优先级：for &gt; while &gt; do while.</li>
+</ul>
+</li>
+<li>break和continue：
+<ul>
+<li>两者都只能用在循环中 (脱离使用场景则没有意义)。</li>
+<li>break：
+<ul>
+<li>使用场景：switch语句；循环。</li>
+<li>作用：跳出单层循环。即默认作用于所在循环。例如位于内层时break则跳出内循环。</li>
+<li>注意：若内层break控制外循环，则可以使用标记符号标记内外循环。</li>
+<li>示例：(continue也可以这样使用)
+<div class="highlight" id="id-12"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-Java" data-lang="Java"><span class="line"><span class="cl"><span class="nl">outer</span><span class="p">:</span><span class="w"> </span><span class="k">for</span><span class="p">(){</span><span class="w"> </span><span class="c1">//注意冒号别丢了</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">inter</span><span class="p">:</span><span class="w"> </span><span class="k">for</span><span class="p">(){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">....;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">break</span><span class="p">:</span><span class="w"> </span><span class="n">outer</span><span class="p">;</span><span class="c1">//直接跳出外循环。</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="c1">//continue: outer; //继续外循环。</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+</li>
+<li>continue：
+<ul>
+<li>使用场景：循环。</li>
+</ul>
+</li>
+<li>注意：break和continue如果单独存在，该条语句下面都不可以有语句(永远执行不到的废物语句，会报错)</li>
+<li>两者的区别：break-退出当前循环；continue-退出本次循环，并继续下次循环。</li>
+</ul>
+</li>
+<li>无限循环：
+<ul>
+<li>格式：<code>while(true){}</code>, <code>for(,,){}</code></li>
+<li>存在的原因：并不知道循环多少次，而是根据某些条件来控制循环；控制循环语句一般放在循环体中，并配合break等使用。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<!--GFM-TOC -->
+<ul>
+<li>
+<h3 id="返回目录目录-8"><a href="#%e7%9b%ae%e5%bd%95">返回目录</a></h3>
+</li>
+</ul>
+<!--GFM-TOC -->
+<h2 id="数组">数组</h2>
+<ul>
+<li>
+<h3 id="一维数组">一维数组</h3>
+<ul>
+<li>概述：
+<ul>
+<li>数组是存储同一种数据类型多个元素的容器。</li>
+<li>数组既可以存储基本数据类型，也可以存储引用数据类型。</li>
+</ul>
+</li>
+<li>特点注意：
+<ul>
+<li>元素类型必须一致；</li>
+<li>元素有整数索引；</li>
+<li>长度一旦定义好就无法改变；</li>
+<li>可以存储基本数据类型，也可存储引用数据类型。</li>
+</ul>
+</li>
+<li>定义数组：
+<ul>
+<li>格式1：<code>数据类型[] 数组名;</code> &ndash; 推荐使用</li>
+<li>格式2：<code>数据类型 数组名[];</code></li>
+<li>注意：这两种定义做完了，数组中是没有元素值的。需要初始化。</li>
+</ul>
+</li>
+<li>数组的初始化：
+<ul>
+<li>定义：为数组中的数组元素分配内存空间，并为每个数组元素赋值。</li>
+<li>分类：
+<ul>
+<li>动态初始化：初始化时只指定数组长度，由系统为数组分配初始值(默认初始化)。</li>
+<li>静态初始化：初始化时指定每个数组元素的初始值，由系统决定数组长度。</li>
+</ul>
+</li>
+<li>动态初始化：
+<ul>
+<li>格式：<code>数据类型[] 数组名 = new 数据类型[数组长度];</code>
+<ul>
+<li>new：为数组申请内存分配，开辟空间。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>未指定数组元素时，通过数值名输出地址值，例如打印arr输出 <code>[I@15db9742</code></li>
+<li>地址值 <code>[I@15db9742 </code>： 一个方括号表示一维数组，I表示int型，<code>@</code>是分隔符，后面是哈希值。</li>
+<li>访问数组元素：使用索引值。例如<code>arr[i]</code>。</li>
+<li>静态初始化：
+<ul>
+<li>格式：<code>数据类型[] 数组名 = new 数据类型[]{元素1,元素2,…};</code>
+<ul>
+<li>注意后面小括号不定义数组长度，以免不一致造成不确定性。</li>
+</ul>
+</li>
+<li>简写：<code>数据类型[] 数组名 = {元素1,元素2,…};</code>，例如：<code>int[] arr = {1,2,3};</code></li>
+</ul>
+</li>
+<li>数组属性：length &ndash; 获取数组中元素的个数。
+<ul>
+<li>使用：<code>数组名.length;</code></li>
+</ul>
+</li>
+<li>数组获取最值的思路：
+<ul>
+<li>注意：参照物从数组元素中取，否则容易出现取太大超过所有数组元素的情况。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h3 id="二维数组">二维数组</h3>
+<ul>
+<li>概述：二维数组其实就是元素为一维数组的数组。</li>
+<li>定义格式：
+<ul>
+<li><code>数据类型[][] 数组名;</code> &ndash; 推荐</li>
+<li><code>数据类型 数组名[][];</code> &ndash; 不推荐</li>
+<li><code>数据类型[] 数组名[];</code> &ndash; 不推荐</li>
+</ul>
+</li>
+<li>初始化方式：
+<ul>
+<li>动态初始化：<code>数据类型[][] 变量名 = new 数据类型[m][n];</code>
+<ul>
+<li>m：二维数组中的一维数组的个数，n：一维数组的元素个数。</li>
+</ul>
+</li>
+<li>静态初始化：<code>数据类型[][] 变量名 = new 数据类型[][]{ {元素},{元素},{元素} };</code>
+<ul>
+<li>简化版格式：<code>数据类型[][] 变量名 = { {元素},{元素},{元素} };</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>二维数组名+索引：获取一维数组地址名
+<ul>
+<li>例如：arr[][]={ {},{},..,{} };</li>
+<li><code>syso(arr);</code> &ndash; 二维数组地址值：例如<code>[[I@6d06d69c </code>，两个方括号表示是二维数组。</li>
+<li><code>syso(arr[1]);</code> &ndash; 二维数组中第二个一维数组的地址值：例如<code>[I@7852e922 </code>，一个方括号表示一维数组。</li>
+<li>遍历二维数组：
+<div class="highlight" id="id-13"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kt">int</span><span class="o">[][]</span><span class="w"> </span><span class="n">arr2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">{</span><span class="n">1</span><span class="p">,</span><span class="n">2</span><span class="p">,</span><span class="n">3</span><span class="p">,</span><span class="n">4</span><span class="p">},{</span><span class="n">5</span><span class="p">,</span><span class="n">6</span><span class="p">},{</span><span class="n">7</span><span class="p">,</span><span class="n">8</span><span class="p">,</span><span class="n">9</span><span class="p">}</span><span class="w"> </span><span class="p">};</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">arr2</span><span class="p">.</span><span class="na">length</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">0</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">arr2</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">.</span><span class="na">length</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">print</span><span class="p">(</span><span class="n">arr2</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]+</span><span class="s">&#34; &#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h3 id="数组初始化问题">数组初始化问题：</h3>
+<ul>
+<li>二维数组：左侧的方括号可以放在任意插空位置；</li>
+<li>静态初始化：右侧可以直接赋值空花括号，不报错。例如<code>int[] arr = {};</code>
+<ul>
+<li>这样相当于定义了一个长度为0的数组，里面没有元素，<code>arr[0]</code>也会越界异常。</li>
+<li>如果后期要添加元素，可使用其他容器，比如ArrayList等。</li>
+</ul>
+</li>
+<li>动态初始化：一维必须指定数组长度，二维必须指定前一个方括号中的值(降维为一维理解)。</li>
+<li>关于二维数组动态初始化只赋值前一个方括号：
+<ul>
+<li>没有指定一维数组的长度，则一维数组在内存中不存在；</li>
+<li>长度一旦确定，数组实体就会new出来；</li>
+<li>长度不确定，数组实体就还不存在。</li>
+<li>示例：<code>int[][] arr=new int[3][];</code>
+<ul>
+<li><code>syso(arr)</code>：输出arr地址值；</li>
+<li><code>syso(arr[0])</code>：输出null，开辟了空间，但其中的一维数组没有new出来；</li>
+<li><code>syso(arr[0][0])</code>：空指针异常，arr[0]已经是null为空了，不能操作该数组中的元素。</li>
+<li>new一维数组：<code>arr[0] = new int[5];</code>，之后再打印<code>[0][0]</code>就不会空指针异常了。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h3 id="地址值概述">地址值概述</h3>
+<ul>
+<li>示例：<code>[[I@6d06d69c </code></li>
+<li><code>[[</code>：表示二维数组，如果是一个方括号，表示一维数组；</li>
+<li><code>I</code>：表示int类型；</li>
+<li><code>@</code>：分隔符；</li>
+<li>后面的数字：16进制哈希值，由哈希算法得出，表示实体在内存中的位置。
+<ul>
+<li>即：看到哈希值，说明必然有实体。</li>
+</ul>
+</li>
+<li>
+<h4 id="注打印数组名特例----char-chs">注：打印数组名特例 &ndash; <code>char[] chs</code></h4>
+<ul>
+<li>数值型数组如int型数组：初始化后直接打印数组名，输出的是地址值。</li>
+<li>char类型数组输出总结:
+<ul>
+<li>直接输出数组名：将数组以字符串形式打印；</li>
+<li>输出前面加字符：输出的是地址；</li>
+<li>输出前面加字符的情况下想要输出数组内容：Arrays.toString(ch)，数组内容将以数组形式输出：</li>
+</ul>
+</li>
+<li>注：直接打印字符串变量名，输出的也是字符串内容；前面加字符串后，输出的仍是字符串内容。</li>
+<li>注：字符串数组直接输出的是地址值。</li>
+<li>参考：<a href="https://www.cnblogs.com/anliux/p/12641018.html"target="_blank" rel="external nofollow noopener noreferrer">【JAVA】java中char类型数组用数组名打印结果不是地址值而是数组内容</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h3 id="数组常见问题">数组常见问题：</h3>
+<ul>
+<li>数组索引越界异常：ArrayIndexOutOfBoundsException
+<ul>
+<li>产生原因：访问到了数组中的不存在的索引时发生。</li>
+</ul>
+</li>
+<li>空指针异常：NullPointerException
+<ul>
+<li>产生原因：数组引用没有指向对象，却在操作对象中的元素或使用数组名访问元素。
+<ul>
+<li>例如：<code>arr=null; syso(arr[1]);</code></li>
+</ul>
+</li>
+<li>引用类型：类，接口，数组。</li>
+<li>空常量：null，可以赋值给引用类型变量。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<!--GFM-TOC -->
+<ul>
+<li>
+<h3 id="返回目录目录-9"><a href="#%e7%9b%ae%e5%bd%95">返回目录</a></h3>
+</li>
+</ul>
+<!--GFM-TOC -->
+<h2 id="java内存分配">java内存分配</h2>
+<ul>
+<li>
+<h3 id="分类">分类：</h3>
+<ul>
+<li>栈：存储局部变量；</li>
+<li>堆：存储new出来的东西，实体、对象；new：进行空间开辟。</li>
+<li>方法区：(面向对象进阶讲)；</li>
+<li>本地方法区：(和系统相关)；</li>
+<li>寄存器：(给CPU使用)。</li>
+</ul>
+</li>
+<li>
+<h3 id="栈存储局部变量">栈：存储局部变量。</h3>
+<ul>
+<li>栈的读取速度比堆快。</li>
+<li>局部变量：定义在方法中的变量；</li>
+<li>一旦生命周期结束，即使用完毕后，立即回收。</li>
+<li>基本数据类型会一直在栈中创建，当声明基本类型时，不需要new。</li>
+<li>基本类型一旦被声明，java将在栈上直接存储它，所以基本类型的变量表示的是数据本身。</li>
+<li>假如调用基本类型的包装类来创建对象，那么将会在堆中创建。</li>
+</ul>
+</li>
+<li>
+<h3 id="堆存储new出来的东西实体对象">堆：存储new出来的东西，实体、对象。</h3>
+<ul>
+<li>堆的读取速度比栈慢。</li>
+<li>每个对象都有地址值；</li>
+<li>每个对象的数据都有默认值：
+<ul>
+<li>byte, short, int, long: 0;</li>
+<li>float, double: 0.0;</li>
+<li>char:&rsquo;\u0000&rsquo;; &ndash; unicode编码的空字符。</li>
+<li>boolean: false;</li>
+<li>对象：null.</li>
+</ul>
+</li>
+<li>使用完毕后，会在垃圾回收器空闲的时候回收。</li>
+</ul>
+</li>
+<li>
+<h3 id="数组内存">数组内存：</h3>
+<ul>
+<li>定义的局部变量arr只存数组实体的地址(引用型变量)；</li>
+<li>实体对象在堆内存中，通过new来开辟空间。</li>
+<li>java中的内存分配图解：
+<img loading="lazy" src="https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/arrays/Java%E4%B8%AD%E7%9A%84%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E5%9B%BE%E8%A7%A3.bmp" srcset="https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/arrays/Java%E4%B8%AD%E7%9A%84%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E5%9B%BE%E8%A7%A3.bmp?size=small, https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/arrays/Java%E4%B8%AD%E7%9A%84%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E5%9B%BE%E8%A7%A3.bmp?size=medium 1.5x, https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/arrays/Java%E4%B8%AD%E7%9A%84%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E5%9B%BE%E8%A7%A3.bmp?size=large 2x" sizes="auto" data-title="java中的内存分配图解" data-alt="java中的内存分配图解" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></li>
+<li>一个数组的内存图：
+<img loading="lazy" src="https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/arrays/%E4%B8%80%E4%B8%AA%E6%95%B0%E7%BB%84%E7%9A%84%E5%86%85%E5%AD%98%E5%9B%BE.bmp" srcset="https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/arrays/%E4%B8%80%E4%B8%AA%E6%95%B0%E7%BB%84%E7%9A%84%E5%86%85%E5%AD%98%E5%9B%BE.bmp?size=small, https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/arrays/%E4%B8%80%E4%B8%AA%E6%95%B0%E7%BB%84%E7%9A%84%E5%86%85%E5%AD%98%E5%9B%BE.bmp?size=medium 1.5x, https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/arrays/%E4%B8%80%E4%B8%AA%E6%95%B0%E7%BB%84%E7%9A%84%E5%86%85%E5%AD%98%E5%9B%BE.bmp?size=large 2x" sizes="auto" data-title="一个数组的内存图" data-alt="一个数组的内存图" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></li>
+<li>两个数组的内存图：
+<img loading="lazy" src="https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/arrays/%E4%B8%A4%E4%B8%AA%E6%95%B0%E7%BB%84%E7%9A%84%E5%86%85%E5%AD%98%E5%9B%BE.bmp" srcset="https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/arrays/%E4%B8%A4%E4%B8%AA%E6%95%B0%E7%BB%84%E7%9A%84%E5%86%85%E5%AD%98%E5%9B%BE.bmp?size=small, https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/arrays/%E4%B8%A4%E4%B8%AA%E6%95%B0%E7%BB%84%E7%9A%84%E5%86%85%E5%AD%98%E5%9B%BE.bmp?size=medium 1.5x, https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/arrays/%E4%B8%A4%E4%B8%AA%E6%95%B0%E7%BB%84%E7%9A%84%E5%86%85%E5%AD%98%E5%9B%BE.bmp?size=large 2x" sizes="auto" data-title="两个数组的内存图" data-alt="两个数组的内存图" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></li>
+<li>两个数组指向同一个地址的内存图：
+<img loading="lazy" src="https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/arrays/%E4%B8%A4%E4%B8%AA%E6%95%B0%E7%BB%84%E6%8C%87%E5%90%91%E5%90%8C%E4%B8%80%E4%B8%AA%E5%9C%B0%E5%9D%80%E7%9A%84%E5%86%85%E5%AD%98%E5%9B%BE.bmp" srcset="https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/arrays/%E4%B8%A4%E4%B8%AA%E6%95%B0%E7%BB%84%E6%8C%87%E5%90%91%E5%90%8C%E4%B8%80%E4%B8%AA%E5%9C%B0%E5%9D%80%E7%9A%84%E5%86%85%E5%AD%98%E5%9B%BE.bmp?size=small, https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/arrays/%E4%B8%A4%E4%B8%AA%E6%95%B0%E7%BB%84%E6%8C%87%E5%90%91%E5%90%8C%E4%B8%80%E4%B8%AA%E5%9C%B0%E5%9D%80%E7%9A%84%E5%86%85%E5%AD%98%E5%9B%BE.bmp?size=medium 1.5x, https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/arrays/%E4%B8%A4%E4%B8%AA%E6%95%B0%E7%BB%84%E6%8C%87%E5%90%91%E5%90%8C%E4%B8%80%E4%B8%AA%E5%9C%B0%E5%9D%80%E7%9A%84%E5%86%85%E5%AD%98%E5%9B%BE.bmp?size=large 2x" sizes="auto" data-title="两个数组指向同一个地址的内存图" data-alt="两个数组指向同一个地址的内存图" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></li>
+<li>静态初始化内存图
+<img loading="lazy" src="https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/arrays/%E9%9D%99%E6%80%81%E5%88%9D%E5%A7%8B%E5%8C%96%E5%86%85%E5%AD%98%E5%9B%BE.bmp" srcset="https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/arrays/%E9%9D%99%E6%80%81%E5%88%9D%E5%A7%8B%E5%8C%96%E5%86%85%E5%AD%98%E5%9B%BE.bmp?size=small, https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/arrays/%E9%9D%99%E6%80%81%E5%88%9D%E5%A7%8B%E5%8C%96%E5%86%85%E5%AD%98%E5%9B%BE.bmp?size=medium 1.5x, https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/arrays/%E9%9D%99%E6%80%81%E5%88%9D%E5%A7%8B%E5%8C%96%E5%86%85%E5%AD%98%E5%9B%BE.bmp?size=large 2x" sizes="auto" data-title="静态初始化内存图" data-alt="静态初始化内存图" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></li>
+<li>数组操作的两个常见小问题
+<img loading="lazy" src="https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/arrays/%E6%95%B0%E7%BB%84%E6%93%8D%E4%BD%9C%E7%9A%84%E4%B8%A4%E4%B8%AA%E5%B8%B8%E8%A7%81%E5%B0%8F%E9%97%AE%E9%A2%98.bmp" srcset="https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/arrays/%E6%95%B0%E7%BB%84%E6%93%8D%E4%BD%9C%E7%9A%84%E4%B8%A4%E4%B8%AA%E5%B8%B8%E8%A7%81%E5%B0%8F%E9%97%AE%E9%A2%98.bmp?size=small, https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/arrays/%E6%95%B0%E7%BB%84%E6%93%8D%E4%BD%9C%E7%9A%84%E4%B8%A4%E4%B8%AA%E5%B8%B8%E8%A7%81%E5%B0%8F%E9%97%AE%E9%A2%98.bmp?size=medium 1.5x, https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/arrays/%E6%95%B0%E7%BB%84%E6%93%8D%E4%BD%9C%E7%9A%84%E4%B8%A4%E4%B8%AA%E5%B8%B8%E8%A7%81%E5%B0%8F%E9%97%AE%E9%A2%98.bmp?size=large 2x" sizes="auto" data-title="数组操作的两个常见小问题" data-alt="数组操作的两个常见小问题" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></li>
+<li>数组操作之获取最值图解
+<img loading="lazy" src="https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/arrays/%E6%95%B0%E7%BB%84%E6%93%8D%E4%BD%9C%E4%B9%8B%E8%8E%B7%E5%8F%96%E6%9C%80%E5%80%BC%E5%9B%BE%E8%A7%A3.bmp" srcset="https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/arrays/%E6%95%B0%E7%BB%84%E6%93%8D%E4%BD%9C%E4%B9%8B%E8%8E%B7%E5%8F%96%E6%9C%80%E5%80%BC%E5%9B%BE%E8%A7%A3.bmp?size=small, https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/arrays/%E6%95%B0%E7%BB%84%E6%93%8D%E4%BD%9C%E4%B9%8B%E8%8E%B7%E5%8F%96%E6%9C%80%E5%80%BC%E5%9B%BE%E8%A7%A3.bmp?size=medium 1.5x, https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/arrays/%E6%95%B0%E7%BB%84%E6%93%8D%E4%BD%9C%E4%B9%8B%E8%8E%B7%E5%8F%96%E6%9C%80%E5%80%BC%E5%9B%BE%E8%A7%A3.bmp?size=large 2x" sizes="auto" data-title="数组操作之获取最值图解" data-alt="数组操作之获取最值图解" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></li>
+</ul>
+</li>
+</ul>
+<!--GFM-TOC -->
+<ul>
+<li>
+<h3 id="返回目录目录-10"><a href="#%e7%9b%ae%e5%bd%95">返回目录</a></h3>
+</li>
+</ul>
+<!--GFM-TOC -->
+<h2 id="方法">方法</h2>
+<ul>
+<li>
+<h3 id="方法概述">方法概述</h3>
+<ul>
+<li>方法就是完成特定功能的代码块</li>
+<li>在很多语言里面都有函数的定义</li>
+<li>函数在Java中被称为方法</li>
+</ul>
+</li>
+<li>
+<h3 id="方法的格式">方法的格式：</h3>
+<ul>
+<li>方法三要素：函数名，参数列表，结果类型。</li>
+<li>格式：
+<div class="highlight" id="id-14"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">修饰符</span><span class="w"> </span><span class="n">返回值类型</span><span class="w"> </span><span class="nf">方法名</span><span class="p">(</span><span class="n">参数类型</span><span class="w"> </span><span class="n">参数名1</span><span class="err">，</span><span class="n">参数类型</span><span class="w"> </span><span class="n">参数名2</span><span class="err">…</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="n">函数体</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="n">返回值</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li>格式解释：
+<ul>
+<li>修饰符：public static</li>
+<li>返回值类型：用于限定返回值的数据类型</li>
+<li>方法名：一个名字，为了方便我们调用方法</li>
+<li>参数类型：用于接收调用方法时传入的数据的类型</li>
+<li>参数名：用于接收调用方法时传入的数据的变量</li>
+<li>方法体：完成功能的代码</li>
+<li>return：结束方法，把返回值带给调用者(返回值为void时可以省略，或<code>return;</code>)
+<ul>
+<li>注：return不能写在最前面，否则后面的语句都执行不到了，同<code>break</code>。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>注意：函数中只能调用函数，不能在函数内部定义函数。（存疑）</li>
+</ul>
+</li>
+<li>
+<h3 id="写方法">写方法</h3>
+<ul>
+<li>写一个方法首先有两点需要明确：
+<ul>
+<li>返回值类型：明确功能结果的数据类型；</li>
+<li>参数列表：明确有几个参数，以及参数的类型。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h3 id="方法的调用">方法的调用</h3>
+<ul>
+<li>方法的一个很重要的特点：不调用不执行。</li>
+<li>有明确返回值的方法调用：
+<ul>
+<li>单独调用：没有意义；(eg. <code>sum(10,20);</code>, 调用了但是什么都没有做，没有联系)</li>
+<li>输出调用：有意义，但是不够好，因为不一定非要把结果输出；</li>
+<li>赋值调用：推荐方式。</li>
+</ul>
+</li>
+<li>图解：求和方法的调用图解
+<img loading="lazy" src="https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/method/%E6%B1%82%E5%92%8C%E6%96%B9%E6%B3%95%E7%9A%84%E8%B0%83%E7%94%A8%E5%9B%BE%E8%A7%A3.bmp" srcset="https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/method/%E6%B1%82%E5%92%8C%E6%96%B9%E6%B3%95%E7%9A%84%E8%B0%83%E7%94%A8%E5%9B%BE%E8%A7%A3.bmp?size=small, https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/method/%E6%B1%82%E5%92%8C%E6%96%B9%E6%B3%95%E7%9A%84%E8%B0%83%E7%94%A8%E5%9B%BE%E8%A7%A3.bmp?size=medium 1.5x, https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/method/%E6%B1%82%E5%92%8C%E6%96%B9%E6%B3%95%E7%9A%84%E8%B0%83%E7%94%A8%E5%9B%BE%E8%A7%A3.bmp?size=large 2x" sizes="auto" data-title="求和方法的调用图解" data-alt="求和方法的调用图解" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></li>
+<li>没有明确返回值的方法调用：
+<ul>
+<li>其实就是void类型方法的调用(没有返回值类型也不能把返回值类型这里空着)；</li>
+<li>参数列表：可以为空，例如<code>void printHW(){...}</code>；</li>
+<li>只能单独调用，例如<code>printHW();</code> &ndash; （是与输出调用和赋值调用相比）。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h3 id="方法的重载">方法的重载</h3>
+<ul>
+<li>方法重载概述：
+<ul>
+<li>在同一个类中，方法名相同，参数列表不同的情况。</li>
+</ul>
+</li>
+<li>方法重载特点：
+<ul>
+<li>方法名相同，参数列表不同。
+<ul>
+<li>参数列表不同：参数个数或者参数类型不同</li>
+<li>注：参数列表是有顺序的，<code>(int, float)</code>和<code>(float,int)</code>也算重载。</li>
+<li>注：参数个数不同包括一个是多参数，一个是空参数的情况。</li>
+</ul>
+</li>
+<li>在调用时，java虚拟机通过参数列表的不同来区分同名方法。</li>
+<li>注：与返回值类型无关，只看方法名和参数列表
+<ul>
+<li>参考<code>int sum(int a, int b)</code>和<code>int sum(int a, int b, int c)；</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h3 id="方法参数传递问题">方法参数传递问题</h3>
+<ul>
+<li>形式参数：用于接收实际参数的变量。</li>
+<li>实际参数：实际参与运算的变量。</li>
+<li>方法的形式参数是基本数据类型：形式参数的改变不影响实际参数。</li>
+<li>图解：
+<img loading="lazy" src="https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/method/%E6%96%B9%E6%B3%95%E7%9A%84%E5%BD%A2%E5%BC%8F%E5%8F%82%E6%95%B0%E6%98%AF%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%9E%8B%E5%9B%BE%E8%A7%A3.bmp" srcset="https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/method/%E6%96%B9%E6%B3%95%E7%9A%84%E5%BD%A2%E5%BC%8F%E5%8F%82%E6%95%B0%E6%98%AF%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%9E%8B%E5%9B%BE%E8%A7%A3.bmp?size=small, https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/method/%E6%96%B9%E6%B3%95%E7%9A%84%E5%BD%A2%E5%BC%8F%E5%8F%82%E6%95%B0%E6%98%AF%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%9E%8B%E5%9B%BE%E8%A7%A3.bmp?size=medium 1.5x, https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/method/%E6%96%B9%E6%B3%95%E7%9A%84%E5%BD%A2%E5%BC%8F%E5%8F%82%E6%95%B0%E6%98%AF%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%9E%8B%E5%9B%BE%E8%A7%A3.bmp?size=large 2x" sizes="auto" data-title="方法的形式参数是基本数据类型" data-alt="方法的形式参数是基本数据类型" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></li>
+<li>方法的形式参数是引用数据类型：形式参数的改变直接影响实际参数。
+<ul>
+<li>传递的是引用型变量的地址值，因此改变后，是对本体进行改变的。</li>
+</ul>
+</li>
+<li>图解：
+<img loading="lazy" src="https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/method/%E6%96%B9%E6%B3%95%E7%9A%84%E5%BD%A2%E5%BC%8F%E5%8F%82%E6%95%B0%E6%98%AF%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B%E5%9B%BE%E8%A7%A3.bmp" srcset="https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/method/%E6%96%B9%E6%B3%95%E7%9A%84%E5%BD%A2%E5%BC%8F%E5%8F%82%E6%95%B0%E6%98%AF%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B%E5%9B%BE%E8%A7%A3.bmp?size=small, https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/method/%E6%96%B9%E6%B3%95%E7%9A%84%E5%BD%A2%E5%BC%8F%E5%8F%82%E6%95%B0%E6%98%AF%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B%E5%9B%BE%E8%A7%A3.bmp?size=medium 1.5x, https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/method/%E6%96%B9%E6%B3%95%E7%9A%84%E5%BD%A2%E5%BC%8F%E5%8F%82%E6%95%B0%E6%98%AF%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B%E5%9B%BE%E8%A7%A3.bmp?size=large 2x" sizes="auto" data-title="方法的形式参数是引用数据类型" data-alt="方法的形式参数是引用数据类型" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></li>
+</ul>
+</li>
+</ul>
+<!--GFM-TOC -->
+<ul>
+<li>
+<h3 id="返回目录目录-11"><a href="#%e7%9b%ae%e5%bd%95">返回目录</a></h3>
+</li>
+</ul>
+<!--GFM-TOC -->
+<h2 id="基础语法练习">基础语法练习</h2>
+<ul>
+<li>
+<h3 id="录入月份输出对应季节">录入月份输出对应季节</h3>
+<ul>
+<li>记得做非法输入判断 (包含对不属于1-12范围输入的判断)</li>
+<li>用switch比if-else判断好一点；</li>
+<li>整合相同季节，而不是每个月份数字做一次判断；</li>
+<li>if-else：可以用或连接多个月份数字，或者用范围；冬季12,1,2用范围不好表示可以放在最后的else里。</li>
+<li>switch：case穿透，将相同的季节的case放在一起穿透
+<div class="highlight" id="id-15"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="k">case</span><span class="w"> </span><span class="n">3</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">case</span><span class="w"> </span><span class="n">4</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">case</span><span class="w"> </span><span class="n">5</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="n">syso</span><span class="p">(</span><span class="s">&#34;春季&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">	</span><span class="k">break</span><span class="p">;</span></span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+</li>
+<li>
+<h3 id="斐波那契数列问题">斐波那契数列问题</h3>
+<ul>
+<li>前两项和等于新的数的数列：1,1,2,3,5,,&hellip;.
+<ul>
+<li>注意第一项和第二项是从几开始的。</li>
+<li>跳台阶问题同(跳台阶方法数为斐波那契数列)。</li>
+<li>生兔子问题同(兔子总数为斐波那契数列)。</li>
+</ul>
+</li>
+<li>求解方法：
+<ul>
+<li>递归；</li>
+<li>数组保存每个结果；</li>
+<li>用变量保存前两项，并不断更新前两项变量的值。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h3 id="评委打分问题">评委打分问题</h3>
+<ul>
+<li>题目：竞赛中有6个评委打分(0-100)，去掉最高分和最低分后的平均分为最后得分，求最终得分。</li>
+<li>思路：键盘获取6个打分并存入数组中，写’getMax()‘,’getMin()‘,’getSum()‘三个方法并调用，avg=(sum-max-min)/(arr.length-2)</li>
+<li>注：就最简单最质朴的解决思路，没有花里胡哨的技巧</li>
+</ul>
+</li>
+<li>
+<h3 id="数组元素反转">数组元素反转</h3>
+<ul>
+<li>双指针从两端向中间遍历，同时交换两指针对应的元素，直到两指针相遇；仔细考虑临界条件!</li>
+<li>交换两个数：常规是利用第三方变量；或者利用两数和；或者利用两数异或。</li>
+<li>关键代码：<code>for(int start=0, end=arr.length-1; start&lt;=end; start++,end--){}</code></li>
+<li>图解
+<img loading="lazy" src="https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/baseTest/%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95%E7%BB%83%E4%B9%A0%E4%B9%8B%E6%95%B0%E7%BB%84%E5%85%83%E7%B4%A0%E5%8F%8D%E8%BD%AC%E5%88%86%E6%9E%90.bmp" srcset="https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/baseTest/%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95%E7%BB%83%E4%B9%A0%E4%B9%8B%E6%95%B0%E7%BB%84%E5%85%83%E7%B4%A0%E5%8F%8D%E8%BD%AC%E5%88%86%E6%9E%90.bmp?size=small, https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/baseTest/%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95%E7%BB%83%E4%B9%A0%E4%B9%8B%E6%95%B0%E7%BB%84%E5%85%83%E7%B4%A0%E5%8F%8D%E8%BD%AC%E5%88%86%E6%9E%90.bmp?size=medium 1.5x, https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/baseTest/%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95%E7%BB%83%E4%B9%A0%E4%B9%8B%E6%95%B0%E7%BB%84%E5%85%83%E7%B4%A0%E5%8F%8D%E8%BD%AC%E5%88%86%E6%9E%90.bmp?size=large 2x" sizes="auto" data-title="基础语法练习之数组元素反转分析" data-alt="基础语法练习之数组元素反转分析" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></li>
+</ul>
+</li>
+<li>
+<h3 id="数组基本查找">数组基本查找</h3>
+<ul>
+<li>题目：定义一个数组，键盘录入被查找数据，写方法得到target第一次出现的索引值</li>
+<li>思路：写方法时for循环遍历数组，比较每个元素与target，循环内if判断，相等时返回</li>
+<li>注意点：既然是if判断，就有可能全部不符合，但是返回值类型又是一个int型数值，因此需要在for循环外额外加一个<code>return -1；</code>
+<ul>
+<li>这一点在编程题目中非常常见，引起注意</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h3 id="加密数字">加密数字</h3>
+<ul>
+<li>要求对一个四位数的每个位的数字进行各种操作：
+<ul>
+<li>eg. 每一位数+5, 对10取余，之后1 4位和2 3位交换</li>
+<li>可以将每个位的数字拆开，并放入一个数组中，便于操作。</li>
+<li>拆开指：<code>arr[0](千位)=a/10/10/10%10;</code>, <code>arr[1]=a/10/10%10;</code>,<code>arr[2]=a/10%10;</code>,<code>arr[3]=a%10;</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<!--GFM-TOC -->
+<ul>
+<li>
+<h3 id="返回目录目录-12"><a href="#%e7%9b%ae%e5%bd%95">返回目录</a></h3>
+</li>
+</ul>
+<!--GFM-TOC -->
+<h3 id="end">END</h3>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod">
+        <span title="更新于 2024-03-25 21:55:50">更新于 2024-03-25&nbsp;</span>
+      </div><div class="post-info-license">
+          <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span>
+        </div></div>
+    <div class="post-info-line">
+      <div class="post-info-md"><span><a href="/articles/2024/03/java%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/index.md" title="阅读原始文档" class="link-to-markdown">阅读原始文档</a></span></div>
+      <div class="post-info-share">
+        <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="https://alextang.top/articles/2024/03/java%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/" data-title="Java基础语法" data-via="a1extang" data-hashtags="Java,语法"><i class="fa-brands fa-twitter fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://alextang.top/articles/2024/03/java%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/" data-hashtag="Java"><i class="fa-brands fa-facebook-square fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://alextang.top/articles/2024/03/java%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/" data-title="Java基础语法"><i class="fa-brands fa-weibo fa-fw" aria-hidden="true"></i></a>
+  </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/java/' class="post-tag">Java</a><a href='/tags/%E8%AF%AD%E6%B3%95/' class="post-tag">语法</a></section>
+    <section>
+      <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div>
+
+  <div class="post-nav"><a href="/articles/2024/03/jdbc-1/" class="post-nav-item" rel="prev" title="JDBC-1-基础"><i class="fa-solid fa-angle-left fa-fw" aria-hidden="true"></i>JDBC-1-基础</a>
+      <a href="/articles/2024/03/java%E5%B8%B8%E7%94%A8api/" class="post-nav-item" rel="next" title="Java常用api">Java常用api<i class="fa-solid fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+</article></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright fa-fw" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2024</span><span class="author" itemprop="copyrightHolder">
+              <a href="/">alextang</a></span><span class="license footer-divider"><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div><div class="footer-line statistics"></div><div class="footer-line visitor">
+          <span id="busuanzi_container_site_uv" title='总访客数'><i class="fa-regular fa-user fa-fw" aria-hidden="true"></i>&nbsp;<span id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span></span><span id="busuanzi_container_site_pv" class="footer-divider" title='总访问量'><i class="fa-regular fa-eye fa-fw" aria-hidden="true"></i>&nbsp;<span id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span></span>
+        </div><div class="footer-line beian"><span class="icp footer-divider"><a href="https://icp.gov.moe/?keyword=20238299" target="_blank">萌ICP备20238299号</a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons animate__faster d-none"><div class="fixed-button back-to-top" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up fa-fw" aria-hidden="true"></i><span class="variant-numeric d-none">0%</span>
+        </div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">FixIt 主题在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js" defer></script><script src="/lib/lunr/lunr.stemmer.support.min.js" defer></script><script src="/lib/lunr/lunr.zh.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js" async defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/copy-tex.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/mhchem.min.js" defer></script><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async defer></script><script>window.config={"code":{"copyTitle":"复制到剪贴板","editLockTitle":"锁定可编辑代码块","editUnLockTitle":"解锁可编辑代码块","editable":true,"maxShownLines":10},"comment":{"enable":false},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script src="/js/theme.min.js" defer></script></body>
+</html>

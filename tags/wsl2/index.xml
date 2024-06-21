@@ -1,0 +1,16 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>WSL2 - 标签 - 好好学习</title>
+    <link>https://alextang.top/tags/wsl2/</link>
+    <description>WSL2 - 标签 - 好好学习</description>
+    <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>alextang@sdu.edu.cn (alextang)</managingEditor>
+      <webMaster>alextang@sdu.edu.cn (alextang)</webMaster><lastBuildDate>Sat, 07 Oct 2023 22:37:00 &#43;0800</lastBuildDate><atom:link href="https://alextang.top/tags/wsl2/" rel="self" type="application/rss+xml" /><item>
+  <title>在Win11中打造近乎完美的Ubuntu终端</title>
+  <link>https://alextang.top/articles/2023/10/%E5%9C%A8win11%E4%B8%AD%E6%89%93%E9%80%A0%E8%BF%91%E4%B9%8E%E5%AE%8C%E7%BE%8E%E7%9A%84ubuntu%E7%BB%88%E7%AB%AF/</link>
+  <pubDate>Sat, 07 Oct 2023 22:37:00 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/10/%E5%9C%A8win11%E4%B8%AD%E6%89%93%E9%80%A0%E8%BF%91%E4%B9%8E%E5%AE%8C%E7%BE%8E%E7%9A%84ubuntu%E7%BB%88%E7%AB%AF/</guid>
+  <description><![CDATA[概述 先上效果图： 首先讲一下大概的配置流程： 安装WSL2，也就是Windows下的linux子系统，默认安装Ubuntu 22.04 安装zsh终端，和o]]></description>
+</item>
+</channel>
+</rss>

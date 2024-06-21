@@ -1,0 +1,16 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>KMP - 标签 - 好好学习</title>
+    <link>https://alextang.top/tags/kmp/</link>
+    <description>KMP - 标签 - 好好学习</description>
+    <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>alextang@sdu.edu.cn (alextang)</managingEditor>
+      <webMaster>alextang@sdu.edu.cn (alextang)</webMaster><lastBuildDate>Wed, 27 Mar 2024 14:18:50 &#43;0800</lastBuildDate><atom:link href="https://alextang.top/tags/kmp/" rel="self" type="application/rss+xml" /><item>
+  <title>前缀函数及其应用</title>
+  <link>https://alextang.top/articles/2024/03/kmp/</link>
+  <pubDate>Wed, 27 Mar 2024 14:18:50 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2024/03/kmp/</guid>
+  <description><![CDATA[本文转自OI-WIKI，仅供学习使用 前缀函数 定义 给定一个长度为 $n$ 的字符串 $s$，其 前缀函数 被定义为一个长度为 $n$ 的数组 $\pi$。 其中 $\pi[i]$ 的定义]]></description>
+</item>
+</channel>
+</rss>

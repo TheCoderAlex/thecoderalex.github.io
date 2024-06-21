@@ -1,0 +1,24 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>Web - 分类 - 好好学习</title>
+    <link>https://alextang.top/categories/web/</link>
+    <description>Web - 分类 - 好好学习</description>
+    <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>alextang@sdu.edu.cn (alextang)</managingEditor>
+      <webMaster>alextang@sdu.edu.cn (alextang)</webMaster><lastBuildDate>Sun, 17 Sep 2023 15:03:24 &#43;0800</lastBuildDate><atom:link href="https://alextang.top/categories/web/" rel="self" type="application/rss+xml" /><item>
+  <title>BJDCTF2020-EasyMD5-Web</title>
+  <link>https://alextang.top/articles/2023/09/bjdctf2020-easymd5-web/</link>
+  <pubDate>Sun, 17 Sep 2023 15:03:24 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/09/bjdctf2020-easymd5-web/</guid>
+  <description><![CDATA[0x01 md5注入 打开网页只给出这样一个输入框： 这里随便输入密码，发现网页GET传参password，但是尝试SQL注入无果。 于是使用Brupsu]]></description>
+</item>
+<item>
+  <title>PHP中数组绕过的一些函数</title>
+  <link>https://alextang.top/articles/2023/09/php%E4%B8%AD%E6%95%B0%E7%BB%84%E7%BB%95%E8%BF%87%E7%9A%84%E4%B8%80%E4%BA%9B%E5%87%BD%E6%95%B0/</link>
+  <pubDate>Sun, 17 Sep 2023 10:38:24 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/09/php%E4%B8%AD%E6%95%B0%E7%BB%84%E7%BB%95%E8%BF%87%E7%9A%84%E4%B8%80%E4%BA%9B%E5%87%BD%E6%95%B0/</guid>
+  <description><![CDATA[简介 记录PHP可以使用数组进行绕过的一些函数，保持更新 0x01 md5() 1 2 3 4 5 6 7 if (isset($_GET[&#39;a&#39;]) and isset($_GET[&#39;b&#39;])) { if ($_GET[&#39;a&#39;] != $_GET[&#39;b&#39;]) if (md5($_GET[&#39;a&#39;]) === md5($_GET[&#39;b&#39;])) die(&#39;Flag: &#39;.$flag); else print &#39;Wrong.&#39;; } md5处理不了数组类型的数据，]]></description>
+</item>
+</channel>
+</rss>

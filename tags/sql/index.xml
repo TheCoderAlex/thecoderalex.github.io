@@ -1,0 +1,24 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>SQL - 标签 - 好好学习</title>
+    <link>https://alextang.top/tags/sql/</link>
+    <description>SQL - 标签 - 好好学习</description>
+    <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>alextang@sdu.edu.cn (alextang)</managingEditor>
+      <webMaster>alextang@sdu.edu.cn (alextang)</webMaster><lastBuildDate>Mon, 04 Mar 2024 22:38:50 &#43;0800</lastBuildDate><atom:link href="https://alextang.top/tags/sql/" rel="self" type="application/rss+xml" /><item>
+  <title>JDBC-1-基础</title>
+  <link>https://alextang.top/articles/2024/03/jdbc-1/</link>
+  <pubDate>Mon, 04 Mar 2024 22:38:50 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2024/03/jdbc-1/</guid>
+  <description><![CDATA[JDBC简介 JDBC是什么？JDBC英文名为：Java Data Base Connectivity(Java数据库连接)，官方解释它是Java编程语言和广泛]]></description>
+</item>
+<item>
+  <title>SQL基础</title>
+  <link>https://alextang.top/articles/2024/03/sql/</link>
+  <pubDate>Sun, 03 Mar 2024 22:55:50 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2024/03/sql/</guid>
+  <description><![CDATA[认识SQL语句 结构化查询语言（Structured Query Language）简称SQL，这是一种特殊的语言，它专门用于数据库的操作。每一种数据库都]]></description>
+</item>
+</channel>
+</rss>

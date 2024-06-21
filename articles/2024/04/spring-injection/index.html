@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>Spring基础:依赖注入 - 好好学习</title><meta name="author" content="alextang">
+<meta name="author-link" content="">
+<meta name="description" content="依赖注入 依赖注入(Dependency Injection, DI)是一种设计模式，也是Spring框架的核心概念之一。现在我们已经了解了如何注册和使用一个Bea" /><meta name="keywords" content='Java, JavaEE, SSM' />
+  <meta itemprop="name" content="Spring基础:依赖注入">
+  <meta itemprop="description" content="依赖注入 依赖注入(Dependency Injection, DI)是一种设计模式，也是Spring框架的核心概念之一。现在我们已经了解了如何注册和使用一个Bea">
+  <meta itemprop="datePublished" content="2024-04-15T16:07:49+08:00">
+  <meta itemprop="dateModified" content="2024-04-15T16:07:49+08:00">
+  <meta itemprop="wordCount" content="2165">
+  <meta itemprop="keywords" content="Java,JavaEE,SSM"><meta property="og:url" content="https://alextang.top/articles/2024/04/spring-injection/">
+  <meta property="og:site_name" content="好好学习">
+  <meta property="og:title" content="Spring基础:依赖注入">
+  <meta property="og:description" content="依赖注入 依赖注入(Dependency Injection, DI)是一种设计模式，也是Spring框架的核心概念之一。现在我们已经了解了如何注册和使用一个Bea">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-04-15T16:07:49+08:00">
+    <meta property="article:modified_time" content="2024-04-15T16:07:49+08:00">
+    <meta property="article:tag" content="Java">
+    <meta property="article:tag" content="JavaEE">
+    <meta property="article:tag" content="SSM">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Spring基础:依赖注入">
+  <meta name="twitter:description" content="依赖注入 依赖注入(Dependency Injection, DI)是一种设计模式，也是Spring框架的核心概念之一。现在我们已经了解了如何注册和使用一个Bea">
+      <meta name="twitter:site" content="@a1extang">
+<meta name="application-name" content="a1extang">
+<meta name="apple-mobile-web-app-title" content="a1extang"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" href="https://alextang.top/articles/2024/04/spring-injection/" /><link rel="prev" href="https://alextang.top/articles/2024/04/spring-test/" /><link rel="next" href="https://alextang.top/articles/2024/04/leetcode-4-24/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Spring基础:依赖注入",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https:\/\/alextang.top\/articles\/2024\/04\/spring-injection\/"
+    },"genre": "posts","keywords": "Java, JavaEE, SSM","wordcount":  2165 ,
+    "url": "https:\/\/alextang.top\/articles\/2024\/04\/spring-injection\/","datePublished": "2024-04-15T16:07:49+08:00","dateModified": "2024-04-15T16:07:49+08:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "alextang"
+      },"description": ""
+  }
+  </script></head>
+  <body data-header-desktop="sticky" data-header-mobile="auto"><script>(window.localStorage?.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('data-theme', 'dark');</script><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="好好学习"><span class="header-title-text">a1extang</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/posts/"
+                
+                
+              ><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden="true"></i> 文章</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/categories/"
+                
+                
+              ><i class="fa-solid fa-th fa-fw fa-sm" aria-hidden="true"></i> 分类</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/tags/"
+                
+                
+              ><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden="true"></i> 标签</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/about/"
+                title="关于"
+                
+              ><i class="fas fa-user fa-fw fa-sm" aria-hidden="true"></i> 关于</a></li><li class="menu-item delimiter"></li><li class="menu-item search" id="search-desktop">
+            <input type="text" placeholder="搜索文章标题或内容……" id="search-input-desktop">
+            <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+              <i class="fa-solid fa-search fa-fw" aria-hidden="true"></i>
+            </a>
+            <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+              <i class="fa-solid fa-times-circle fa-fw" aria-hidden="true"></i>
+            </a>
+            <span class="search-button search-loading" id="search-loading-desktop">
+              <i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+            </span>
+          </li><li class="menu-item theme-switch" title="切换主题">
+          <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+        </li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="好好学习"><span class="header-title-text">a1extang</span></a><span class="header-subtitle"></span></div>
+      <div class="menu-toggle" id="menu-toggle-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="search-wrapper">
+            <div class="search mobile" id="search-mobile">
+              <input type="text" placeholder="搜索文章标题或内容……" id="search-input-mobile">
+              <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                <i class="fa-solid fa-search fa-fw" aria-hidden="true"></i>
+              </a>
+              <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                <i class="fa-solid fa-times-circle fa-fw" aria-hidden="true"></i>
+              </a>
+              <span class="search-button search-loading" id="search-loading-mobile">
+                <i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+              </span>
+            </div>
+            <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+              取消
+            </a>
+          </li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/posts/"
+                  
+                  
+                ><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden="true"></i> 文章</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/categories/"
+                  
+                  
+                ><i class="fa-solid fa-th fa-fw fa-sm" aria-hidden="true"></i> 分类</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/tags/"
+                  
+                  
+                ><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden="true"></i> 标签</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/about/"
+                  title="关于"
+                  
+                ><i class="fas fa-user fa-fw fa-sm" aria-hidden="true"></i> 关于</a></li><li class="menu-item menu-system">
+          <span class="menu-system-item theme-switch" title="切换主题"><i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i></span></li>
+      </ul>
+    </nav>
+  </div>
+</header><div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+  </div>
+  <div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+  </div><main class="container"><aside class="toc" id="toc-auto"><h2 class="toc-title">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down fa-fw" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside>
+
+  <aside class="aside-custom">
+    </aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>Spring基础:依赖注入</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=large 2x" sizes="auto" data-title="alextang" data-alt="alextang" class="avatar" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/>&nbsp;alextang</span></span>
+          <span class="post-category">收录于 <a href="/categories/java/"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Java</a></span></div>
+      <div class="post-meta-line"><span title="发布于 2024-04-15 16:07:49"><i class="fa-regular fa-calendar-alt fa-fw me-1" aria-hidden="true"></i><time datetime="2024-04-15">2024-04-15</time></span>&nbsp;<span title="更新于 2024-04-15 16:07:49"><i class="fa-regular fa-edit fa-fw me-1" aria-hidden="true"></i><time datetime="2024-04-15">2024-04-15</time></span>&nbsp;<span title="2165 字"><i class="fa-solid fa-pencil-alt fa-fw me-1" aria-hidden="true"></i>约 2200 字</span>&nbsp;<span><i class="fa-regular fa-clock fa-fw me-1" aria-hidden="true"></i>预计阅读 5 分钟</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#依赖注入">依赖注入</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><h3 id="依赖注入">依赖注入</h3>
+<p>依赖注入(Dependency Injection, DI)是一种设计模式，也是Spring框架的核心概念之一。现在我们已经了解了如何注册和使用一个Bean，但是这样还远远不够，还记得我们一开始说的，消除类之间的强关联吗？比如现在有一个教师接口：</p>
+<div class="highlight" id="id-1"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">Teacher</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">teach</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>具体的实现有两个：</p>
+<div class="highlight" id="id-2"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">ArtTeacher</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">Teacher</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@Override</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">teach</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;我是美术老师，我教你画画！&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">ProgramTeacher</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">Teacher</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@Override</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">teach</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;我是编程老师，我教你学Golang！&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>我们的学生一开始有一个老师教他，比如美术老师：</p>
+<div class="highlight" id="id-3"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Student</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Teacher</span><span class="w"> </span><span class="n">teacher</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArtTeacher</span><span class="p">();</span><span class="w">   
+</span></span></span><span class="line"><span class="cl"><span class="w">  	</span><span class="c1">//在以前，如果我们需要制定哪个老师教我们，直接new创建对应的对象就可以了</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">study</span><span class="p">(){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">teacher</span><span class="p">.</span><span class="na">teach</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>但是我们发现，如果美术老师不教了，现在来了一个其他的老师教学生，那么就需要去修改Student类的定义：</p>
+<div class="highlight" id="id-4"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Student</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Teacher</span><span class="w"> </span><span class="n">teacher</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ProgramTeacher</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  	</span><span class="p">...</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>可以想象一下，如果现在冒出来各种各样的类都需要这样去用Teacher，那么一旦Teacher的实现发生变化，会导致我们挨个对之前用到Teacher的类进行修改，这就很难受了。</p>
+<p>而有了依赖注入之后，Student中的Teacher成员变量，可以由IoC容器来选择一个合适的Teacher对象进行赋值，也就是说，IoC容器在创建对象时，需要将我们预先给定的属性注入到对象中，非常简单，我们可以使用<code>property</code>标签来实现，我们将bean标签展开：</p>
+<div class="highlight" id="id-5"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;bean</span> <span class="na">name=</span><span class="s">&#34;teacher&#34;</span> <span class="na">class=</span><span class="s">&#34;com.test.bean.ProgramTeacher&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;bean</span> <span class="na">name=</span><span class="s">&#34;student&#34;</span> <span class="na">class=</span><span class="s">&#34;com.test.bean.Student&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&#34;teacher&#34;</span> <span class="na">ref=</span><span class="s">&#34;teacher&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/bean&gt;</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>同时我们还需要修改一下Student类，依赖注入要求对应的属性必须有一个set方法：</p>
+<div class="highlight" id="id-6"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Student</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Teacher</span><span class="w"> </span><span class="n">teacher</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  	</span><span class="c1">//要使用依赖注入，我们必须提供一个set方法（无论成员变量的访问权限是什么）命名规则依然是驼峰命名法</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">setTeacher</span><span class="p">(</span><span class="n">Teacher</span><span class="w"> </span><span class="n">teacher</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">teacher</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">teacher</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">...</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><img loading="lazy" src="https://image.itbaima.cn/markdown/2022/11/22/wu2EYC8HToJbsva.png" srcset="https://image.itbaima.cn/markdown/2022/11/22/wu2EYC8HToJbsva.png?size=small, https://image.itbaima.cn/markdown/2022/11/22/wu2EYC8HToJbsva.png?size=medium 1.5x, https://image.itbaima.cn/markdown/2022/11/22/wu2EYC8HToJbsva.png?size=large 2x" sizes="auto" data-title="image-20221122191025279" data-alt="image-20221122191025279" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>使用<code>property</code>来指定需要注入的值或是一个Bean，这里我们选择ProgramTeacher，那么在使用时，Student类中的得到的就是这个Bean的对象了：</p>
+<div class="highlight" id="id-7"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">Student</span><span class="w"> </span><span class="n">student</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">context</span><span class="p">.</span><span class="na">getBean</span><span class="p">(</span><span class="n">Student</span><span class="p">.</span><span class="na">class</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">student</span><span class="p">.</span><span class="na">study</span><span class="p">();</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><img loading="lazy" src="https://image.itbaima.cn/markdown/2022/11/22/n3zYWvIoE8CrRDT.png" srcset="https://image.itbaima.cn/markdown/2022/11/22/n3zYWvIoE8CrRDT.png?size=small, https://image.itbaima.cn/markdown/2022/11/22/n3zYWvIoE8CrRDT.png?size=medium 1.5x, https://image.itbaima.cn/markdown/2022/11/22/n3zYWvIoE8CrRDT.png?size=large 2x" sizes="auto" data-title="image-20221122191109690" data-alt="image-20221122191109690" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>可以看到，现在我们的Java代码中，没有出现任何的具体实现类信息（ArtTeacher、ProgramTeacher都没出现）取而代之的是那一堆xml配置，这样，就算我们切换老师的实现为另一个类，也不用去调整代码，只需要变动一下Bean的类型就可以：</p>
+<div class="highlight" id="id-8"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="c">&lt;!--  只需要修改这里的class即可，现在改为ArtTeacher  --&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;bean</span> <span class="na">name=</span><span class="s">&#34;teacher&#34;</span> <span class="na">class=</span><span class="s">&#34;com.test.bean.ArtTeacher&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;bean</span> <span class="na">name=</span><span class="s">&#34;student&#34;</span> <span class="na">class=</span><span class="s">&#34;com.test.bean.Student&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&#34;teacher&#34;</span> <span class="na">ref=</span><span class="s">&#34;teacher&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/bean&gt;</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>这样，这个Bean的class就变成了新的类型，并且我们不需要再去调整其他位置的代码，再次启动程序：</p>
+<p><img loading="lazy" src="https://image.itbaima.cn/markdown/2022/11/22/evKArqDYcIQPCXT.png" srcset="https://image.itbaima.cn/markdown/2022/11/22/evKArqDYcIQPCXT.png?size=small, https://image.itbaima.cn/markdown/2022/11/22/evKArqDYcIQPCXT.png?size=medium 1.5x, https://image.itbaima.cn/markdown/2022/11/22/evKArqDYcIQPCXT.png?size=large 2x" sizes="auto" data-title="image-20221122191427776" data-alt="image-20221122191427776" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>通过依赖注入，是不是开始逐渐感受到Spring为我们带来的便利了？当然，依赖注入并不一定要注入其他的Bean，也可以是一个简单的值：</p>
+<div class="highlight" id="id-9"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">bean</span><span class="w"> </span><span class="n">name</span><span class="o">=</span><span class="s">&#34;student&#34;</span><span class="w"> </span><span class="kd">class</span><span class="err">=&#34;</span><span class="nc">com</span><span class="p">.</span><span class="na">test</span><span class="p">.</span><span class="na">bean</span><span class="p">.</span><span class="na">Student</span><span class="s">&#34;&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s">    &lt;property name=&#34;</span><span class="n">name</span><span class="s">&#34; value=&#34;</span><span class="n">卢本伟</span><span class="s">&#34;/&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s">&lt;/bean&gt;</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>直接使用<code>value</code>可以直接传入一个具体值。</p>
+<p>实际上，在很多情况下，类中的某些参数是在构造方法中就已经完成的初始化，而不是创建之后，比如：</p>
+<div class="highlight" id="id-10"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Student</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Teacher</span><span class="w"> </span><span class="n">teacher</span><span class="p">;</span><span class="w">   </span><span class="c1">//构造方法中完成，所以说是一个final变量</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="nf">Student</span><span class="p">(</span><span class="n">Teacher</span><span class="w"> </span><span class="n">teacher</span><span class="p">){</span><span class="w">   </span><span class="c1">//Teacher属性是在构造方法中完成的初始化</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">teacher</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">teacher</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  	</span><span class="p">...</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>我们前面说了，Bean实际上是由IoC容器进行创建的，但是现在我们修改了默认的无参构造，可以看到配置文件里面报错了：</p>
+<p><img loading="lazy" src="https://image.itbaima.cn/markdown/2022/11/22/5HN8GKQywWaYvrF.png" srcset="https://image.itbaima.cn/markdown/2022/11/22/5HN8GKQywWaYvrF.png?size=small, https://image.itbaima.cn/markdown/2022/11/22/5HN8GKQywWaYvrF.png?size=medium 1.5x, https://image.itbaima.cn/markdown/2022/11/22/5HN8GKQywWaYvrF.png?size=large 2x" sizes="auto" data-title="image-20221122174328107" data-alt="image-20221122174328107" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>很明显，是因为我们修改了构造方法，IoC容器默认只会调用无参构造，所以，我们需要指明一个可以用的构造方法，我们展开bean标签，添加一个<code>constructor-arg</code>标签：</p>
+<div class="highlight" id="id-11"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;bean</span> <span class="na">name=</span><span class="s">&#34;teacher&#34;</span> <span class="na">class=</span><span class="s">&#34;com.test.bean.ArtTeacher&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;bean</span> <span class="na">name=</span><span class="s">&#34;student&#34;</span> <span class="na">class=</span><span class="s">&#34;com.test.bean.Student&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;constructor-arg</span> <span class="na">name=</span><span class="s">&#34;teacher&#34;</span> <span class="na">ref=</span><span class="s">&#34;teacher&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/bean&gt;</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>这里的<code>constructor-arg</code>就是构造方法的一个参数，这个参数可以写很多个，会自动匹配符合里面参数数量的构造方法，这里匹配的就是我们刚刚编写的需要一个参数的构造方法。</p>
+<p><img loading="lazy" src="https://image.itbaima.cn/markdown/2022/11/22/evKArqDYcIQPCXT.png" srcset="https://image.itbaima.cn/markdown/2022/11/22/evKArqDYcIQPCXT.png?size=small, https://image.itbaima.cn/markdown/2022/11/22/evKArqDYcIQPCXT.png?size=medium 1.5x, https://image.itbaima.cn/markdown/2022/11/22/evKArqDYcIQPCXT.png?size=large 2x" sizes="auto" data-title="image-20221122191427776" data-alt="image-20221122191427776" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>通过这种方式，我们也能实现依赖注入，只不过现在我们将依赖注入的时机提前到了对象构造时。</p>
+<p>那要是出现这种情况呢？现在我们的Student类中是这样定义的：</p>
+<div class="highlight" id="id-12"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Student</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">name</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="nf">Student</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">name</span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;我是一号构造方法&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">name</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="nf">Student</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">age</span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;我是二号构造方法&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">String</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="n">age</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>此时我们希望使用的是二号构造方法，那么怎么才能指定呢？有2种方式，我们可以给标签添加类型：</p>
+<div class="highlight" id="id-13"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;constructor-arg</span> <span class="na">value=</span><span class="s">&#34;1&#34;</span> <span class="na">type=</span><span class="s">&#34;int&#34;</span><span class="nt">/&gt;</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>也可以指定为对应的参数名称：</p>
+<div class="highlight" id="id-14"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;constructor-arg</span> <span class="na">value=</span><span class="s">&#34;1&#34;</span> <span class="na">name=</span><span class="s">&#34;age&#34;</span><span class="nt">/&gt;</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>反正只要能够保证我们指定的参数匹配到目标构造方法即可。</p>
+<p>现在我们的类中出现了一个比较特殊的类型，它是一个集合类型：</p>
+<div class="highlight" id="id-15"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Student</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">list</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">setList</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">list</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">list</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>对于这种集合类型，有着特殊的支持：</p>
+<div class="highlight" id="id-16"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;bean</span> <span class="na">name=</span><span class="s">&#34;student&#34;</span> <span class="na">class=</span><span class="s">&#34;com.test.bean.Student&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">  	<span class="c">&lt;!--  对于集合类型，我们可以直接使用标签编辑集合的默认值  --&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&#34;list&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;list&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;value&gt;</span>AAA<span class="nt">&lt;/value&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;value&gt;</span>BBB<span class="nt">&lt;/value&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;value&gt;</span>CCC<span class="nt">&lt;/value&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;/list&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;/property&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/bean&gt;</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>不仅仅是List，Map、Set这类常用集合类包括数组在内，都是支持这样编写的，比如Map类型，我们也可以使用<code>entry</code>来注入：</p>
+<div class="highlight" id="id-17"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;bean</span> <span class="na">name=</span><span class="s">&#34;student&#34;</span> <span class="na">class=</span><span class="s">&#34;com.test.bean.Student&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">&#34;map&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;map&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;entry</span> <span class="na">key=</span><span class="s">&#34;语文&#34;</span> <span class="na">value=</span><span class="s">&#34;100.0&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;entry</span> <span class="na">key=</span><span class="s">&#34;数学&#34;</span> <span class="na">value=</span><span class="s">&#34;80.0&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&lt;entry</span> <span class="na">key=</span><span class="s">&#34;英语&#34;</span> <span class="na">value=</span><span class="s">&#34;92.5&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;/map&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;/property&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/bean&gt;</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>至此，我们就已经完成了两种依赖注入的学习：</p>
+<ul>
+<li>Setter依赖注入：通过成员属性对应的set方法完成注入。</li>
+<li>构造方法依赖注入：通过构造方法完成注入。</li>
+</ul>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod">
+        <span title="更新于 2024-04-15 16:07:49">更新于 2024-04-15&nbsp;</span>
+      </div><div class="post-info-license">
+          <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span>
+        </div></div>
+    <div class="post-info-line">
+      <div class="post-info-md"><span><a href="/articles/2024/04/spring-injection/index.md" title="阅读原始文档" class="link-to-markdown">阅读原始文档</a></span></div>
+      <div class="post-info-share">
+        <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="https://alextang.top/articles/2024/04/spring-injection/" data-title="Spring基础:依赖注入" data-via="a1extang" data-hashtags="Java,JavaEE,SSM"><i class="fa-brands fa-twitter fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://alextang.top/articles/2024/04/spring-injection/" data-hashtag="Java"><i class="fa-brands fa-facebook-square fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://alextang.top/articles/2024/04/spring-injection/" data-title="Spring基础:依赖注入"><i class="fa-brands fa-weibo fa-fw" aria-hidden="true"></i></a>
+  </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/java/' class="post-tag">Java</a><a href='/tags/javaee/' class="post-tag">JavaEE</a><a href='/tags/ssm/' class="post-tag">SSM</a></section>
+    <section>
+      <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div>
+
+  <div class="post-nav"><a href="/articles/2024/04/spring-test/" class="post-nav-item" rel="prev" title="Spring基础:创建项目和Bean"><i class="fa-solid fa-angle-left fa-fw" aria-hidden="true"></i>Spring基础:创建项目和Bean</a>
+      <a href="/articles/2024/04/leetcode-4-24/" class="post-nav-item" rel="next" title="LeetCode-感染二叉树需要的总时间">LeetCode-感染二叉树需要的总时间<i class="fa-solid fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+</article></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright fa-fw" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2024</span><span class="author" itemprop="copyrightHolder">
+              <a href="/">alextang</a></span><span class="license footer-divider"><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div><div class="footer-line statistics"></div><div class="footer-line visitor">
+          <span id="busuanzi_container_site_uv" title='总访客数'><i class="fa-regular fa-user fa-fw" aria-hidden="true"></i>&nbsp;<span id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span></span><span id="busuanzi_container_site_pv" class="footer-divider" title='总访问量'><i class="fa-regular fa-eye fa-fw" aria-hidden="true"></i>&nbsp;<span id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span></span>
+        </div><div class="footer-line beian"><span class="icp footer-divider"><a href="https://icp.gov.moe/?keyword=20238299" target="_blank">萌ICP备20238299号</a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons animate__faster d-none"><div class="fixed-button back-to-top" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up fa-fw" aria-hidden="true"></i><span class="variant-numeric d-none">0%</span>
+        </div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">FixIt 主题在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js" defer></script><script src="/lib/lunr/lunr.stemmer.support.min.js" defer></script><script src="/lib/lunr/lunr.zh.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js" async defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/copy-tex.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/mhchem.min.js" defer></script><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async defer></script><script>window.config={"code":{"copyTitle":"复制到剪贴板","editLockTitle":"锁定可编辑代码块","editUnLockTitle":"解锁可编辑代码块","editable":true,"maxShownLines":10},"comment":{"enable":false},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script src="/js/theme.min.js" defer></script></body>
+</html>

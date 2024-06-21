@@ -1,0 +1,16 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>Fastbin - 标签 - 好好学习</title>
+    <link>https://alextang.top/tags/fastbin/</link>
+    <description>Fastbin - 标签 - 好好学习</description>
+    <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>alextang@sdu.edu.cn (alextang)</managingEditor>
+      <webMaster>alextang@sdu.edu.cn (alextang)</webMaster><lastBuildDate>Tue, 12 Dec 2023 15:05:40 &#43;0800</lastBuildDate><atom:link href="https://alextang.top/tags/fastbin/" rel="self" type="application/rss+xml" /><item>
+  <title>Fastbin Attack</title>
+  <link>https://alextang.top/articles/2023/12/fastbin_attack/</link>
+  <pubDate>Tue, 12 Dec 2023 15:05:40 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/12/fastbin_attack/</guid>
+  <description><![CDATA[关于Fastbin机制 在Glibc 2.25及之前的版本中，如果free的chunk大小小于get_max_fast()，也就是全局变量glo]]></description>
+</item>
+</channel>
+</rss>

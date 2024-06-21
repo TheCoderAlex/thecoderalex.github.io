@@ -1,0 +1,24 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>JavaSE - 标签 - 好好学习</title>
+    <link>https://alextang.top/tags/javase/</link>
+    <description>JavaSE - 标签 - 好好学习</description>
+    <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>alextang@sdu.edu.cn (alextang)</managingEditor>
+      <webMaster>alextang@sdu.edu.cn (alextang)</webMaster><lastBuildDate>Fri, 21 Jun 2024 15:49:46 &#43;0800</lastBuildDate><atom:link href="https://alextang.top/tags/javase/" rel="self" type="application/rss+xml" /><item>
+  <title>Java AWT 创建窗口</title>
+  <link>https://alextang.top/articles/2024/06/java-awt-1/</link>
+  <pubDate>Fri, 21 Jun 2024 15:49:46 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2024/06/java-awt-1/</guid>
+  <description><![CDATA[使用AWT创建一个窗口 AWT中每个窗口单位是以 Frame 为单位的，我们可以使用 Frame 来创建一个窗口。 1 2 3 4 5 6 7 8 9 package com.alextang; import java.awt.*; public class Main { public static void main(String[] args) { Frame frame =]]></description>
+</item>
+<item>
+  <title>Java IO优化</title>
+  <link>https://alextang.top/articles/2024/04/java-io/</link>
+  <pubDate>Fri, 12 Apr 2024 23:18:37 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2024/04/java-io/</guid>
+  <description><![CDATA[Java IO优化 使用Scanner进行输入输出会非常方便，但是当读入或者输出的数据量超过$10^5$ 的数量级时，很容易TLE（Java在算法题中的]]></description>
+</item>
+</channel>
+</rss>

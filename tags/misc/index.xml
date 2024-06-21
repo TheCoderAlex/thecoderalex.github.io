@@ -1,0 +1,24 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>Misc - 标签 - 好好学习</title>
+    <link>https://alextang.top/tags/misc/</link>
+    <description>Misc - 标签 - 好好学习</description>
+    <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>alextang@sdu.edu.cn (alextang)</managingEditor>
+      <webMaster>alextang@sdu.edu.cn (alextang)</webMaster><lastBuildDate>Wed, 04 Oct 2023 15:35:40 &#43;0800</lastBuildDate><atom:link href="https://alextang.top/tags/misc/" rel="self" type="application/rss+xml" /><item>
+  <title>NewStarCTF2023-Week1-Misc</title>
+  <link>https://alextang.top/articles/2023/10/newstarctf2023-week1-misc/</link>
+  <pubDate>Wed, 04 Oct 2023 15:35:40 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/10/newstarctf2023-week1-misc/</guid>
+  <description><![CDATA[CyberChef&rsquo;s Secret 实际上是Base加密的套娃，这里根据提示使用cyberchef的magic方法 直接得flag 机密图片 不会做。看wp得知是LSB隐写。关于]]></description>
+</item>
+<item>
+  <title>WP-SUSCTF招新题目-Misc</title>
+  <link>https://alextang.top/articles/2023/09/wp-susctf%E6%8B%9B%E6%96%B0%E9%A2%98%E7%9B%AE-misc/</link>
+  <pubDate>Sun, 17 Sep 2023 11:03:35 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/09/wp-susctf%E6%8B%9B%E6%96%B0%E9%A2%98%E7%9B%AE-misc/</guid>
+  <description><![CDATA[0x01题目 题目是一个二维码 0x02 分析 扫码后发现二维码包含的信息如下： 1 \u58eb\u4eba\u0020\u5927\u571f\u0020\u5927\u4eba\u0020\u4e2d\u53e3\u0020\u4e2d\u4eba\u0020\u4eba\u5de5\u0020\u592b\u7f8a\u0020\u4e2d\u7530\u0020\u592b\u592b\u0020\u4eba\u4eba\u0020\u4eba\u7531\u0020\u5929\u4eba\u0020\u4eba\u53e3\u0020\u4e2d\u4eba\u0020\u738b\u5927\u0020\u4e2d\u53e3\u0020\u592b\u5927 立刻得知是Unicode编码，进行解密，得到一下中文： 1 士人 大土 大人 中]]></description>
+</item>
+</channel>
+</rss>

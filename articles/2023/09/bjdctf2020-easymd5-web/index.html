@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>BJDCTF2020-EasyMD5-Web - 好好学习</title><meta name="author" content="alextang">
+<meta name="author-link" content="">
+<meta name="description" content="0x01 md5注入 打开网页只给出这样一个输入框： 这里随便输入密码，发现网页GET传参password，但是尝试SQL注入无果。 于是使用Brupsu" /><meta name="keywords" content='PHP, CTF, Web' />
+  <meta itemprop="name" content="BJDCTF2020-EasyMD5-Web">
+  <meta itemprop="description" content="0x01 md5注入 打开网页只给出这样一个输入框： 这里随便输入密码，发现网页GET传参password，但是尝试SQL注入无果。 于是使用Brupsu">
+  <meta itemprop="datePublished" content="2023-09-17T15:03:24+08:00">
+  <meta itemprop="dateModified" content="2023-09-17T15:03:24+08:00">
+  <meta itemprop="wordCount" content="578">
+  <meta itemprop="keywords" content="PHP,CTF,Web"><meta property="og:url" content="https://alextang.top/articles/2023/09/bjdctf2020-easymd5-web/">
+  <meta property="og:site_name" content="好好学习">
+  <meta property="og:title" content="BJDCTF2020-EasyMD5-Web">
+  <meta property="og:description" content="0x01 md5注入 打开网页只给出这样一个输入框： 这里随便输入密码，发现网页GET传参password，但是尝试SQL注入无果。 于是使用Brupsu">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2023-09-17T15:03:24+08:00">
+    <meta property="article:modified_time" content="2023-09-17T15:03:24+08:00">
+    <meta property="article:tag" content="PHP">
+    <meta property="article:tag" content="CTF">
+    <meta property="article:tag" content="Web">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="BJDCTF2020-EasyMD5-Web">
+  <meta name="twitter:description" content="0x01 md5注入 打开网页只给出这样一个输入框： 这里随便输入密码，发现网页GET传参password，但是尝试SQL注入无果。 于是使用Brupsu">
+      <meta name="twitter:site" content="@a1extang">
+<meta name="application-name" content="a1extang">
+<meta name="apple-mobile-web-app-title" content="a1extang"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" href="https://alextang.top/articles/2023/09/bjdctf2020-easymd5-web/" /><link rel="prev" href="https://alextang.top/articles/2023/09/wp-susctf%E6%8B%9B%E6%96%B0%E9%A2%98%E7%9B%AE-misc/" /><link rel="next" href="https://alextang.top/articles/2023/09/reverse%E5%85%A5%E9%97%A82%E9%A2%98/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "BJDCTF2020-EasyMD5-Web",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https:\/\/alextang.top\/articles\/2023\/09\/bjdctf2020-easymd5-web\/"
+    },"genre": "posts","keywords": "PHP, CTF, Web","wordcount":  578 ,
+    "url": "https:\/\/alextang.top\/articles\/2023\/09\/bjdctf2020-easymd5-web\/","datePublished": "2023-09-17T15:03:24+08:00","dateModified": "2023-09-17T15:03:24+08:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "alextang"
+      },"description": ""
+  }
+  </script></head>
+  <body data-header-desktop="sticky" data-header-mobile="auto"><script>(window.localStorage?.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('data-theme', 'dark');</script><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="好好学习"><span class="header-title-text">a1extang</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/posts/"
+                
+                
+              ><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden="true"></i> 文章</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/categories/"
+                
+                
+              ><i class="fa-solid fa-th fa-fw fa-sm" aria-hidden="true"></i> 分类</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/tags/"
+                
+                
+              ><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden="true"></i> 标签</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/about/"
+                title="关于"
+                
+              ><i class="fas fa-user fa-fw fa-sm" aria-hidden="true"></i> 关于</a></li><li class="menu-item delimiter"></li><li class="menu-item search" id="search-desktop">
+            <input type="text" placeholder="搜索文章标题或内容……" id="search-input-desktop">
+            <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+              <i class="fa-solid fa-search fa-fw" aria-hidden="true"></i>
+            </a>
+            <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+              <i class="fa-solid fa-times-circle fa-fw" aria-hidden="true"></i>
+            </a>
+            <span class="search-button search-loading" id="search-loading-desktop">
+              <i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+            </span>
+          </li><li class="menu-item theme-switch" title="切换主题">
+          <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+        </li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="好好学习"><span class="header-title-text">a1extang</span></a><span class="header-subtitle"></span></div>
+      <div class="menu-toggle" id="menu-toggle-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="search-wrapper">
+            <div class="search mobile" id="search-mobile">
+              <input type="text" placeholder="搜索文章标题或内容……" id="search-input-mobile">
+              <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                <i class="fa-solid fa-search fa-fw" aria-hidden="true"></i>
+              </a>
+              <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                <i class="fa-solid fa-times-circle fa-fw" aria-hidden="true"></i>
+              </a>
+              <span class="search-button search-loading" id="search-loading-mobile">
+                <i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+              </span>
+            </div>
+            <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+              取消
+            </a>
+          </li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/posts/"
+                  
+                  
+                ><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden="true"></i> 文章</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/categories/"
+                  
+                  
+                ><i class="fa-solid fa-th fa-fw fa-sm" aria-hidden="true"></i> 分类</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/tags/"
+                  
+                  
+                ><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden="true"></i> 标签</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/about/"
+                  title="关于"
+                  
+                ><i class="fas fa-user fa-fw fa-sm" aria-hidden="true"></i> 关于</a></li><li class="menu-item menu-system">
+          <span class="menu-system-item theme-switch" title="切换主题"><i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i></span></li>
+      </ul>
+    </nav>
+  </div>
+</header><div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+  </div>
+  <div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+  </div><main class="container"><aside class="toc" id="toc-auto"><h2 class="toc-title">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down fa-fw" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside>
+
+  <aside class="aside-custom">
+    </aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>BJDCTF2020-EasyMD5-Web</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=large 2x" sizes="auto" data-title="alextang" data-alt="alextang" class="avatar" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/>&nbsp;alextang</span></span>
+          <span class="post-category">收录于 <a href="/categories/web/"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Web</a></span></div>
+      <div class="post-meta-line"><span title="发布于 2023-09-17 15:03:24"><i class="fa-regular fa-calendar-alt fa-fw me-1" aria-hidden="true"></i><time datetime="2023-09-17">2023-09-17</time></span>&nbsp;<span title="更新于 2023-09-17 15:03:24"><i class="fa-regular fa-edit fa-fw me-1" aria-hidden="true"></i><time datetime="2023-09-17">2023-09-17</time></span>&nbsp;<span title="578 字"><i class="fa-solid fa-pencil-alt fa-fw me-1" aria-hidden="true"></i>约 600 字</span>&nbsp;<span><i class="fa-regular fa-clock fa-fw me-1" aria-hidden="true"></i>预计阅读 2 分钟</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#0x01-md5注入">0x01 md5注入</a></li>
+    <li><a href="#0x02-md5判断绕过">0x02 md5判断绕过</a></li>
+    <li><a href="#0x03-post传值">0x03 POST传值</a></li>
+    <li><a href="#0x04-总结">0x04 总结</a></li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><h2 id="0x01-md5注入">0x01 md5注入</h2>
+<p>打开网页只给出这样一个输入框：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/20230917151641.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/20230917151641.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/20230917151641.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/20230917151641.png?size=large 2x" sizes="auto" data-title="level1" data-alt="level1" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>这里随便输入密码，发现网页GET传参password，但是尝试SQL注入无果。</p>
+<p>于是使用Brupsuite尝试抓取相应包，发现提示：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/20230917152024.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/20230917152024.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/20230917152024.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/20230917152024.png?size=large 2x" sizes="auto" data-title="HINT" data-alt="HINT" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>考虑如下sql语句</p>
+<div class="highlight" id="id-1"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="err">$</span><span class="k">sql</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&#34;select * from &#39;admin&#39; where password = &#39;&#34;</span><span class="p">.</span><span class="n">md5</span><span class="p">(</span><span class="err">$</span><span class="n">_GET</span><span class="p">[</span><span class="n">password</span><span class="p">],</span><span class="k">true</span><span class="p">).</span><span class="s2">&#34;&#39;&#34;</span><span class="p">;</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>于是尝试MD5下的sql注入。也就是想办法找到一个字符串，它的md5值转化为字符串（md5函数的第二个参数是true，则将16进制的哈希结果转化为字符串格式）可以闭合sql语句（也就是password=&lsquo;&lsquo;or&rsquo;xxx&rsquo;）并且恒为Ture。</p>
+<p>这里提供一个别人构造好的字符串：ffifdyop</p>
+<div class="highlight" id="id-2"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="o">&lt;?</span><span class="nx">php</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">$str</span> <span class="o">=</span> <span class="nx">md5</span><span class="p">(</span><span class="s1">&#39;ffifdyop&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">echo</span> <span class="nv">$str</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">print</span><span class="p">(</span><span class="s2">&#34;</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">$str</span> <span class="o">=</span> <span class="nx">md5</span><span class="p">(</span><span class="s2">&#34;ffifdyop&#34;</span><span class="p">,</span><span class="k">true</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">echo</span> <span class="nv">$str</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="cp">?&gt;</span><span class="err">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>输入结果为</p>
+<div class="highlight" id="id-3"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">276f722736c95d99e921722cf9ed621c
+</span></span><span class="line"><span class="cl">&#39;or&#39;6�]��!r,��b</span></span></code></pre></td></tr></table>
+</div>
+</div><p>&lsquo;or&rsquo;可以实现闭合。</p>
+<p>输入ffifdyop，跳转至下一个网页。</p>
+<h2 id="0x02-md5判断绕过">0x02 md5判断绕过</h2>
+<p>查看网页源码发现提示：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/20230917153224.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/20230917153224.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/20230917153224.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/20230917153224.png?size=large 2x" sizes="auto" data-title="Do you like MD5?" data-alt="Do you like MD5?" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>根据之前的文章：<a href="http://www.alextang.top/2023/09/17/PHP%e4%b8%ad%e6%95%b0%e7%bb%84%e7%bb%95%e8%bf%87%e7%9a%84%e4%b8%80%e4%ba%9b%e5%87%bd%e6%95%b0/"target="_blank" rel="external nofollow noopener noreferrer">PHP中数组绕过的一些函数 | AlexanderZ.Tang (alextang.top)</a>可知，当md5的第一个参数是数组时会返回null，而null==null，因此答案就是传入两个数组（注意这两个数组的值不能相同）。</p>
+<div class="highlight" id="id-4"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">levels91.php?a[]=1&amp;b[]=2</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="0x03-post传值">0x03 POST传值</h2>
+<p>和上一节一模一样，只不过这次使用POST传递参数。payload将参数名字改一下就行。
+<img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/20230917153635.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/20230917153635.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/20230917153635.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/20230917153635.png?size=large 2x" sizes="auto" data-title="source" data-alt="source" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<div class="highlight" id="id-5"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">param1[]=a&amp;param2[]=b</span></span></code></pre></td></tr></table>
+</div>
+</div><p>得到结果</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/20230917153755.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/20230917153755.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/20230917153755.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/20230917153755.png?size=large 2x" sizes="auto" data-title="flag" data-alt="flag" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<h2 id="0x04-总结">0x04 总结</h2>
+<p>这题的关键在于第一问，这个常用的md5万能密码应该记住。</p>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod">
+        <span title="更新于 2023-09-17 15:03:24">更新于 2023-09-17&nbsp;</span>
+      </div><div class="post-info-license">
+          <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span>
+        </div></div>
+    <div class="post-info-line">
+      <div class="post-info-md"><span><a href="/articles/2023/09/bjdctf2020-easymd5-web/index.md" title="阅读原始文档" class="link-to-markdown">阅读原始文档</a></span></div>
+      <div class="post-info-share">
+        <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="https://alextang.top/articles/2023/09/bjdctf2020-easymd5-web/" data-title="BJDCTF2020-EasyMD5-Web" data-via="a1extang" data-hashtags="PHP,CTF,Web"><i class="fa-brands fa-twitter fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://alextang.top/articles/2023/09/bjdctf2020-easymd5-web/" data-hashtag="PHP"><i class="fa-brands fa-facebook-square fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://alextang.top/articles/2023/09/bjdctf2020-easymd5-web/" data-title="BJDCTF2020-EasyMD5-Web"><i class="fa-brands fa-weibo fa-fw" aria-hidden="true"></i></a>
+  </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/php/' class="post-tag">PHP</a><a href='/tags/ctf/' class="post-tag">CTF</a><a href='/tags/web/' class="post-tag">Web</a></section>
+    <section>
+      <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div>
+
+  <div class="post-nav"><a href="/articles/2023/09/wp-susctf%E6%8B%9B%E6%96%B0%E9%A2%98%E7%9B%AE-misc/" class="post-nav-item" rel="prev" title="WP-SUSCTF招新题目-Misc"><i class="fa-solid fa-angle-left fa-fw" aria-hidden="true"></i>WP-SUSCTF招新题目-Misc</a>
+      <a href="/articles/2023/09/reverse%E5%85%A5%E9%97%A82%E9%A2%98/" class="post-nav-item" rel="next" title="Reverse入门2题">Reverse入门2题<i class="fa-solid fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+</article></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright fa-fw" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2024</span><span class="author" itemprop="copyrightHolder">
+              <a href="/">alextang</a></span><span class="license footer-divider"><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div><div class="footer-line statistics"></div><div class="footer-line visitor">
+          <span id="busuanzi_container_site_uv" title='总访客数'><i class="fa-regular fa-user fa-fw" aria-hidden="true"></i>&nbsp;<span id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span></span><span id="busuanzi_container_site_pv" class="footer-divider" title='总访问量'><i class="fa-regular fa-eye fa-fw" aria-hidden="true"></i>&nbsp;<span id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span></span>
+        </div><div class="footer-line beian"><span class="icp footer-divider"><a href="https://icp.gov.moe/?keyword=20238299" target="_blank">萌ICP备20238299号</a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons animate__faster d-none"><div class="fixed-button back-to-top" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up fa-fw" aria-hidden="true"></i><span class="variant-numeric d-none">0%</span>
+        </div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">FixIt 主题在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js" defer></script><script src="/lib/lunr/lunr.stemmer.support.min.js" defer></script><script src="/lib/lunr/lunr.zh.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js" async defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/copy-tex.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/mhchem.min.js" defer></script><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async defer></script><script>window.config={"code":{"copyTitle":"复制到剪贴板","editLockTitle":"锁定可编辑代码块","editUnLockTitle":"解锁可编辑代码块","editable":true,"maxShownLines":10},"comment":{"enable":false},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script src="/js/theme.min.js" defer></script></body>
+</html>

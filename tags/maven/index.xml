@@ -1,0 +1,16 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>Maven - 标签 - 好好学习</title>
+    <link>https://alextang.top/tags/maven/</link>
+    <description>Maven - 标签 - 好好学习</description>
+    <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>alextang@sdu.edu.cn (alextang)</managingEditor>
+      <webMaster>alextang@sdu.edu.cn (alextang)</webMaster><lastBuildDate>Sun, 07 Apr 2024 15:59:24 &#43;0800</lastBuildDate><atom:link href="https://alextang.top/tags/maven/" rel="self" type="application/rss+xml" /><item>
+  <title>使用Maven管理项目</title>
+  <link>https://alextang.top/articles/2024/04/maven/</link>
+  <pubDate>Sun, 07 Apr 2024 15:59:24 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2024/04/maven/</guid>
+  <description><![CDATA[使用Maven管理项目 注意： 开始之前，看看你C盘空间够不够，最好预留2GB空间以上！ 吐槽： 很多电脑预装系统C盘都给得巨少，就算不装软件，一些]]></description>
+</item>
+</channel>
+</rss>

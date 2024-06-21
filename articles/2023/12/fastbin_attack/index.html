@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>Fastbin Attack - 好好学习</title><meta name="author" content="alextang">
+<meta name="author-link" content="">
+<meta name="description" content="关于Fastbin机制 在Glibc 2.25及之前的版本中，如果free的chunk大小小于get_max_fast()，也就是全局变量glo" /><meta name="keywords" content='CTF, Pwn, Heap, Fastbin' />
+  <meta itemprop="name" content="Fastbin Attack">
+  <meta itemprop="description" content="关于Fastbin机制 在Glibc 2.25及之前的版本中，如果free的chunk大小小于get_max_fast()，也就是全局变量glo">
+  <meta itemprop="datePublished" content="2023-12-12T15:05:40+08:00">
+  <meta itemprop="dateModified" content="2023-12-12T15:05:40+08:00">
+  <meta itemprop="wordCount" content="2692">
+  <meta itemprop="keywords" content="CTF,Pwn,Heap,Fastbin"><meta property="og:url" content="https://alextang.top/articles/2023/12/fastbin_attack/">
+  <meta property="og:site_name" content="好好学习">
+  <meta property="og:title" content="Fastbin Attack">
+  <meta property="og:description" content="关于Fastbin机制 在Glibc 2.25及之前的版本中，如果free的chunk大小小于get_max_fast()，也就是全局变量glo">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2023-12-12T15:05:40+08:00">
+    <meta property="article:modified_time" content="2023-12-12T15:05:40+08:00">
+    <meta property="article:tag" content="CTF">
+    <meta property="article:tag" content="Pwn">
+    <meta property="article:tag" content="Heap">
+    <meta property="article:tag" content="Fastbin">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Fastbin Attack">
+  <meta name="twitter:description" content="关于Fastbin机制 在Glibc 2.25及之前的版本中，如果free的chunk大小小于get_max_fast()，也就是全局变量glo">
+      <meta name="twitter:site" content="@a1extang">
+<meta name="application-name" content="a1extang">
+<meta name="apple-mobile-web-app-title" content="a1extang"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" href="https://alextang.top/articles/2023/12/fastbin_attack/" /><link rel="prev" href="https://alextang.top/articles/2023/12/heap_overflow/" /><link rel="next" href="https://alextang.top/articles/2023/12/cglibc/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Fastbin Attack",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https:\/\/alextang.top\/articles\/2023\/12\/fastbin_attack\/"
+    },"genre": "posts","keywords": "CTF, Pwn, Heap, Fastbin","wordcount":  2692 ,
+    "url": "https:\/\/alextang.top\/articles\/2023\/12\/fastbin_attack\/","datePublished": "2023-12-12T15:05:40+08:00","dateModified": "2023-12-12T15:05:40+08:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "alextang"
+      },"description": ""
+  }
+  </script></head>
+  <body data-header-desktop="sticky" data-header-mobile="auto"><script>(window.localStorage?.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('data-theme', 'dark');</script><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="好好学习"><span class="header-title-text">a1extang</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/posts/"
+                
+                
+              ><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden="true"></i> 文章</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/categories/"
+                
+                
+              ><i class="fa-solid fa-th fa-fw fa-sm" aria-hidden="true"></i> 分类</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/tags/"
+                
+                
+              ><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden="true"></i> 标签</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/about/"
+                title="关于"
+                
+              ><i class="fas fa-user fa-fw fa-sm" aria-hidden="true"></i> 关于</a></li><li class="menu-item delimiter"></li><li class="menu-item search" id="search-desktop">
+            <input type="text" placeholder="搜索文章标题或内容……" id="search-input-desktop">
+            <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+              <i class="fa-solid fa-search fa-fw" aria-hidden="true"></i>
+            </a>
+            <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+              <i class="fa-solid fa-times-circle fa-fw" aria-hidden="true"></i>
+            </a>
+            <span class="search-button search-loading" id="search-loading-desktop">
+              <i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+            </span>
+          </li><li class="menu-item theme-switch" title="切换主题">
+          <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+        </li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="好好学习"><span class="header-title-text">a1extang</span></a><span class="header-subtitle"></span></div>
+      <div class="menu-toggle" id="menu-toggle-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="search-wrapper">
+            <div class="search mobile" id="search-mobile">
+              <input type="text" placeholder="搜索文章标题或内容……" id="search-input-mobile">
+              <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                <i class="fa-solid fa-search fa-fw" aria-hidden="true"></i>
+              </a>
+              <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                <i class="fa-solid fa-times-circle fa-fw" aria-hidden="true"></i>
+              </a>
+              <span class="search-button search-loading" id="search-loading-mobile">
+                <i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+              </span>
+            </div>
+            <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+              取消
+            </a>
+          </li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/posts/"
+                  
+                  
+                ><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden="true"></i> 文章</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/categories/"
+                  
+                  
+                ><i class="fa-solid fa-th fa-fw fa-sm" aria-hidden="true"></i> 分类</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/tags/"
+                  
+                  
+                ><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden="true"></i> 标签</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/about/"
+                  title="关于"
+                  
+                ><i class="fas fa-user fa-fw fa-sm" aria-hidden="true"></i> 关于</a></li><li class="menu-item menu-system">
+          <span class="menu-system-item theme-switch" title="切换主题"><i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i></span></li>
+      </ul>
+    </nav>
+  </div>
+</header><div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+  </div>
+  <div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+  </div><main class="container"><aside class="toc" id="toc-auto"><h2 class="toc-title">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down fa-fw" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside>
+
+  <aside class="aside-custom">
+    </aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>Fastbin Attack</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=large 2x" sizes="auto" data-title="alextang" data-alt="alextang" class="avatar" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/>&nbsp;alextang</span></span>
+          <span class="post-category">收录于 <a href="/categories/pwn/"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Pwn</a></span></div>
+      <div class="post-meta-line"><span title="发布于 2023-12-12 15:05:40"><i class="fa-regular fa-calendar-alt fa-fw me-1" aria-hidden="true"></i><time datetime="2023-12-12">2023-12-12</time></span>&nbsp;<span title="更新于 2023-12-12 15:05:40"><i class="fa-regular fa-edit fa-fw me-1" aria-hidden="true"></i><time datetime="2023-12-12">2023-12-12</time></span>&nbsp;<span title="2692 字"><i class="fa-solid fa-pencil-alt fa-fw me-1" aria-hidden="true"></i>约 2700 字</span>&nbsp;<span><i class="fa-regular fa-clock fa-fw me-1" aria-hidden="true"></i>预计阅读 6 分钟</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#关于fastbin机制">关于Fastbin机制</a></li>
+    <li><a href="#修改fd指针">修改fd指针</a>
+      <ul>
+        <li><a href="#heap-overflow">Heap Overflow</a></li>
+        <li><a href="#修改fd指针低位">修改fd指针低位</a></li>
+        <li><a href="#double-free">Double Free</a></li>
+        <li><a href="#改写global-max-fast">改写Global Max Fast</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><h2 id="关于fastbin机制">关于Fastbin机制</h2>
+<p>在Glibc 2.25及之前的版本中，如果free的chunk大小小于<code>get_max_fast()</code>，也就是全局变量<code>global_max_fast</code>的值，那么他就会被放入Fastbin的链表中。前面说过，Fastbin实际上是一个单链表，它通过free chunk的fd指针来链接chunks。每当有新的chunk加入Fastbin，Fastbin就会将此chunk插入链表的开头。这里我们看下free函数中有关Fastbin的部分：</p>
+<div class="highlight" id="id-1"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="k">if</span> <span class="p">((</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)(</span><span class="n">size</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)(</span><span class="nf">get_max_fast</span> <span class="p">())</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="cp">#if TRIM_FASTBINS
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>      <span class="cm">/*
+</span></span></span><span class="line"><span class="cl"><span class="cm">	If TRIM_FASTBINS set, don&#39;t place chunks
+</span></span></span><span class="line"><span class="cl"><span class="cm">	bordering top into fastbins
+</span></span></span><span class="line"><span class="cl"><span class="cm">      */</span>
+</span></span><span class="line"><span class="cl">      <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nf">chunk_at_offset</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span> <span class="o">!=</span> <span class="n">av</span><span class="o">-&gt;</span><span class="n">top</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="cp">#endif
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>      <span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="nf">__builtin_expect</span> <span class="p">(</span><span class="nf">chunksize_nomask</span> <span class="p">(</span><span class="nf">chunk_at_offset</span> <span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">size</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">			  <span class="o">&lt;=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">SIZE_SZ</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="o">||</span> <span class="nf">__builtin_expect</span> <span class="p">(</span><span class="nf">chunksize</span> <span class="p">(</span><span class="nf">chunk_at_offset</span> <span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">size</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">			     <span class="o">&gt;=</span> <span class="n">av</span><span class="o">-&gt;</span><span class="n">system_mem</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">      <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="cm">/* We might not have a lock at this point and concurrent modifications
+</span></span></span><span class="line"><span class="cl"><span class="cm">	   of system_mem might have let to a false positive.  Redo the test
+</span></span></span><span class="line"><span class="cl"><span class="cm">	   after getting the lock.  */</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">have_lock</span>
+</span></span><span class="line"><span class="cl">	    <span class="o">||</span> <span class="p">({</span> <span class="nf">assert</span> <span class="p">(</span><span class="n">locked</span> <span class="o">==</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		  <span class="nf">__libc_lock_lock</span> <span class="p">(</span><span class="n">av</span><span class="o">-&gt;</span><span class="n">mutex</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		  <span class="n">locked</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		  <span class="nf">chunksize_nomask</span> <span class="p">(</span><span class="nf">chunk_at_offset</span> <span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">size</span><span class="p">))</span> <span class="o">&lt;=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">SIZE_SZ</span>
+</span></span><span class="line"><span class="cl">		    <span class="o">||</span> <span class="nf">chunksize</span> <span class="p">(</span><span class="nf">chunk_at_offset</span> <span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">size</span><span class="p">))</span> <span class="o">&gt;=</span> <span class="n">av</span><span class="o">-&gt;</span><span class="n">system_mem</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	      <span class="p">}))</span>
+</span></span><span class="line"><span class="cl">	  <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	    <span class="n">errstr</span> <span class="o">=</span> <span class="s">&#34;free(): invalid next size (fast)&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	    <span class="k">goto</span> <span class="n">errout</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="n">have_lock</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	  <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	    <span class="nf">__libc_lock_unlock</span> <span class="p">(</span><span class="n">av</span><span class="o">-&gt;</span><span class="n">mutex</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	    <span class="n">locked</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nf">free_perturb</span> <span class="p">(</span><span class="nf">chunk2mem</span><span class="p">(</span><span class="n">p</span><span class="p">),</span> <span class="n">size</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">SIZE_SZ</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nf">set_fastchunks</span><span class="p">(</span><span class="n">av</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">idx</span> <span class="o">=</span> <span class="nf">fastbin_index</span><span class="p">(</span><span class="n">size</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">fb</span> <span class="o">=</span> <span class="o">&amp;</span><span class="nf">fastbin</span> <span class="p">(</span><span class="n">av</span><span class="p">,</span> <span class="n">idx</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="cm">/* Atomically link P to its fastbin: P-&gt;FD = *FB; *FB = P;  */</span>
+</span></span><span class="line"><span class="cl">    <span class="n">mchunkptr</span> <span class="n">old</span> <span class="o">=</span> <span class="o">*</span><span class="n">fb</span><span class="p">,</span> <span class="n">old2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">old_idx</span> <span class="o">=</span> <span class="o">~</span><span class="mi">0u</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">do</span>
+</span></span><span class="line"><span class="cl">      <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="cm">/* Check that the top of the bin is not the record we are going to add
+</span></span></span><span class="line"><span class="cl"><span class="cm">	   (i.e., double free).  */</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="nf">__builtin_expect</span> <span class="p">(</span><span class="n">old</span> <span class="o">==</span> <span class="n">p</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">	  <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	    <span class="n">errstr</span> <span class="o">=</span> <span class="s">&#34;double free or corruption (fasttop)&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	    <span class="k">goto</span> <span class="n">errout</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="cm">/* Check that size of fastbin chunk at the top is the same as
+</span></span></span><span class="line"><span class="cl"><span class="cm">	   size of the chunk that we are adding.  We can dereference OLD
+</span></span></span><span class="line"><span class="cl"><span class="cm">	   only if we have the lock, otherwise it might have already been
+</span></span></span><span class="line"><span class="cl"><span class="cm">	   deallocated.  See use of OLD_IDX below for the actual check.  */</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">have_lock</span> <span class="o">&amp;&amp;</span> <span class="n">old</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	  <span class="n">old_idx</span> <span class="o">=</span> <span class="nf">fastbin_index</span><span class="p">(</span><span class="nf">chunksize</span><span class="p">(</span><span class="n">old</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">	<span class="n">p</span><span class="o">-&gt;</span><span class="n">fd</span> <span class="o">=</span> <span class="n">old2</span> <span class="o">=</span> <span class="n">old</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">while</span> <span class="p">((</span><span class="n">old</span> <span class="o">=</span> <span class="nf">catomic_compare_and_exchange_val_rel</span> <span class="p">(</span><span class="n">fb</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">old2</span><span class="p">))</span> <span class="o">!=</span> <span class="n">old2</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">have_lock</span> <span class="o">&amp;&amp;</span> <span class="n">old</span> <span class="o">!=</span> <span class="nb">NULL</span> <span class="o">&amp;&amp;</span> <span class="nf">__builtin_expect</span> <span class="p">(</span><span class="n">old_idx</span> <span class="o">!=</span> <span class="n">idx</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">      <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">errstr</span> <span class="o">=</span> <span class="s">&#34;invalid fastbin entry (free)&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">goto</span> <span class="n">errout</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>这里需要注意的是以下几点：</p>
+<ul>
+<li>在插入链表前首先要计算<code>idx</code>。由于Fastbin不只有一个链，不同大小的chunk会放在不同的链上。</li>
+<li>45行开始，free会检查Fastbin链表的首元素。如果本次释放的仍然是这个元素，那么就会throw double free的错误。但是由于free只检查首元素，那么存在于链表后部的chunk是否被double free是检查不出来的。</li>
+</ul>
+<p>接着来看malloc部分有关Fastbin的内容，即如果用户malloc的大小不超过<code>global_max_fast</code>的值，那么就直接从Fastbin中取一块符合要求的chunk返回。</p>
+<div class="highlight" id="id-2"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cm">/*
+</span></span></span><span class="line"><span class="cl"><span class="cm">     If the size qualifies as a fastbin, first check corresponding bin.
+</span></span></span><span class="line"><span class="cl"><span class="cm">     This code is safe to execute even if av is not yet initialized, so we
+</span></span></span><span class="line"><span class="cl"><span class="cm">     can try it without checking, which saves some time on this fast path.
+</span></span></span><span class="line"><span class="cl"><span class="cm">   */</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="p">((</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="n">nb</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="nf">get_max_fast</span> <span class="p">()))</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="n">idx</span> <span class="o">=</span> <span class="nf">fastbin_index</span> <span class="p">(</span><span class="n">nb</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">      <span class="n">mfastbinptr</span> <span class="o">*</span><span class="n">fb</span> <span class="o">=</span> <span class="o">&amp;</span><span class="nf">fastbin</span> <span class="p">(</span><span class="n">av</span><span class="p">,</span> <span class="n">idx</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">      <span class="n">mchunkptr</span> <span class="n">pp</span> <span class="o">=</span> <span class="o">*</span><span class="n">fb</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">      <span class="k">do</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">          <span class="n">victim</span> <span class="o">=</span> <span class="n">pp</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">          <span class="k">if</span> <span class="p">(</span><span class="n">victim</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">      <span class="k">while</span> <span class="p">((</span><span class="n">pp</span> <span class="o">=</span> <span class="nf">catomic_compare_and_exchange_val_acq</span> <span class="p">(</span><span class="n">fb</span><span class="p">,</span> <span class="n">victim</span><span class="o">-&gt;</span><span class="n">fd</span><span class="p">,</span> <span class="n">victim</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">             <span class="o">!=</span> <span class="n">victim</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">      <span class="k">if</span> <span class="p">(</span><span class="n">victim</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">          <span class="k">if</span> <span class="p">(</span><span class="nf">__builtin_expect</span> <span class="p">(</span><span class="nf">fastbin_index</span> <span class="p">(</span><span class="nf">chunksize</span> <span class="p">(</span><span class="n">victim</span><span class="p">))</span> <span class="o">!=</span> <span class="n">idx</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">            <span class="p">{</span>
+</span></span><span class="line"><span class="cl">              <span class="n">errstr</span> <span class="o">=</span> <span class="s">&#34;malloc(): memory corruption (fast)&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="nl">errout</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">              <span class="nf">malloc_printerr</span> <span class="p">(</span><span class="n">check_action</span><span class="p">,</span> <span class="n">errstr</span><span class="p">,</span> <span class="nf">chunk2mem</span> <span class="p">(</span><span class="n">victim</span><span class="p">),</span> <span class="n">av</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">              <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">          <span class="nf">check_remalloced_chunk</span> <span class="p">(</span><span class="n">av</span><span class="p">,</span> <span class="n">victim</span><span class="p">,</span> <span class="n">nb</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">          <span class="kt">void</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="nf">chunk2mem</span> <span class="p">(</span><span class="n">victim</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">          <span class="nf">alloc_perturb</span> <span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">bytes</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">          <span class="k">return</span> <span class="n">p</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>这里安全性检查的部分只有一个地方，22行。当取出该chunk之前，会首先检查该chunk的size部分是不是和它所存放在的fastbin链表的idx值相同。假如说取出的是0x30的chunk，那么改chunk的size区域的8byte的值也必须是0x30（当然实际情况应该是0x31，因为有AMP三位的存在。但是<code>chunksize()</code>函数会忽略掉低三位）。</p>
+<p>根据上面的源码分析，我们可以发现Fastbin机制对chunk的安全性检查并不是很多。所以，我们可以利用以下缺陷进行漏利用。</p>
+<h2 id="修改fd指针">修改fd指针</h2>
+<h3 id="heap-overflow">Heap Overflow</h3>
+<p>由于malloc的一块区域很可能是程序上次free的，同时free了之后并不会清空chunk的data。那么如果出现了heap overflow，</p>
+<p>并且fastbin已经成链的情况下，我们可以通过覆写free chunk的fd的数据，来将我们想要的内存区域放入Fastbin中，然后再malloc取出想要的内存区域进行读写。下面是Nu1L Book中的一个简单例子：</p>
+<div class="highlight" id="id-3"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cm">/*Glibc 2.23*/</span>
+</span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;unistd.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="k">typedef</span> <span class="k">struct</span> <span class="n">animal</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">char</span> <span class="n">desc</span><span class="p">[</span><span class="mh">0x8</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">size_t</span> <span class="n">lifetime</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span><span class="n">Animal</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Animal</span> <span class="o">*</span><span class="n">A</span> <span class="o">=</span> <span class="nf">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">Animal</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Animal</span> <span class="o">*</span><span class="n">B</span> <span class="o">=</span> <span class="nf">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">Animal</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Animal</span> <span class="o">*</span><span class="n">C</span> <span class="o">=</span> <span class="nf">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">Animal</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kt">char</span> <span class="o">*</span><span class="n">target</span> <span class="o">=</span> <span class="nf">malloc</span><span class="p">(</span><span class="mh">0x10</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">memcpy</span><span class="p">(</span><span class="n">target</span><span class="p">,</span><span class="s">&#34;THIS IS A SECRET&#34;</span><span class="p">,</span> <span class="mh">0x10</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nf">malloc</span><span class="p">(</span><span class="mh">0x80</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">free</span><span class="p">(</span><span class="n">C</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">free</span><span class="p">(</span><span class="n">B</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kt">char</span> <span class="o">*</span><span class="n">payload</span> <span class="o">=</span> <span class="s">&#34;AAAAAAAAAAAAAAAAAAAAAAAA</span><span class="se">\x21\x00\x00\x00\x00\x00\x00\x00\x60</span><span class="s">&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">memcpy</span><span class="p">(</span><span class="n">A</span><span class="o">-&gt;</span><span class="n">desc</span><span class="p">,</span> <span class="n">payload</span><span class="p">,</span> <span class="mh">0x21</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Animal</span> <span class="o">*</span><span class="n">D</span> <span class="o">=</span> <span class="nf">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">Animal</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Animal</span> <span class="o">*</span><span class="n">E</span> <span class="o">=</span> <span class="nf">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">Animal</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">write</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">E</span><span class="o">-&gt;</span><span class="n">desc</span><span class="p">,</span><span class="mh">0x10</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>由于是演示代码，那就一边调试一边看好了。我们首先先将前面的四个malloc过掉，看下目前heap的结构：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231212205338151.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231212205338151.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231212205338151.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231212205338151.png?size=large 2x" sizes="auto" data-title="heap" data-alt="heap" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>自上而下3个0x20的chunk就是我们malloc 的三个。0x602060的chunk是target块。我们接着向下，向target内写入0x10个字符：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231212205641175.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231212205641175.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231212205641175.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231212205641175.png?size=large 2x" sizes="auto" data-title="heap" data-alt="heap" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>写入成功，到此时也没有什么问题。接下来还有一个malloc(0x80)，和两个free，我们直接过掉free，再次看看bins和heap的结构：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231212205923591.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231212205923591.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231212205923591.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231212205923591.png?size=large 2x" sizes="auto" data-title="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231212205923591.png" data-alt="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231212205923591.png" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>此时fastbin是由B指向C的，因为先释放的C。同时heap中的B、C变成了free chunk。接下来，我们对A chunk（0x602000）进行overflow，试图修改已经free掉的B chunk的fd指针。为了满足安全性检测，我们不能改变B chunk中size的值。于是，payload如下：</p>
+<div class="highlight" id="id-4"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="kt">char</span> <span class="o">*</span><span class="n">payload</span> <span class="o">=</span> <span class="s">&#34;AAAAAAAAAAAAAAAAAAAAAAAA</span><span class="se">\x21\x00\x00\x00\x00\x00\x00\x00\x60</span><span class="s">&#34;</span><span class="p">;</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>写入后的效果为：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231212210817331.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231212210817331.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231212210817331.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231212210817331.png?size=large 2x" sizes="auto" data-title="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231212210817331.png" data-alt="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231212210817331.png" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>我们通过修改B chunk fd的低位地址0x20至0x60，可以将bins的链表改为B指向target。而由于C从fastbin中解链，自然变为了Allocated chunk。此时，我们只需要malloc两次，便可以获得target chunk，也就是0x602060这片区域。</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231212211331710.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231212211331710.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231212211331710.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231212211331710.png?size=large 2x" sizes="auto" data-title="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231212211331710.png" data-alt="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20231212211331710.png" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>最后一次malloc也是成功返回了target chunk的data部分并且输出了target chunk中的内容。</p>
+<h3 id="修改fd指针低位">修改fd指针低位</h3>
+<p>由于系统ASLR的限制，想要对某一块内存进行修改，必须知道目标内存的地址，这往往需要其他漏洞来泄露内存。但是堆的分配在系统中的偏移是固定的，分配的堆内存地址相对于堆内存的基地址是固定的。因此，我们只需要修改free chunk中fd指针的低位就可以指向我们想要的chunk，不需要进行信息泄露就可以进行内存的Overlap攻击。</p>
+<h3 id="double-free">Double Free</h3>
+<p>即使Ptmalloc2会检查Fastbin的第一个chunk是否是当前被free的chunk，从而来检查是否存在double free。但是它并不检查fastbin中的其它chunk。那么就可以先free另一个chunk，再进行double free就不会被检查到。假如此时我们释放了A，再释放了B，接着释放A，则可以得到A-&gt;B-&gt;A-&gt;B……这样一个无限循环的链表。那么此时如果malloc一个相同大小的chunk，就会得到一个“既死又活”的A chunk。那么我们对malloc的块进行修改，就可以同时改掉fastbin的链，让A指向我们想要覆写的区块，然后再malloc2次获得此区块。该部分演示见 <a href="https://github.com/shellphish/how2heap/blob/master/glibc_2.23/fastbin_dup.c"target="_blank" rel="external nofollow noopener noreferrer">how2heap-Fastbin dup</a>，这里不再演示。</p>
+<h3 id="改写global-max-fast">改写Global Max Fast</h3>
+<p>由于arena的位置在glibc的bss段	我们可以通过改写全局变数Global Max Fast的值，处理特定大小的chunk，进而可以在arena往后的任意地址写入一个堆地址。</p>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod">
+        <span title="更新于 2023-12-12 15:05:40">更新于 2023-12-12&nbsp;</span>
+      </div><div class="post-info-license">
+          <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span>
+        </div></div>
+    <div class="post-info-line">
+      <div class="post-info-md"><span><a href="/articles/2023/12/fastbin_attack/index.md" title="阅读原始文档" class="link-to-markdown">阅读原始文档</a></span></div>
+      <div class="post-info-share">
+        <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="https://alextang.top/articles/2023/12/fastbin_attack/" data-title="Fastbin Attack" data-via="a1extang" data-hashtags="CTF,Pwn,Heap,Fastbin"><i class="fa-brands fa-twitter fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://alextang.top/articles/2023/12/fastbin_attack/" data-hashtag="CTF"><i class="fa-brands fa-facebook-square fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://alextang.top/articles/2023/12/fastbin_attack/" data-title="Fastbin Attack"><i class="fa-brands fa-weibo fa-fw" aria-hidden="true"></i></a>
+  </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/ctf/' class="post-tag">CTF</a><a href='/tags/pwn/' class="post-tag">Pwn</a><a href='/tags/heap/' class="post-tag">Heap</a><a href='/tags/fastbin/' class="post-tag">Fastbin</a></section>
+    <section>
+      <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div>
+
+  <div class="post-nav"><a href="/articles/2023/12/heap_overflow/" class="post-nav-item" rel="prev" title="堆溢出利用"><i class="fa-solid fa-angle-left fa-fw" aria-hidden="true"></i>堆溢出利用</a>
+      <a href="/articles/2023/12/cglibc/" class="post-nav-item" rel="next" title="彻底解决Glibc版本问题">彻底解决Glibc版本问题<i class="fa-solid fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+</article></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright fa-fw" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2024</span><span class="author" itemprop="copyrightHolder">
+              <a href="/">alextang</a></span><span class="license footer-divider"><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div><div class="footer-line statistics"></div><div class="footer-line visitor">
+          <span id="busuanzi_container_site_uv" title='总访客数'><i class="fa-regular fa-user fa-fw" aria-hidden="true"></i>&nbsp;<span id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span></span><span id="busuanzi_container_site_pv" class="footer-divider" title='总访问量'><i class="fa-regular fa-eye fa-fw" aria-hidden="true"></i>&nbsp;<span id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span></span>
+        </div><div class="footer-line beian"><span class="icp footer-divider"><a href="https://icp.gov.moe/?keyword=20238299" target="_blank">萌ICP备20238299号</a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons animate__faster d-none"><div class="fixed-button back-to-top" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up fa-fw" aria-hidden="true"></i><span class="variant-numeric d-none">0%</span>
+        </div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">FixIt 主题在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js" defer></script><script src="/lib/lunr/lunr.stemmer.support.min.js" defer></script><script src="/lib/lunr/lunr.zh.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js" async defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/copy-tex.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/mhchem.min.js" defer></script><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async defer></script><script>window.config={"code":{"copyTitle":"复制到剪贴板","editLockTitle":"锁定可编辑代码块","editUnLockTitle":"解锁可编辑代码块","editable":true,"maxShownLines":10},"comment":{"enable":false},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script src="/js/theme.min.js" defer></script></body>
+</html>

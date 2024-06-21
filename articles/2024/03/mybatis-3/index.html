@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>使用Mybatis进行复杂查询 - 好好学习</title><meta name="author" content="alextang">
+<meta name="author-link" content="">
+<meta name="description" content="Mybatis进行复杂查询 要将一个查询映射为一个具有多个复杂属性的类对象的时候，建议使用resultMap将数据库的字段和类的属性进行手动的" /><meta name="keywords" content='Java, Mybatis, JavaEE' />
+  <meta itemprop="name" content="使用Mybatis进行复杂查询">
+  <meta itemprop="description" content="Mybatis进行复杂查询 要将一个查询映射为一个具有多个复杂属性的类对象的时候，建议使用resultMap将数据库的字段和类的属性进行手动的">
+  <meta itemprop="datePublished" content="2024-03-29T22:01:50+08:00">
+  <meta itemprop="dateModified" content="2024-03-29T22:01:50+08:00">
+  <meta itemprop="wordCount" content="1724">
+  <meta itemprop="keywords" content="Java,Mybatis,JavaEE"><meta property="og:url" content="https://alextang.top/articles/2024/03/mybatis-3/">
+  <meta property="og:site_name" content="好好学习">
+  <meta property="og:title" content="使用Mybatis进行复杂查询">
+  <meta property="og:description" content="Mybatis进行复杂查询 要将一个查询映射为一个具有多个复杂属性的类对象的时候，建议使用resultMap将数据库的字段和类的属性进行手动的">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-03-29T22:01:50+08:00">
+    <meta property="article:modified_time" content="2024-03-29T22:01:50+08:00">
+    <meta property="article:tag" content="Java">
+    <meta property="article:tag" content="Mybatis">
+    <meta property="article:tag" content="JavaEE">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="使用Mybatis进行复杂查询">
+  <meta name="twitter:description" content="Mybatis进行复杂查询 要将一个查询映射为一个具有多个复杂属性的类对象的时候，建议使用resultMap将数据库的字段和类的属性进行手动的">
+      <meta name="twitter:site" content="@a1extang">
+<meta name="application-name" content="a1extang">
+<meta name="apple-mobile-web-app-title" content="a1extang"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" href="https://alextang.top/articles/2024/03/mybatis-3/" /><link rel="prev" href="https://alextang.top/articles/2024/03/mybatis-2/" /><link rel="next" href="https://alextang.top/articles/2024/03/mybatis-4/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "使用Mybatis进行复杂查询",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https:\/\/alextang.top\/articles\/2024\/03\/mybatis-3\/"
+    },"genre": "posts","keywords": "Java, Mybatis, JavaEE","wordcount":  1724 ,
+    "url": "https:\/\/alextang.top\/articles\/2024\/03\/mybatis-3\/","datePublished": "2024-03-29T22:01:50+08:00","dateModified": "2024-03-29T22:01:50+08:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "alextang"
+      },"description": ""
+  }
+  </script></head>
+  <body data-header-desktop="sticky" data-header-mobile="auto"><script>(window.localStorage?.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('data-theme', 'dark');</script><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="好好学习"><span class="header-title-text">a1extang</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/posts/"
+                
+                
+              ><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden="true"></i> 文章</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/categories/"
+                
+                
+              ><i class="fa-solid fa-th fa-fw fa-sm" aria-hidden="true"></i> 分类</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/tags/"
+                
+                
+              ><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden="true"></i> 标签</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/about/"
+                title="关于"
+                
+              ><i class="fas fa-user fa-fw fa-sm" aria-hidden="true"></i> 关于</a></li><li class="menu-item delimiter"></li><li class="menu-item search" id="search-desktop">
+            <input type="text" placeholder="搜索文章标题或内容……" id="search-input-desktop">
+            <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+              <i class="fa-solid fa-search fa-fw" aria-hidden="true"></i>
+            </a>
+            <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+              <i class="fa-solid fa-times-circle fa-fw" aria-hidden="true"></i>
+            </a>
+            <span class="search-button search-loading" id="search-loading-desktop">
+              <i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+            </span>
+          </li><li class="menu-item theme-switch" title="切换主题">
+          <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+        </li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="好好学习"><span class="header-title-text">a1extang</span></a><span class="header-subtitle"></span></div>
+      <div class="menu-toggle" id="menu-toggle-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="search-wrapper">
+            <div class="search mobile" id="search-mobile">
+              <input type="text" placeholder="搜索文章标题或内容……" id="search-input-mobile">
+              <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                <i class="fa-solid fa-search fa-fw" aria-hidden="true"></i>
+              </a>
+              <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                <i class="fa-solid fa-times-circle fa-fw" aria-hidden="true"></i>
+              </a>
+              <span class="search-button search-loading" id="search-loading-mobile">
+                <i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+              </span>
+            </div>
+            <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+              取消
+            </a>
+          </li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/posts/"
+                  
+                  
+                ><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden="true"></i> 文章</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/categories/"
+                  
+                  
+                ><i class="fa-solid fa-th fa-fw fa-sm" aria-hidden="true"></i> 分类</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/tags/"
+                  
+                  
+                ><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden="true"></i> 标签</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/about/"
+                  title="关于"
+                  
+                ><i class="fas fa-user fa-fw fa-sm" aria-hidden="true"></i> 关于</a></li><li class="menu-item menu-system">
+          <span class="menu-system-item theme-switch" title="切换主题"><i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i></span></li>
+      </ul>
+    </nav>
+  </div>
+</header><div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+  </div>
+  <div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+  </div><main class="container"><aside class="toc" id="toc-auto"><h2 class="toc-title">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down fa-fw" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside>
+
+  <aside class="aside-custom">
+    </aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>使用Mybatis进行复杂查询</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=large 2x" sizes="auto" data-title="alextang" data-alt="alextang" class="avatar" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/>&nbsp;alextang</span></span>
+          <span class="post-category">收录于 <a href="/categories/java/"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Java</a></span></div>
+      <div class="post-meta-line"><span title="发布于 2024-03-29 22:01:50"><i class="fa-regular fa-calendar-alt fa-fw me-1" aria-hidden="true"></i><time datetime="2024-03-29">2024-03-29</time></span>&nbsp;<span title="更新于 2024-03-29 22:01:50"><i class="fa-regular fa-edit fa-fw me-1" aria-hidden="true"></i><time datetime="2024-03-29">2024-03-29</time></span>&nbsp;<span title="1724 字"><i class="fa-solid fa-pencil-alt fa-fw me-1" aria-hidden="true"></i>约 1800 字</span>&nbsp;<span><i class="fa-regular fa-clock fa-fw me-1" aria-hidden="true"></i>预计阅读 4 分钟</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#mybatis进行复杂查询">Mybatis进行复杂查询</a></li>
+    <li><a href="#事务操作">事务操作</a></li>
+    <li><a href="#动态sql">动态SQL</a></li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><h2 id="mybatis进行复杂查询">Mybatis进行复杂查询</h2>
+<p>要将一个查询映射为一个具有多个复杂属性的类对象的时候，建议使用<code>resultMap</code>将数据库的字段和类的属性进行手动的对应。例如我们要查询下面的内容以便收集对应老师和学生的信息：</p>
+<div class="highlight" id="id-1"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-mysql" data-lang="mysql"><span class="line"><span class="cl"><span class="k">select</span><span class="w"> </span><span class="n">student</span><span class="p">.</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">student</span><span class="p">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">student</span><span class="p">.</span><span class="n">sex</span><span class="p">,</span><span class="w"> </span><span class="n">teacher</span><span class="p">.</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">teacher</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">student</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">inner</span><span class="w"> </span><span class="k">join</span><span class="w"> </span><span class="n">teach</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">teach</span><span class="p">.</span><span class="n">sid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">student</span><span class="p">.</span><span class="n">id</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">inner</span><span class="w"> </span><span class="k">join</span><span class="w"> </span><span class="n">teacher</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">teach</span><span class="p">.</span><span class="n">tid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">teacher</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">teacher</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">11238</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>而我们<code>Teacher</code>类的定义如下：</p>
+<div class="highlight" id="id-2"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Data</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Teacher</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">id</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">name</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Student</span><span class="o">&gt;</span><span class="w"> </span><span class="n">studentList</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>于是我们可以使用以下的<code>resultMap</code>将其和数据表对应起来：</p>
+<div class="highlight" id="id-3"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;select</span> <span class="na">id=</span><span class="s">&#34;selectTeacherById&#34;</span> <span class="na">resultMap=</span><span class="s">&#34;getTeacher&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">    select student.id as sid, student.name as sname, student.sex, teacher.id as tid, teacher.name as tname from student
+</span></span><span class="line"><span class="cl">    inner join teach on teach.sid = student.id
+</span></span><span class="line"><span class="cl">    inner join teacher on teach.tid = teacher.id where teacher.id = #{id}
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/select&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;resultMap</span> <span class="na">id=</span><span class="s">&#34;getTeacher&#34;</span> <span class="na">type=</span><span class="s">&#34;com.entity.Teacher&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;id</span> <span class="na">column=</span><span class="s">&#34;tid&#34;</span> <span class="na">property=</span><span class="s">&#34;id&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;result</span> <span class="na">column=</span><span class="s">&#34;tname&#34;</span> <span class="na">property=</span><span class="s">&#34;name&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;collection</span> <span class="na">property=</span><span class="s">&#34;studentList&#34;</span> <span class="na">ofType=</span><span class="s">&#34;com.entity.Student&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;id</span> <span class="na">column=</span><span class="s">&#34;sid&#34;</span> <span class="na">property=</span><span class="s">&#34;id&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;result</span> <span class="na">column=</span><span class="s">&#34;sname&#34;</span>   <span class="na">property=</span><span class="s">&#34;name&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;result</span> <span class="na">column=</span><span class="s">&#34;sex&#34;</span>    <span class="na">property=</span><span class="s">&#34;sex&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;/collection&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/resultMap&gt;</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>对一些配置内容做出解释：</p>
+<ul>
+<li><code>constructor</code> - 用于在实例化类时，注入结果到构造方法中、
+<ul>
+<li><code>idArg</code> - ID 参数；标记出作为 ID 的结果可以帮助提高整体性能</li>
+<li><code>arg</code> - 将被注入到构造方法的一个普通结果</li>
+</ul>
+</li>
+<li><code>id</code> – 一个 ID 结果；标记出作为 ID 的结果可以帮助提高整体性能</li>
+<li><code>result</code> – 注入到字段或 JavaBean 属性的普通结果</li>
+<li><code>association</code> – 一个复杂类型的关联；许多结果将包装成这种类型
+<ul>
+<li>嵌套结果映射 – 关联可以是 <code>resultMap</code> 元素，或是对其它结果映射的引用</li>
+</ul>
+</li>
+<li><code>collection</code> – 一个复杂类型的集合
+<ul>
+<li>嵌套结果映射 – 集合可以是 <code>resultMap</code> 元素，或是对其它结果映射的引用</li>
+</ul>
+</li>
+<li><code>discriminator</code> – 使用结果值来决定使用哪个<code>resultMap</code></li>
+<li><code>case</code> – 基于某些值的结果映射
+<ul>
+<li>嵌套结果映射 – <code>case</code> 也是一个结果映射，因此具有相同的结构和元素；或者引用其它的结果映射</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>id &amp; result</strong>: 这些元素是结果映射的基础。id 和 result 元素都将一个列的值映射到一个简单数据类型（String, int, double, Date 等）的属性或字段。这两者之间的唯一不同是，id 元素对应的属性会被标记为对象的标识符，在比较对象实例时使用。 这样可以提高整体的性能，尤其是进行缓存和嵌套结果映射（也就是连接映射）的时候。</p>
+</blockquote>
+<blockquote>
+<p>注意在使用<code>resultMap</code>进行映射的时候，尽量不要定义额外的构造函数。</p>
+</blockquote>
+<p>了解了一对多，那么多对一又该如何查询呢，比如每个学生都有一个对应的老师，现在Student新增了一个Teacher对象，那么现在又该如何去处理呢？</p>
+<div class="highlight" id="id-4"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Data</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nd">@Accessors</span><span class="p">(</span><span class="n">chain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Student</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">sid</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">name</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">sex</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Teacher</span><span class="w"> </span><span class="n">teacher</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nd">@Data</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Teacher</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">tid</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">name</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>现在我们希望的是，每次查询到一个Student对象时都带上它的老师，同样的，我们也可以使用<code>resultMap</code>来实现（先修改一下老师的类定义，不然会很麻烦）：</p>
+<div class="highlight" id="id-5"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;resultMap</span> <span class="na">id=</span><span class="s">&#34;test2&#34;</span> <span class="na">type=</span><span class="s">&#34;Student&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;id</span> <span class="na">column=</span><span class="s">&#34;sid&#34;</span> <span class="na">property=</span><span class="s">&#34;sid&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;result</span> <span class="na">column=</span><span class="s">&#34;name&#34;</span> <span class="na">property=</span><span class="s">&#34;name&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;result</span> <span class="na">column=</span><span class="s">&#34;sex&#34;</span> <span class="na">property=</span><span class="s">&#34;sex&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;association</span> <span class="na">property=</span><span class="s">&#34;teacher&#34;</span> <span class="na">javaType=</span><span class="s">&#34;Teacher&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;id</span> <span class="na">column=</span><span class="s">&#34;tid&#34;</span> <span class="na">property=</span><span class="s">&#34;tid&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&lt;result</span> <span class="na">column=</span><span class="s">&#34;tname&#34;</span> <span class="na">property=</span><span class="s">&#34;name&#34;</span><span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;/association&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/resultMap&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;select</span> <span class="na">id=</span><span class="s">&#34;selectStudent&#34;</span> <span class="na">resultMap=</span><span class="s">&#34;test2&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">    select *, teacher.name as tname from student left join teach on student.sid = teach.sid
+</span></span><span class="line"><span class="cl">                                                 left join teacher on teach.tid = teacher.tid
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/select&gt;</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>通过使用<code>association</code>进行关联，形成多对一的关系，实际上和一对多是同理的，都是对查询结果的一种处理方式罢了。</p>
+<blockquote>
+<p>更多关于<strong>结果映射</strong>的文档参考：https://mybatis.org/mybatis-3/zh_CN/sqlmap-xml.html</p>
+</blockquote>
+<h2 id="事务操作">事务操作</h2>
+<p>可以在获取<code>SqlSession</code>关闭自动提交来开启事务模式，和JDBC其实都差不多：</p>
+<div class="highlight" id="id-6"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">SqlSession</span><span class="w"> </span><span class="n">sqlSession</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MybatisUtil</span><span class="p">.</span><span class="na">getSession</span><span class="p">(</span><span class="kc">false</span><span class="p">)){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">TestMapper</span><span class="w"> </span><span class="n">testMapper</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sqlSession</span><span class="p">.</span><span class="na">getMapper</span><span class="p">(</span><span class="n">TestMapper</span><span class="p">.</span><span class="na">class</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">testMapper</span><span class="p">.</span><span class="na">addStudent</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">Student</span><span class="p">().</span><span class="na">setSex</span><span class="p">(</span><span class="s">&#34;男&#34;</span><span class="p">).</span><span class="na">setName</span><span class="p">(</span><span class="s">&#34;小王&#34;</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">testMapper</span><span class="p">.</span><span class="na">selectStudent</span><span class="p">().</span><span class="na">forEach</span><span class="p">(</span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">::</span><span class="n">println</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>在关闭自动提交后内容是没有进入到数据库的，只有提交事务后才能将相应的改变写入数据库：</p>
+<div class="highlight" id="id-7"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">sqlSession</span><span class="p">.</span><span class="na">commit</span><span class="p">();</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>同理，可以通过回滚操作让<code>commit()</code>之前的操作全部取消。</p>
+<div class="highlight" id="id-8"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">SqlSession</span><span class="w"> </span><span class="n">sqlSession</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MybatisUtil</span><span class="p">.</span><span class="na">getSession</span><span class="p">(</span><span class="kc">false</span><span class="p">)){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">TestMapper</span><span class="w"> </span><span class="n">testMapper</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sqlSession</span><span class="p">.</span><span class="na">getMapper</span><span class="p">(</span><span class="n">TestMapper</span><span class="p">.</span><span class="na">class</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">testMapper</span><span class="p">.</span><span class="na">addStudent</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">Student</span><span class="p">().</span><span class="na">setSex</span><span class="p">(</span><span class="s">&#34;男&#34;</span><span class="p">).</span><span class="na">setName</span><span class="p">(</span><span class="s">&#34;小王&#34;</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">testMapper</span><span class="p">.</span><span class="na">selectStudent</span><span class="p">().</span><span class="na">forEach</span><span class="p">(</span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">::</span><span class="n">println</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">sqlSession</span><span class="p">.</span><span class="na">rollback</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">sqlSession</span><span class="p">.</span><span class="na">commit</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="动态sql">动态SQL</h2>
+<blockquote>
+<p>官方文档：https://mybatis.org/mybatis-3/zh_CN/dynamic-sql.html</p>
+</blockquote>
+<p>在XML配置中，可以配置当满足某个条件的时候增加某个SQL条件，此时就可以使用动态SQL的语法。</p>
+<div class="highlight" id="id-9"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;select</span> <span class="na">id=</span><span class="s">&#34;selectStudentById&#34;</span> <span class="na">resultType=</span><span class="s">&#34;com.entity.Student&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">    select * from student where id = #{id}
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;if</span> <span class="na">test=</span><span class="s">&#34;sid % 2 == 0&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">        and sex = &#39;男&#39;
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;/if&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/select&gt;</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>在添加以上标签后，当<code>sid</code>为偶数的时候，只能查到男生的信息。</p>
+<blockquote>
+<p><code>test</code>属性的语句是Java语句</p>
+</blockquote>
+<p>同时，还有很多动态标签的例子，例如：</p>
+<div class="highlight" id="id-10"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;select</span> <span class="na">id=</span><span class="s">&#34;findActiveBlogLike&#34;</span>
+</span></span><span class="line"><span class="cl">     <span class="na">resultType=</span><span class="s">&#34;Blog&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">  SELECT * FROM BLOG WHERE state = ‘ACTIVE’
+</span></span><span class="line"><span class="cl">  <span class="nt">&lt;choose&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;when</span> <span class="na">test=</span><span class="s">&#34;title != null&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">      AND title like #{title}
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;/when&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;when</span> <span class="na">test=</span><span class="s">&#34;author != null and author.name != null&#34;</span><span class="nt">&gt;</span>
+</span></span><span class="line"><span class="cl">      AND author_name like #{author.name}
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;/when&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;otherwise&gt;</span>
+</span></span><span class="line"><span class="cl">      AND featured = 1
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;/otherwise&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&lt;/choose&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/select&gt;</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>&lt;when&gt;</code>和<code>&lt;choose&gt;</code>标签就非常像Java中的<code>switch</code>和<code>case</code>的组合。</p>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod">
+        <span title="更新于 2024-03-29 22:01:50">更新于 2024-03-29&nbsp;</span>
+      </div><div class="post-info-license">
+          <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span>
+        </div></div>
+    <div class="post-info-line">
+      <div class="post-info-md"><span><a href="/articles/2024/03/mybatis-3/index.md" title="阅读原始文档" class="link-to-markdown">阅读原始文档</a></span></div>
+      <div class="post-info-share">
+        <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="https://alextang.top/articles/2024/03/mybatis-3/" data-title="使用Mybatis进行复杂查询" data-via="a1extang" data-hashtags="Java,Mybatis,JavaEE"><i class="fa-brands fa-twitter fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://alextang.top/articles/2024/03/mybatis-3/" data-hashtag="Java"><i class="fa-brands fa-facebook-square fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://alextang.top/articles/2024/03/mybatis-3/" data-title="使用Mybatis进行复杂查询"><i class="fa-brands fa-weibo fa-fw" aria-hidden="true"></i></a>
+  </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/java/' class="post-tag">Java</a><a href='/tags/mybatis/' class="post-tag">Mybatis</a><a href='/tags/javaee/' class="post-tag">JavaEE</a></section>
+    <section>
+      <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div>
+
+  <div class="post-nav"><a href="/articles/2024/03/mybatis-2/" class="post-nav-item" rel="prev" title="使用Mybatis进行增删改查"><i class="fa-solid fa-angle-left fa-fw" aria-hidden="true"></i>使用Mybatis进行增删改查</a>
+      <a href="/articles/2024/03/mybatis-4/" class="post-nav-item" rel="next" title="Mybatis的缓存机制">Mybatis的缓存机制<i class="fa-solid fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+</article></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright fa-fw" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2024</span><span class="author" itemprop="copyrightHolder">
+              <a href="/">alextang</a></span><span class="license footer-divider"><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div><div class="footer-line statistics"></div><div class="footer-line visitor">
+          <span id="busuanzi_container_site_uv" title='总访客数'><i class="fa-regular fa-user fa-fw" aria-hidden="true"></i>&nbsp;<span id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span></span><span id="busuanzi_container_site_pv" class="footer-divider" title='总访问量'><i class="fa-regular fa-eye fa-fw" aria-hidden="true"></i>&nbsp;<span id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span></span>
+        </div><div class="footer-line beian"><span class="icp footer-divider"><a href="https://icp.gov.moe/?keyword=20238299" target="_blank">萌ICP备20238299号</a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons animate__faster d-none"><div class="fixed-button back-to-top" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up fa-fw" aria-hidden="true"></i><span class="variant-numeric d-none">0%</span>
+        </div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">FixIt 主题在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js" defer></script><script src="/lib/lunr/lunr.stemmer.support.min.js" defer></script><script src="/lib/lunr/lunr.zh.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js" async defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/copy-tex.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/mhchem.min.js" defer></script><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async defer></script><script>window.config={"code":{"copyTitle":"复制到剪贴板","editLockTitle":"锁定可编辑代码块","editUnLockTitle":"解锁可编辑代码块","editable":true,"maxShownLines":10},"comment":{"enable":false},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script src="/js/theme.min.js" defer></script></body>
+</html>

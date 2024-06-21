@@ -1,0 +1,24 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>Docker - 标签 - 好好学习</title>
+    <link>https://alextang.top/tags/docker/</link>
+    <description>Docker - 标签 - 好好学习</description>
+    <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>alextang@sdu.edu.cn (alextang)</managingEditor>
+      <webMaster>alextang@sdu.edu.cn (alextang)</webMaster><lastBuildDate>Tue, 12 Dec 2023 20:04:40 &#43;0800</lastBuildDate><atom:link href="https://alextang.top/tags/docker/" rel="self" type="application/rss+xml" /><item>
+  <title>彻底解决Glibc版本问题</title>
+  <link>https://alextang.top/articles/2023/12/cglibc/</link>
+  <pubDate>Tue, 12 Dec 2023 20:04:40 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/12/cglibc/</guid>
+  <description><![CDATA[由于不同版本的libc功能差异大，甚至无法兼容运行。同时，随意的更改系统libc版本会导致系统的崩溃。下面就Pwn有关堆利用的题目中涉及到切]]></description>
+</item>
+<item>
+  <title>使用docker在x86架构上运行ARM架构的ubuntu系统</title>
+  <link>https://alextang.top/articles/2023/10/%E4%BD%BF%E7%94%A8docker%E5%9C%A8x86%E6%9E%B6%E6%9E%84%E4%B8%8A%E8%BF%90%E8%A1%8Carm%E6%9E%B6%E6%9E%84%E7%9A%84ubuntu%E7%B3%BB%E7%BB%9F/</link>
+  <pubDate>Thu, 05 Oct 2023 16:43:45 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2023/10/%E4%BD%BF%E7%94%A8docker%E5%9C%A8x86%E6%9E%B6%E6%9E%84%E4%B8%8A%E8%BF%90%E8%A1%8Carm%E6%9E%B6%E6%9E%84%E7%9A%84ubuntu%E7%B3%BB%E7%BB%9F/</guid>
+  <description><![CDATA[参考文章：x86架构的Ubuntu上通过Docker运行ARM架构的系统-CSDN博客 0x01 Docker安装 最简单快速的安装方法：使用阿里云镜像]]></description>
+</item>
+</channel>
+</rss>

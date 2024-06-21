@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>xctf-666-Reverse - 好好学习</title><meta name="author" content="alextang">
+<meta name="author-link" content="">
+<meta name="description" content="0x01 查壳/脱壳 使用Die工具，发现是64位ELF，无壳。 0x01 反编译 IDA64反编译结果如下，我们直接进入含有“flag{This_1s_f4ck" /><meta name="keywords" content='Reverse, CTF' />
+  <meta itemprop="name" content="xctf-666-Reverse">
+  <meta itemprop="description" content="0x01 查壳/脱壳 使用Die工具，发现是64位ELF，无壳。 0x01 反编译 IDA64反编译结果如下，我们直接进入含有“flag{This_1s_f4ck">
+  <meta itemprop="datePublished" content="2023-09-17T20:57:27+08:00">
+  <meta itemprop="dateModified" content="2023-09-17T20:57:27+08:00">
+  <meta itemprop="wordCount" content="956">
+  <meta itemprop="keywords" content="Reverse,CTF"><meta property="og:url" content="https://alextang.top/articles/2023/09/xctf-666-reverse/">
+  <meta property="og:site_name" content="好好学习">
+  <meta property="og:title" content="xctf-666-Reverse">
+  <meta property="og:description" content="0x01 查壳/脱壳 使用Die工具，发现是64位ELF，无壳。 0x01 反编译 IDA64反编译结果如下，我们直接进入含有“flag{This_1s_f4ck">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2023-09-17T20:57:27+08:00">
+    <meta property="article:modified_time" content="2023-09-17T20:57:27+08:00">
+    <meta property="article:tag" content="Reverse">
+    <meta property="article:tag" content="CTF">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="xctf-666-Reverse">
+  <meta name="twitter:description" content="0x01 查壳/脱壳 使用Die工具，发现是64位ELF，无壳。 0x01 反编译 IDA64反编译结果如下，我们直接进入含有“flag{This_1s_f4ck">
+      <meta name="twitter:site" content="@a1extang">
+<meta name="application-name" content="a1extang">
+<meta name="apple-mobile-web-app-title" content="a1extang"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" href="https://alextang.top/articles/2023/09/xctf-666-reverse/" /><link rel="prev" href="https://alextang.top/articles/2023/09/reverse%E5%85%A5%E9%97%A82%E9%A2%98/" /><link rel="next" href="https://alextang.top/articles/2023/09/ida%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "xctf-666-Reverse",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https:\/\/alextang.top\/articles\/2023\/09\/xctf-666-reverse\/"
+    },"genre": "posts","keywords": "Reverse, CTF","wordcount":  956 ,
+    "url": "https:\/\/alextang.top\/articles\/2023\/09\/xctf-666-reverse\/","datePublished": "2023-09-17T20:57:27+08:00","dateModified": "2023-09-17T20:57:27+08:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "alextang"
+      },"description": ""
+  }
+  </script></head>
+  <body data-header-desktop="sticky" data-header-mobile="auto"><script>(window.localStorage?.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('data-theme', 'dark');</script><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="好好学习"><span class="header-title-text">a1extang</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/posts/"
+                
+                
+              ><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden="true"></i> 文章</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/categories/"
+                
+                
+              ><i class="fa-solid fa-th fa-fw fa-sm" aria-hidden="true"></i> 分类</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/tags/"
+                
+                
+              ><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden="true"></i> 标签</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/about/"
+                title="关于"
+                
+              ><i class="fas fa-user fa-fw fa-sm" aria-hidden="true"></i> 关于</a></li><li class="menu-item delimiter"></li><li class="menu-item search" id="search-desktop">
+            <input type="text" placeholder="搜索文章标题或内容……" id="search-input-desktop">
+            <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+              <i class="fa-solid fa-search fa-fw" aria-hidden="true"></i>
+            </a>
+            <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+              <i class="fa-solid fa-times-circle fa-fw" aria-hidden="true"></i>
+            </a>
+            <span class="search-button search-loading" id="search-loading-desktop">
+              <i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+            </span>
+          </li><li class="menu-item theme-switch" title="切换主题">
+          <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+        </li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="好好学习"><span class="header-title-text">a1extang</span></a><span class="header-subtitle"></span></div>
+      <div class="menu-toggle" id="menu-toggle-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="search-wrapper">
+            <div class="search mobile" id="search-mobile">
+              <input type="text" placeholder="搜索文章标题或内容……" id="search-input-mobile">
+              <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                <i class="fa-solid fa-search fa-fw" aria-hidden="true"></i>
+              </a>
+              <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                <i class="fa-solid fa-times-circle fa-fw" aria-hidden="true"></i>
+              </a>
+              <span class="search-button search-loading" id="search-loading-mobile">
+                <i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+              </span>
+            </div>
+            <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+              取消
+            </a>
+          </li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/posts/"
+                  
+                  
+                ><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden="true"></i> 文章</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/categories/"
+                  
+                  
+                ><i class="fa-solid fa-th fa-fw fa-sm" aria-hidden="true"></i> 分类</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/tags/"
+                  
+                  
+                ><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden="true"></i> 标签</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/about/"
+                  title="关于"
+                  
+                ><i class="fas fa-user fa-fw fa-sm" aria-hidden="true"></i> 关于</a></li><li class="menu-item menu-system">
+          <span class="menu-system-item theme-switch" title="切换主题"><i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i></span></li>
+      </ul>
+    </nav>
+  </div>
+</header><div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+  </div>
+  <div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+  </div><main class="container"><aside class="toc" id="toc-auto"><h2 class="toc-title">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down fa-fw" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside>
+
+  <aside class="aside-custom">
+    </aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>xctf-666-Reverse</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=large 2x" sizes="auto" data-title="alextang" data-alt="alextang" class="avatar" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/>&nbsp;alextang</span></span>
+          <span class="post-category">收录于 <a href="/categories/reverse/"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Reverse</a></span></div>
+      <div class="post-meta-line"><span title="发布于 2023-09-17 20:57:27"><i class="fa-regular fa-calendar-alt fa-fw me-1" aria-hidden="true"></i><time datetime="2023-09-17">2023-09-17</time></span>&nbsp;<span title="更新于 2023-09-17 20:57:27"><i class="fa-regular fa-edit fa-fw me-1" aria-hidden="true"></i><time datetime="2023-09-17">2023-09-17</time></span>&nbsp;<span title="956 字"><i class="fa-solid fa-pencil-alt fa-fw me-1" aria-hidden="true"></i>约 1000 字</span>&nbsp;<span><i class="fa-regular fa-clock fa-fw me-1" aria-hidden="true"></i>预计阅读 2 分钟</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#0x01-查壳脱壳">0x01 查壳/脱壳</a></li>
+    <li><a href="#0x01-反编译">0x01 反编译</a></li>
+    <li><a href="#0x02-进入encode">0x02 进入encode</a></li>
+    <li><a href="#0x03-payload">0x03 Payload</a></li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><h2 id="0x01-查壳脱壳">0x01 查壳/脱壳</h2>
+<p>使用Die工具，发现是64位ELF，无壳。</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/20230917210240.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/20230917210240.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/20230917210240.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/20230917210240.png?size=large 2x" sizes="auto" data-title="查壳" data-alt="查壳" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<h2 id="0x01-反编译">0x01 反编译</h2>
+<p>IDA64反编译结果如下，我们直接进入含有“flag{This_1s_f4cker_flag}”的函数：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20230917210638942.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20230917210638942.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20230917210638942.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20230917210638942.png?size=large 2x" sizes="auto" data-title="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20230917210638942.png" data-alt="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20230917210638942.png" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>生成伪代码：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20230917210731748.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20230917210731748.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20230917210731748.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20230917210731748.png?size=large 2x" sizes="auto" data-title="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20230917210731748.png" data-alt="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20230917210731748.png" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>这时发现flag{This_1s_f4cker_flag}显然是假的，而且根据以上的信息，我们要让s==enflag，而且s是和输入一起进行encode后得到的字符串。同时输入的字符串大小应该等于key，查看数据：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20230917211226301.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20230917211226301.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20230917211226301.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20230917211226301.png?size=large 2x" sizes="auto" data-title="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20230917211226301.png" data-alt="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20230917211226301.png" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+<p>发现s经过处理后应该等于izwhroz&quot;&ldquo;w&quot;v.K&rdquo;.Ni，key=18。</p>
+<h2 id="0x02-进入encode">0x02 进入encode</h2>
+<p>ecode函数的实现如下：</p>
+<div class="highlight" id="id-1"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="kt">int</span> <span class="kr">__fastcall</span> <span class="nf">encode</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">a1</span><span class="p">,</span> <span class="kr">__int64</span> <span class="n">a2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kt">char</span> <span class="n">v3</span><span class="p">[</span><span class="mi">104</span><span class="p">];</span> <span class="c1">// [rsp+10h] [rbp-70h]
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="kt">int</span> <span class="n">v4</span><span class="p">;</span> <span class="c1">// [rsp+78h] [rbp-8h]
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="kt">int</span> <span class="n">i</span><span class="p">;</span> <span class="c1">// [rsp+7Ch] [rbp-4h]
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">  <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="n">v4</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="p">(</span> <span class="nf">strlen</span><span class="p">(</span><span class="n">a1</span><span class="p">)</span> <span class="o">!=</span> <span class="n">key</span> <span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nf">puts</span><span class="p">(</span><span class="s">&#34;Your Length is Wrong&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">for</span> <span class="p">(</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">key</span><span class="p">;</span> <span class="n">i</span> <span class="o">+=</span> <span class="mi">3</span> <span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">v3</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">64</span><span class="p">]</span> <span class="o">=</span> <span class="n">key</span> <span class="o">^</span> <span class="p">(</span><span class="n">a1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="mi">6</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">v3</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">33</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">a1</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">6</span><span class="p">)</span> <span class="o">^</span> <span class="n">key</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">v3</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">a1</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span> <span class="o">^</span> <span class="mi">6</span> <span class="o">^</span> <span class="n">key</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">*</span><span class="p">(</span><span class="n">_BYTE</span> <span class="o">*</span><span class="p">)(</span><span class="n">a2</span> <span class="o">+</span> <span class="n">i</span><span class="p">)</span> <span class="o">=</span> <span class="n">v3</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">64</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">    <span class="o">*</span><span class="p">(</span><span class="n">_BYTE</span> <span class="o">*</span><span class="p">)(</span><span class="n">a2</span> <span class="o">+</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1LL</span><span class="p">)</span> <span class="o">=</span> <span class="n">v3</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">33</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">    <span class="o">*</span><span class="p">(</span><span class="n">_BYTE</span> <span class="o">*</span><span class="p">)(</span><span class="n">a2</span> <span class="o">+</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">2LL</span><span class="p">)</span> <span class="o">=</span> <span class="n">v3</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="n">a2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>通过阅读发现：a1其实就是要解的flag，a2是s字符串。我们此时要假定a2=izwhroz&quot;&ldquo;w&quot;v.K&rdquo;.Ni然后反解出a1来。</p>
+<p>关键在于for循环，虽然其中很多代码，但是我们发现，其实v3数组只是一个中间量，而且它的值是通过计算得出的，那么我们此时可以将等号连接起来，建立起a1和a2之间直接的联系：</p>
+<div class="highlight" id="id-2"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="o">*</span><span class="p">(</span><span class="n">_BYTE</span> <span class="o">*</span><span class="p">)(</span><span class="n">a2</span> <span class="o">+</span> <span class="n">i</span><span class="p">)</span> <span class="o">=</span> <span class="n">v3</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">64</span><span class="p">]</span> <span class="o">=</span> <span class="n">key</span> <span class="o">^</span> <span class="p">(</span><span class="n">a1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="mi">6</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="o">*</span><span class="p">(</span><span class="n">_BYTE</span> <span class="o">*</span><span class="p">)(</span><span class="n">a2</span> <span class="o">+</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1LL</span><span class="p">)</span> <span class="o">=</span> <span class="n">v3</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">33</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">a1</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">6</span><span class="p">)</span> <span class="o">^</span> <span class="n">key</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="o">*</span><span class="p">(</span><span class="n">_BYTE</span> <span class="o">*</span><span class="p">)(</span><span class="n">a2</span> <span class="o">+</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">2LL</span><span class="p">)</span> <span class="o">=</span> <span class="n">v3</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">a1</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span> <span class="o">^</span> <span class="mi">6</span> <span class="o">^</span> <span class="n">key</span><span class="p">;</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>继续简化：</p>
+<div class="highlight" id="id-3"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="o">*</span><span class="p">(</span><span class="n">_BYTE</span> <span class="o">*</span><span class="p">)(</span><span class="n">a2</span> <span class="o">+</span> <span class="n">i</span><span class="p">)</span> <span class="o">=</span> <span class="n">key</span> <span class="o">^</span> <span class="p">(</span><span class="n">a1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="mi">6</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="o">*</span><span class="p">(</span><span class="n">_BYTE</span> <span class="o">*</span><span class="p">)(</span><span class="n">a2</span> <span class="o">+</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1LL</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="n">a1</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">6</span><span class="p">)</span> <span class="o">^</span> <span class="n">key</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="o">*</span><span class="p">(</span><span class="n">_BYTE</span> <span class="o">*</span><span class="p">)(</span><span class="n">a2</span> <span class="o">+</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">2LL</span><span class="p">)</span> <span class="o">=</span> <span class="n">a1</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span> <span class="o">^</span> <span class="mi">6</span> <span class="o">^</span> <span class="n">key</span><span class="p">;</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>其中，i = 0 to 18 step 3；而a2实际上要等于izwhroz&quot;&ldquo;w&quot;v.K&rdquo;.N。那么根据异或的性质，a = b ^ c则有b = a ^ c （由于c ^ c = 0，且0^x = x，那么两边同时异或c即可得到）,我们可以反解出a1：</p>
+<div class="highlight" id="id-4"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="n">a1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">a2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">^</span> <span class="n">key</span> <span class="o">-</span> <span class="mi">6</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">a1</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">a2</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">^</span> <span class="n">key</span> <span class="o">+</span> <span class="mi">6</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">a1</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">a2</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span> <span class="o">^</span> <span class="mi">6</span> <span class="o">^</span> <span class="n">key</span><span class="p">;</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>那么构造循环即可解出。下面给出C++代码。</p>
+<h2 id="0x03-payload">0x03 Payload</h2>
+<div class="highlight" id="id-5"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">string</span> <span class="n">s</span> <span class="o">=</span> <span class="s">&#34;izwhroz</span><span class="se">\&#34;\&#34;</span><span class="s">w</span><span class="se">\&#34;</span><span class="s">v.K</span><span class="se">\&#34;</span><span class="s">.Ni&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kt">char</span> <span class="n">a1</span><span class="p">[</span><span class="mi">18</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span><span class="n">i</span> <span class="o">&lt;</span> <span class="mi">18</span><span class="p">;</span><span class="n">i</span> <span class="o">+=</span> <span class="mi">3</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">       <span class="n">a1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">^</span> <span class="mi">18</span><span class="p">)</span> <span class="o">-</span> <span class="mi">6</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">       <span class="n">a1</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">^</span> <span class="mi">18</span><span class="p">)</span> <span class="o">+</span> <span class="mi">6</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">       <span class="n">a1</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span> <span class="o">^</span> <span class="mi">6</span> <span class="o">^</span> <span class="mi">18</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">i</span> <span class="p">:</span> <span class="n">a1</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">i</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>得到答案：</p>
+<p><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20230917212215791.png" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20230917212215791.png?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20230917212215791.png?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/image-20230917212215791.png?size=large 2x" sizes="auto" data-title="flag" data-alt="flag" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></p>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod">
+        <span title="更新于 2023-09-17 20:57:27">更新于 2023-09-17&nbsp;</span>
+      </div><div class="post-info-license">
+          <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span>
+        </div></div>
+    <div class="post-info-line">
+      <div class="post-info-md"><span><a href="/articles/2023/09/xctf-666-reverse/index.md" title="阅读原始文档" class="link-to-markdown">阅读原始文档</a></span></div>
+      <div class="post-info-share">
+        <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="https://alextang.top/articles/2023/09/xctf-666-reverse/" data-title="xctf-666-Reverse" data-via="a1extang" data-hashtags="Reverse,CTF"><i class="fa-brands fa-twitter fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://alextang.top/articles/2023/09/xctf-666-reverse/" data-hashtag="Reverse"><i class="fa-brands fa-facebook-square fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://alextang.top/articles/2023/09/xctf-666-reverse/" data-title="xctf-666-Reverse"><i class="fa-brands fa-weibo fa-fw" aria-hidden="true"></i></a>
+  </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/reverse/' class="post-tag">Reverse</a><a href='/tags/ctf/' class="post-tag">CTF</a></section>
+    <section>
+      <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div>
+
+  <div class="post-nav"><a href="/articles/2023/09/reverse%E5%85%A5%E9%97%A82%E9%A2%98/" class="post-nav-item" rel="prev" title="Reverse入门2题"><i class="fa-solid fa-angle-left fa-fw" aria-hidden="true"></i>Reverse入门2题</a>
+      <a href="/articles/2023/09/ida%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B/" class="post-nav-item" rel="next" title="IDA快速上手">IDA快速上手<i class="fa-solid fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+</article></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright fa-fw" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2024</span><span class="author" itemprop="copyrightHolder">
+              <a href="/">alextang</a></span><span class="license footer-divider"><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div><div class="footer-line statistics"></div><div class="footer-line visitor">
+          <span id="busuanzi_container_site_uv" title='总访客数'><i class="fa-regular fa-user fa-fw" aria-hidden="true"></i>&nbsp;<span id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span></span><span id="busuanzi_container_site_pv" class="footer-divider" title='总访问量'><i class="fa-regular fa-eye fa-fw" aria-hidden="true"></i>&nbsp;<span id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span></span>
+        </div><div class="footer-line beian"><span class="icp footer-divider"><a href="https://icp.gov.moe/?keyword=20238299" target="_blank">萌ICP备20238299号</a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons animate__faster d-none"><div class="fixed-button back-to-top" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up fa-fw" aria-hidden="true"></i><span class="variant-numeric d-none">0%</span>
+        </div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">FixIt 主题在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js" defer></script><script src="/lib/lunr/lunr.stemmer.support.min.js" defer></script><script src="/lib/lunr/lunr.zh.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js" async defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/copy-tex.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/mhchem.min.js" defer></script><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async defer></script><script>window.config={"code":{"copyTitle":"复制到剪贴板","editLockTitle":"锁定可编辑代码块","editUnLockTitle":"解锁可编辑代码块","editable":true,"maxShownLines":10},"comment":{"enable":false},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script src="/js/theme.min.js" defer></script></body>
+</html>

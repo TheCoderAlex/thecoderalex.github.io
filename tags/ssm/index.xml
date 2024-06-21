@@ -1,0 +1,56 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>SSM - 标签 - 好好学习</title>
+    <link>https://alextang.top/tags/ssm/</link>
+    <description>SSM - 标签 - 好好学习</description>
+    <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>alextang@sdu.edu.cn (alextang)</managingEditor>
+      <webMaster>alextang@sdu.edu.cn (alextang)</webMaster><lastBuildDate>Mon, 06 May 2024 22:17:49 &#43;0800</lastBuildDate><atom:link href="https://alextang.top/tags/ssm/" rel="self" type="application/rss+xml" /><item>
+  <title>Spring基础:生命周期和继承</title>
+  <link>https://alextang.top/articles/2024/05/spring-life/</link>
+  <pubDate>Mon, 06 May 2024 22:17:49 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2024/05/spring-life/</guid>
+  <description><![CDATA[Bean的生命周期 除了直接修改构造函数，同时可以为Bean指定初始化方法和销毁方法，让其在对象创建和销毁的时候执行一些其他的任务： init-method ：初始化]]></description>
+</item>
+<item>
+  <title>Spring基础:适配工厂设计模式</title>
+  <link>https://alextang.top/articles/2024/05/spring-factory/</link>
+  <pubDate>Mon, 06 May 2024 22:17:49 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2024/05/spring-factory/</guid>
+  <description><![CDATA[工厂模式和工厂Bean 如果某个类的设计模式是工厂模式，Spring将无法构造出类的实例，而是只能通过该类的Factory 构造方法拿到实例化的]]></description>
+</item>
+<item>
+  <title>Spring基础:自动装配</title>
+  <link>https://alextang.top/articles/2024/05/spring-autowire/</link>
+  <pubDate>Sun, 05 May 2024 11:02:49 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2024/05/spring-autowire/</guid>
+  <description><![CDATA[Java自动装配 当我们的类中存在其他类的成员的时候，可以使用自动装配来自动进行实例化： 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 package org.alextang.entity.student; import org.alextang.entity.teacher.Teacher; public class Student { private Teacher]]></description>
+</item>
+<item>
+  <title>Spring基础:依赖注入</title>
+  <link>https://alextang.top/articles/2024/04/spring-injection/</link>
+  <pubDate>Mon, 15 Apr 2024 16:07:49 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2024/04/spring-injection/</guid>
+  <description><![CDATA[依赖注入 依赖注入(Dependency Injection, DI)是一种设计模式，也是Spring框架的核心概念之一。现在我们已经了解了如何注册和使用一个Bea]]></description>
+</item>
+<item>
+  <title>Spring基础:创建项目和Bean</title>
+  <link>https://alextang.top/articles/2024/04/spring-test/</link>
+  <pubDate>Mon, 15 Apr 2024 11:18:14 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2024/04/spring-test/</guid>
+  <description><![CDATA[创建第一个Spring项目 使用Spring框架的目的在于解耦合，而非简化代码。 Spring框架由很多模块组成： 其中最核心的框架就是：Core]]></description>
+</item>
+<item>
+  <title>Spring基础:IoC理论</title>
+  <link>https://alextang.top/articles/2024/04/spring-ioc/</link>
+  <pubDate>Sun, 14 Apr 2024 22:10:40 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2024/04/spring-ioc/</guid>
+  <description><![CDATA[IoC容器基础 Spring框架最核心的其实它的IoC容器，Spring框架使用IoC容器管理各个不同的组件。 IoC理论介绍 在Java的应用程]]></description>
+</item>
+</channel>
+</rss>

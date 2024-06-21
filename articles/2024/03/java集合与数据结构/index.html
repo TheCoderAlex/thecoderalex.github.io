@@ -1,0 +1,2099 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>Java集合与数据结构 - 好好学习</title><meta name="author" content="alextang">
+<meta name="author-link" content="">
+<meta name="description" content="目录 ArrayList: 集合类, ArrayList, 构造方法, 添加方法, 增删改查方法, 集合遍历 集合类: 集合类的体系结构, Collection常用功能, 迭代器与并发修改异常, 泛型" /><meta name="keywords" content='Java, 语法' />
+  <meta itemprop="name" content="Java集合与数据结构">
+  <meta itemprop="description" content="目录 ArrayList: 集合类, ArrayList, 构造方法, 添加方法, 增删改查方法, 集合遍历 集合类: 集合类的体系结构, Collection常用功能, 迭代器与并发修改异常, 泛型">
+  <meta itemprop="datePublished" content="2024-03-25T21:57:50+08:00">
+  <meta itemprop="dateModified" content="2024-03-25T21:57:50+08:00">
+  <meta itemprop="wordCount" content="11195">
+  <meta itemprop="keywords" content="Java,语法"><meta property="og:url" content="https://alextang.top/articles/2024/03/java%E9%9B%86%E5%90%88%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">
+  <meta property="og:site_name" content="好好学习">
+  <meta property="og:title" content="Java集合与数据结构">
+  <meta property="og:description" content="目录 ArrayList: 集合类, ArrayList, 构造方法, 添加方法, 增删改查方法, 集合遍历 集合类: 集合类的体系结构, Collection常用功能, 迭代器与并发修改异常, 泛型">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-03-25T21:57:50+08:00">
+    <meta property="article:modified_time" content="2024-03-25T21:57:50+08:00">
+    <meta property="article:tag" content="Java">
+    <meta property="article:tag" content="语法">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Java集合与数据结构">
+  <meta name="twitter:description" content="目录 ArrayList: 集合类, ArrayList, 构造方法, 添加方法, 增删改查方法, 集合遍历 集合类: 集合类的体系结构, Collection常用功能, 迭代器与并发修改异常, 泛型">
+      <meta name="twitter:site" content="@a1extang">
+<meta name="application-name" content="a1extang">
+<meta name="apple-mobile-web-app-title" content="a1extang"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" href="https://alextang.top/articles/2024/03/java%E9%9B%86%E5%90%88%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" /><link rel="prev" href="https://alextang.top/articles/2024/03/java%E5%B8%B8%E7%94%A8api/" /><link rel="next" href="https://alextang.top/articles/2024/03/java-io%E6%B5%81/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Java集合与数据结构",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https:\/\/alextang.top\/articles\/2024\/03\/java%E9%9B%86%E5%90%88%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84\/"
+    },"genre": "posts","keywords": "Java, 语法","wordcount":  11195 ,
+    "url": "https:\/\/alextang.top\/articles\/2024\/03\/java%E9%9B%86%E5%90%88%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84\/","datePublished": "2024-03-25T21:57:50+08:00","dateModified": "2024-03-25T21:57:50+08:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "alextang"
+      },"description": ""
+  }
+  </script></head>
+  <body data-header-desktop="sticky" data-header-mobile="auto"><script>(window.localStorage?.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('data-theme', 'dark');</script><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="好好学习"><span class="header-title-text">a1extang</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/posts/"
+                
+                
+              ><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden="true"></i> 文章</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/categories/"
+                
+                
+              ><i class="fa-solid fa-th fa-fw fa-sm" aria-hidden="true"></i> 分类</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/tags/"
+                
+                
+              ><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden="true"></i> 标签</a></li><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/about/"
+                title="关于"
+                
+              ><i class="fas fa-user fa-fw fa-sm" aria-hidden="true"></i> 关于</a></li><li class="menu-item delimiter"></li><li class="menu-item search" id="search-desktop">
+            <input type="text" placeholder="搜索文章标题或内容……" id="search-input-desktop">
+            <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+              <i class="fa-solid fa-search fa-fw" aria-hidden="true"></i>
+            </a>
+            <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+              <i class="fa-solid fa-times-circle fa-fw" aria-hidden="true"></i>
+            </a>
+            <span class="search-button search-loading" id="search-loading-desktop">
+              <i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+            </span>
+          </li><li class="menu-item theme-switch" title="切换主题">
+          <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+        </li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="好好学习"><span class="header-title-text">a1extang</span></a><span class="header-subtitle"></span></div>
+      <div class="menu-toggle" id="menu-toggle-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="search-wrapper">
+            <div class="search mobile" id="search-mobile">
+              <input type="text" placeholder="搜索文章标题或内容……" id="search-input-mobile">
+              <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                <i class="fa-solid fa-search fa-fw" aria-hidden="true"></i>
+              </a>
+              <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                <i class="fa-solid fa-times-circle fa-fw" aria-hidden="true"></i>
+              </a>
+              <span class="search-button search-loading" id="search-loading-mobile">
+                <i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+              </span>
+            </div>
+            <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+              取消
+            </a>
+          </li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/posts/"
+                  
+                  
+                ><i class="fa-solid fa-archive fa-fw fa-sm" aria-hidden="true"></i> 文章</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/categories/"
+                  
+                  
+                ><i class="fa-solid fa-th fa-fw fa-sm" aria-hidden="true"></i> 分类</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/tags/"
+                  
+                  
+                ><i class="fa-solid fa-tags fa-fw fa-sm" aria-hidden="true"></i> 标签</a></li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/about/"
+                  title="关于"
+                  
+                ><i class="fas fa-user fa-fw fa-sm" aria-hidden="true"></i> 关于</a></li><li class="menu-item menu-system">
+          <span class="menu-system-item theme-switch" title="切换主题"><i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i></span></li>
+      </ul>
+    </nav>
+  </div>
+</header><div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+  </div>
+  <div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+  </div><main class="container"><aside class="toc" id="toc-auto"><h2 class="toc-title">目录&nbsp;<i class="toc-icon fa-solid fa-angle-down fa-fw" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside>
+
+  <aside class="aside-custom">
+    </aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>Java集合与数据结构</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg" srcset="https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=small, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=medium 1.5x, https://cdn.jsdelivr.net/gh/thecoderalex/imgs@upload/2023/1693637676533.jpg?size=large 2x" sizes="auto" data-title="alextang" data-alt="alextang" class="avatar" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/>&nbsp;alextang</span></span>
+          <span class="post-category">收录于 <a href="/categories/java/"><i class="fa-regular fa-folder fa-fw" aria-hidden="true"></i> Java</a></span></div>
+      <div class="post-meta-line"><span title="发布于 2024-03-25 21:57:50"><i class="fa-regular fa-calendar-alt fa-fw me-1" aria-hidden="true"></i><time datetime="2024-03-25">2024-03-25</time></span>&nbsp;<span title="更新于 2024-03-25 21:57:50"><i class="fa-regular fa-edit fa-fw me-1" aria-hidden="true"></i><time datetime="2024-03-25">2024-03-25</time></span>&nbsp;<span title="11195 字"><i class="fa-solid fa-pencil-alt fa-fw me-1" aria-hidden="true"></i>约 11200 字</span>&nbsp;<span><i class="fa-regular fa-clock fa-fw me-1" aria-hidden="true"></i>预计阅读 23 分钟</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>目录</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
+        </div>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#目录">目录</a></li>
+      </ul>
+    </li>
+    <li><a href="#arraylist">ArrayList</a>
+      <ul>
+        <li><a href="#备注">备注</a></li>
+        <li><a href="#集合类概述">集合类概述</a></li>
+        <li><a href="#arraylist概述">ArrayList概述</a></li>
+        <li><a href="#构造方法">构造方法</a></li>
+        <li><a href="#添加元素">添加元素</a></li>
+        <li><a href="#增删改查">增删改查</a></li>
+        <li><a href="#集合遍历">集合遍历</a></li>
+        <li><a href="#返回目录目录"><a href="#%E7%9B%AE%E5%BD%95">返回目录</a></a></li>
+      </ul>
+    </li>
+    <li><a href="#集合类">集合类</a>
+      <ul>
+        <li><a href="#集合类的体系结构">集合类的体系结构</a></li>
+        <li><a href="#collection常用功能">Collection常用功能</a></li>
+        <li><a href="#迭代器与并发修改异常">迭代器与并发修改异常</a></li>
+        <li><a href="#泛型">泛型</a></li>
+        <li><a href="#foreach循环">foreach循环</a></li>
+        <li><a href="#返回目录目录-1"><a href="#%E7%9B%AE%E5%BD%95">返回目录</a></a></li>
+      </ul>
+    </li>
+    <li><a href="#常见数据结构">常见数据结构</a>
+      <ul>
+        <li><a href="#数组">数组</a></li>
+        <li><a href="#链表">链表</a></li>
+        <li><a href="#栈和队列">栈和队列</a></li>
+        <li><a href="#返回目录目录-2"><a href="#%E7%9B%AE%E5%BD%95">返回目录</a></a></li>
+      </ul>
+    </li>
+    <li><a href="#list">List</a>
+      <ul>
+        <li><a href="#list概述">List概述</a></li>
+        <li><a href="#list的特有功能">List的特有功能</a></li>
+        <li><a href="#list的子类">List的子类</a></li>
+        <li><a href="#linkedlist的特有功能">LinkedList的特有功能</a></li>
+        <li><a href="#番外由小题目引入源码查阅">番外：由小题目引入源码查阅</a></li>
+        <li><a href="#返回目录目录-3"><a href="#%E7%9B%AE%E5%BD%95">返回目录</a></a></li>
+      </ul>
+    </li>
+    <li><a href="#set">Set</a>
+      <ul>
+        <li><a href="#set接口的特点">Set接口的特点</a></li>
+        <li><a href="#hashset的add方法添加元素">HashSet的add()方法添加元素</a></li>
+        <li><a href="#返回目录目录-4"><a href="#%E7%9B%AE%E5%BD%95">返回目录</a></a></li>
+      </ul>
+    </li>
+    <li><a href="#collections工具类">Collections工具类</a>
+      <ul>
+        <li><a href="#常见面试题">常见面试题：</a></li>
+        <li><a href="#collections的常见方法">Collections的常见方法</a></li>
+        <li><a href="#模拟斗地主发牌">模拟斗地主发牌</a></li>
+        <li><a href="#返回目录目录-5"><a href="#%E7%9B%AE%E5%BD%95">返回目录</a></a></li>
+      </ul>
+    </li>
+    <li><a href="#map">Map</a>
+      <ul>
+        <li><a href="#map接口概述">Map接口概述</a></li>
+        <li><a href="#map的功能">Map的功能</a></li>
+        <li><a href="#map的遍历">Map的遍历</a></li>
+        <li><a href="#hashmap存储对象并遍历">HashMap存储对象并遍历</a></li>
+        <li><a href="#返回目录目录-6"><a href="#%E7%9B%AE%E5%BD%95">返回目录</a></a></li>
+        <li><a href="#end">END</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><h3 id="目录">目录</h3>
+<!--GFM-TOC -->
+<ul>
+<li><a href="#arraylist">ArrayList</a>: 集合类, ArrayList, 构造方法, 添加方法, 增删改查方法, 集合遍历</li>
+<li><a href="#%e9%9b%86%e5%90%88%e7%b1%bb">集合类</a>: 集合类的体系结构, Collection常用功能, 迭代器与并发修改异常, 泛型, foreach循环</li>
+<li><a href="#%e5%b8%b8%e8%a7%81%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84">常见数据结构</a>: 数组, 链表, 栈和队列的简单图解</li>
+<li><a href="#list">List</a>: List概述, List的特有功能, List的子类(ArrayList和LinkedList), 源码阅读tips</li>
+<li><a href="#set">Set</a>: Set接口的特点, HashSet的add()方法以及hashCode()和equals()方法的重写</li>
+<li><a href="#collections%e5%b7%a5%e5%85%b7%e7%b1%bb">Collections工具类</a>: Collection和Collections的区别(面试题), Collections的常用方法, 模拟斗地主发牌小题</li>
+<li><a href="#map">Map</a>: Map接口概述, Map的功能, Map的两种遍历方法, HashMap存储对象并遍历(自定义对象为key时重写两个方法)</li>
+</ul>
+<!--GFM-TOC -->
+<h2 id="arraylist">ArrayList</h2>
+<ul>
+<li>
+<h3 id="备注">备注</h3>
+<ul>
+<li>此部分在“Java常用API”系列中首次出现，这里直接复制并简化了相关内容。</li>
+<li>详见：<a href="https://github.com/anliux/JAVALearning/blob/master/notes/01-java-base/Java%E5%B8%B8%E7%94%A8API.md#%E9%9B%86%E5%90%88%E7%B1%BB%E4%B8%8Earraylist"target="_blank" rel="external nofollow noopener noreferrer">Java常用API: 集合类与ArrayList</a></li>
+</ul>
+</li>
+<li>
+<h3 id="集合类概述">集合类概述</h3>
+<ul>
+<li>引入
+<ul>
+<li>面向对象语言对事物的描述是通过对象体现的; 为了方便对多个对象进行操作，必须把这多个对象进行存储。</li>
+<li>而要想存储多个对象，就不能是一个基本的变量，而应该是一个容器类型的变量。</li>
+<li>已经学过的，有哪些是容器类型的呢? 数组和StringBuilder
+<ul>
+<li>StringBuilder的结果是一个字符串，不一定满足我们的要求，</li>
+<li>所以我们只能选择数组，这就是对象数组。</li>
+</ul>
+</li>
+<li>对象数组的弊端：不能适应变化的需求，因为数组的长度是固定的</li>
+<li>因此：为了适应变化的需求，Java就提供了 &lt;集合类&gt; 供我们使用。</li>
+</ul>
+</li>
+<li>集合类的特点：
+<ul>
+<li>长度可变 (相比数组的优势)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h3 id="arraylist概述">ArrayList概述</h3>
+<ul>
+<li>最常用的集合，通过阅读API学习</li>
+<li>java.util包下：因此需要导包 <code>import java.util.ArrayList;</code></li>
+<li><code>ArrayList&lt;E&gt;</code>：大小可变数组的实现。</li>
+<li><code>&lt;E&gt;</code>：一种特殊的数据类型，泛型。
+<ul>
+<li>在出现E的地方，暂时可以使用引用数据类型替换。</li>
+<li>举例：<code>ArrayList&lt;String&gt;</code>, <code>ArrayList&lt;Student&gt;</code>, &hellip;</li>
+</ul>
+</li>
+<li>打印自带小括号：syso输出 &lsquo;array：[hello, world]&rsquo;</li>
+</ul>
+</li>
+<li>
+<h3 id="构造方法">构造方法</h3>
+<ul>
+<li>无参：ArrayList()
+<ul>
+<li>示例：<code>ArrayList&lt;String&gt; array = new ArrayList&lt;String&gt;();//可以参考数组的定义格式</code></li>
+</ul>
+</li>
+<li>无参：ArrayList()：</li>
+</ul>
+</li>
+<li>
+<h3 id="添加元素">添加元素</h3>
+<ul>
+<li><code>public boolean add(E e)</code>:
+<ul>
+<li>依次添加元素，E根据定义的类型确定，用的多</li>
+<li>示例：<code>array.add(&quot;hello&quot;); //这条可作为一行独立代码</code></li>
+</ul>
+</li>
+<li><code>public void add(int index, E element)</code>:
+<ul>
+<li>在指定索引处添加元素，而原位置元素顺次后移一位，用的不多</li>
+<li>示例：<code>array.add(1, &quot;java&quot;);//原来索引1处的元素会顺次后移到索引2处</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h3 id="增删改查">增删改查</h3>
+<ul>
+<li>获取元素：
+<ul>
+<li><code>public E get(int index)</code>: 返回指定索引处的元素
+<ul>
+<li>注意：get方法不改变原有集合</li>
+</ul>
+</li>
+<li>示例：<code>System.out.println(&quot;get:&quot;+array.get(0));</code></li>
+</ul>
+</li>
+<li>集合长度：
+<ul>
+<li><code>public int size()</code>: 返回集合中的元素的个数</li>
+<li>示例：<code>System.out.println(&quot;size:&quot;+array.size());</code></li>
+</ul>
+</li>
+<li>删除元素：
+<ul>
+<li><code>public boolean remove(Object o)</code>: 删除指定的元素，并返回删除是否成功（布尔型）
+<ul>
+<li>注意：若存在，即可删除并返回true，否则返回false；成功时仅删除第一个，再次remove时删除下一个该元素。</li>
+<li>示例：<code>array.remove(&quot;hello&quot;);</code></li>
+</ul>
+</li>
+<li><code>public E remove(int index)</code>: 删除指定索引处的元素，并返回被删除的元素
+<ul>
+<li>注意：输入的是索引值，需要注意越界错误</li>
+<li>示例：<code>System.out.println(&quot;remove(index)&quot;: + array.remove(i));</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>修改元素：
+<ul>
+<li><code>public E set(int index, E element)</code> &ndash; 修改指定索引处的元素，返回被修改的元素（原来的元素）</li>
+<li>示例：<code>System.out.println(&quot;set:&quot;+array.set(1,&quot;python&quot;));</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h3 id="集合遍历">集合遍历</h3>
+<ul>
+<li>用for循环 + size()方法 + get()方法</li>
+<li>注：常规的做法是，输出时，先将get获取到的元素存储在变量中，然后输出变量。</li>
+</ul>
+</li>
+</ul>
+<!--GFM-TOC -->
+<ul>
+<li>
+<h3 id="返回目录目录"><a href="#%e7%9b%ae%e5%bd%95">返回目录</a></h3>
+</li>
+</ul>
+<!--GFM-TOC -->
+<h2 id="集合类">集合类</h2>
+<ul>
+<li>
+<h3 id="集合类的体系结构">集合类的体系结构</h3>
+<ul>
+<li>体系结构:
+<ul>
+<li>怎么学习？
+<ul>
+<li>从最顶层开始学习，因为最顶层包含了所有的共性。</li>
+</ul>
+</li>
+<li>怎么使用？
+<ul>
+<li>使用最底层，因为最底层就是具体的实现。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>集合的体系结构：
+<ul>
+<li>由于不同的数据结构(数据的组织、存储方式)，所以Java为我们提供了不同的集合。</li>
+<li>不同的集合功能相似，不断向上提取，将共性抽取出来，就是集合体系结构的原因。</li>
+</ul>
+</li>
+<li>ArrayList &ndash;&gt; List &ndash;&gt; Collection
+<ul>
+<li>Collection: 最顶层</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h3 id="collection常用功能">Collection常用功能</h3>
+<ul>
+<li>
+<p>Collection:</p>
+<ul>
+<li>java.util包下</li>
+<li>接口，不能实例化 &ndash; 用子类创建(多态)</li>
+<li>示例：<code>Collection c = new ArrayList();//多态,父类引用指向子类对象</code></li>
+</ul>
+</li>
+<li>
+<p>boolean add(E e)：添加元素e，返回是否添加成功</p>
+<ul>
+<li>ArrayList: 允许重复，返回值恒为true</li>
+<li>示例：<code>c.add(&quot;hello&quot;);</code>
+<ul>
+<li>可以直接输出；可赋值给Boolean类型的变量</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>void clear(): 清空集合</p>
+<ul>
+<li>会清空集合中所有元素，慎用</li>
+<li>示例：<code>c.clear();</code></li>
+</ul>
+</li>
+<li>
+<p>boolean contains(Object o): 判断集合中是否包含指定元素</p>
+<ul>
+<li>示例：<code>syso(c.contains(&quot;hello&quot;));//true</code></li>
+</ul>
+</li>
+<li>
+<p>boolean isEmpty()：判断集合是否为空</p>
+<ul>
+<li>示例：<code>syso(c.isEmpty());//false</code></li>
+<li>注：<code>c.clear();</code> 后会判空为true</li>
+</ul>
+</li>
+<li>
+<p>boolean remove(Object o): 删除元素，返回删除成功与否</p>
+<ul>
+<li>示例：<code>syso(c.remove(&quot;Java&quot;));//删除没有的元素，返回false</code></li>
+</ul>
+</li>
+<li>
+<p>int size(): 返回集合中的元素个数</p>
+<ul>
+<li>求集合对象的个数或长度： 注意与 数组length属性 和  String的length()方法区分。</li>
+<li>示例：<code>syso(c.size());</code></li>
+</ul>
+</li>
+<li>
+<p>Object toArray(): 将集合转换为Object类型的数组</p>
+<ul>
+<li>Object类型：任意类型的父类型，确保涵盖所有类型的元素。</li>
+<li>使用场景：用数组思路遍历集合时可以先转为数组类型</li>
+<li>示例：<code>Object[] objs = c.toArray();//转为Object类型的数组后遍历</code></li>
+</ul>
+</li>
+<li>
+<p>迭代器：<code>Iterator&lt;E&gt; iterator()</code></p>
+<ul>
+<li>下一小节详述</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h3 id="迭代器与并发修改异常">迭代器与并发修改异常</h3>
+<ul>
+<li>集合的遍历方式：
+<ul>
+<li>法1：toArray() 把集合转为数组，然后以数组的方式遍历
+<ul>
+<li>局限性：不是所有集合都与索引相关</li>
+</ul>
+</li>
+<li>法2：<code>Iterator&lt;E&gt; iterator()</code>:
+<ul>
+<li>返回一个迭代器对象，通过迭代器对象来迭代集合</li>
+<li>后面还有一个foreach循环方法</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>迭代器：
+<ul>
+<li><code>Iterator&lt;E&gt; iterator()</code>:
+<ul>
+<li>注意区别前后两个迭代器
+<ul>
+<li>iterator(): 是Collection类的一个方法</li>
+<li>Iterator接口：是一个接口</li>
+</ul>
+</li>
+<li>Collection对象的这个iterator()方法的作用就是返回一个迭代器对象，因此可以通过此方法获取迭代器对象。</li>
+</ul>
+</li>
+<li>Iterator接口：
+<ul>
+<li>用于遍历集合</li>
+<li>有三种方法：hasNext(), next(), remove()</li>
+</ul>
+</li>
+<li>获取迭代器方法：
+<ul>
+<li>由Collection对象的iterator()方法获取</li>
+<li>代码示例：<code>Iterator it = c.iterator();</code></li>
+</ul>
+</li>
+<li><code>E next()</code>方法：
+<ul>
+<li>返回下一个元素</li>
+<li>没有下一个元素时报错：
+<ul>
+<li>抛出异常：Exception in thread &ldquo;main&rdquo; java.util.NoSuchElementException</li>
+</ul>
+</li>
+<li>代码示例：<code>syso(it.next());//返回获取到的元素，或者报错</code></li>
+</ul>
+</li>
+<li><code>boolean hasNext()</code>:
+<ul>
+<li>判断是否有下一个元素可以获取，有则返回true，否则false</li>
+</ul>
+</li>
+<li>代码示例：</li>
+</ul>
+<div class="highlight" id="id-1"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="w">  </span><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.ArrayList</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Collection</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Iterator</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">IteratorDemo</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="n">Collection</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="n">c</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;hello&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="n">c</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;world&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="n">c</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;java&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="n">Iterator</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c</span><span class="p">.</span><span class="na">iterator</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="k">while</span><span class="p">(</span><span class="n">it</span><span class="p">.</span><span class="na">hasNext</span><span class="p">())</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">it</span><span class="p">.</span><span class="na">next</span><span class="p">());</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">it</span><span class="p">.</span><span class="na">next</span><span class="p">());</span><span class="c1">//java.util.NoSuchElementException</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="p">}</span><span class="w">  </span></span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li>并发修改异常
+<ul>
+<li>并发修改异常：
+<ul>
+<li>ConcurrentModificationException</li>
+</ul>
+</li>
+<li>异常分析：
+<ul>
+<li>迭代器是依赖于集合的，相当于集合的一个副本；</li>
+<li>当迭代器操作时，如果发现和集合不一样，会抛出异常。</li>
+<li>迭代中途给集合添加元素触发了“不一样”</li>
+</ul>
+</li>
+<li>异常代码示例：</li>
+</ul>
+<div class="highlight" id="id-2"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="w">  </span><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.ArrayList</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Collection</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Iterator</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">IteratorDemo</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="n">Collection</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="n">c</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;hello&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="n">c</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;world&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="n">c</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;java&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="n">Iterator</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c</span><span class="p">.</span><span class="na">iterator</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="k">while</span><span class="p">(</span><span class="n">it</span><span class="p">.</span><span class="na">hasNext</span><span class="p">())</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">String</span><span class="p">)</span><span class="n">it</span><span class="p">.</span><span class="na">next</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="s">&#34;java&#34;</span><span class="p">))</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="n">c</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;android&#34;</span><span class="p">);</span><span class="c1">//java.util.ConcurrentModificationException</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>使用ListIterator解决
+<ul>
+<li>让迭代器去添加或修改，会同步到集合中，这样就不会触发并发修改异常</li>
+<li>在Iterator接口中没有发现add相关方法，找Iterator的子接口ListIterator中找到add()方法</li>
+<li>ListIterator创建：<code>ListIterator&lt;E&gt;	listIterator()</code>
+<ul>
+<li>返回此列表元素的列表迭代器（按适当顺序）。</li>
+</ul>
+</li>
+<li>综上：
+<ul>
+<li>创建集合部分，用List代替Collection；</li>
+<li>创建迭代器部分，用list.listIterator()方法；</li>
+<li>添加元素部分：用ListIterator迭代器的add()方法</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>改进后的代码示例：</li>
+</ul>
+<div class="highlight" id="id-3"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="w">    </span><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.ArrayList</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.ListIterator</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">IteratorDemo</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">//Collection c = new ArrayList();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">List</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="p">();</span><span class="c1">//也可以ArrayList代替List</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">c</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;hello&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">c</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;world&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">c</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;java&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">//Iterator it = c.iterator();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">ListIterator</span><span class="w"> </span><span class="n">lit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c</span><span class="p">.</span><span class="na">listIterator</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">while</span><span class="p">(</span><span class="n">lit</span><span class="p">.</span><span class="na">hasNext</span><span class="p">())</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="n">String</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">String</span><span class="p">)</span><span class="n">lit</span><span class="p">.</span><span class="na">next</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="k">if</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="s">&#34;java&#34;</span><span class="p">))</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="c1">//c.add(&#34;android&#34;);//java.util.ConcurrentModificationException</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">lit</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;android&#34;</span><span class="p">);</span><span class="c1">//不要用集合添加，而是使用迭代器添加，迭代器会同步到集合</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">c</span><span class="p">);</span><span class="c1">//[hello, world, java, android]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">      </span></span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+</li>
+<li>
+<h3 id="泛型">泛型</h3>
+<ul>
+<li>泛型概述：
+<ul>
+<li>引入：
+<ul>
+<li>集合可以存储任意类型的数据</li>
+<li>当存储了不同类型的数据，就有可能在转换的时候发生类型转换异常 ClassCastException</li>
+<li>java为了解决这个问题，就引入了一种机制，即泛型。</li>
+</ul>
+</li>
+<li>概述：
+<ul>
+<li>一种广泛的类型</li>
+<li>把明确数据类型的工作提前到了编译时期</li>
+<li>借鉴了数组的特点</li>
+</ul>
+</li>
+<li>好处：
+<ul>
+<li>避免了数据类型转换异常的发生；</li>
+<li>减少了编辑器里的黄色警告标识；</li>
+<li>简化了代码的书写</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>泛型使用：
+<ul>
+<li>查阅API/Ctrl查看源码，当看到类或接口有<code>&lt;E&gt;</code>，就可以使用泛型。</li>
+<li>可以标明泛型而没有写，编辑器会给黄色警告线</li>
+<li>注意：<code>&lt;E&gt;</code>中的E在实际代码中需要替换为具体的对象类型</li>
+<li>示例：
+<ul>
+<li><code>Collection&lt;Student&gt; c = new ArrayList&lt;Student&gt;();//声明集合c总存储的对象类型为Student</code></li>
+<li><code>Iterator&lt;Student&gt; it = c.iterator();</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>代码示例：</li>
+</ul>
+</li>
+<li>
+<h3 id="foreach循环">foreach循环</h3>
+<ul>
+<li>foreach:
+<ul>
+<li>增强for循环，一般用于遍历集合或数组</li>
+</ul>
+</li>
+<li>格式：
+<ul>
+<li>每次循环，将 (冒号后的)集合或数组对象中的一个元素 放入 (冒号前的)定义为元素类型的变量中，并在循环中使用取出的变量</li>
+</ul>
+</li>
+</ul>
+<div class="highlight" id="id-4"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="k">for</span><span class="p">(</span><span class="n">元素的类型</span><span class="w">  </span><span class="n">变量</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">集合或者数组对象</span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">可以直接使用变量</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>注意：
+<ul>
+<li>增强for循环提供了一种新的遍历集合的方法。</li>
+<li>增强for循环中不能修改集合，否则会出现并发修改异常。</li>
+<li>增强for循环底层是迭代器循环(上一条的原因)
+<ul>
+<li>Collection 的父接口 Iterator：</li>
+<li>其中有一条说明：<code>public interface Iterable&lt;T&gt;</code>
+<ul>
+<li>实现这个接口允许对象成为 &ldquo;foreach&rdquo; 语句的目标。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>代码示例：</li>
+</ul>
+<div class="highlight" id="id-5"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="w">  </span><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.ArrayList</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Collection</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.ListIterator</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">IteratorDemo</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="n">Collection</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="n">c</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;hello&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="n">c</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;world&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="n">c</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;java&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">string</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">string</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+<!--GFM-TOC -->
+<ul>
+<li>
+<h3 id="返回目录目录-1"><a href="#%e7%9b%ae%e5%bd%95">返回目录</a></h3>
+</li>
+</ul>
+<!--GFM-TOC -->
+<h2 id="常见数据结构">常见数据结构</h2>
+<ul>
+<li>
+<h3 id="数组">数组</h3>
+<ul>
+<li>查找快，增删慢</li>
+<li><img loading="lazy" src="https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/collections/%E5%B8%B8%E8%A7%81%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%EF%BC%88%E6%95%B0%E7%BB%84%EF%BC%89.bmp" srcset="https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/collections/%E5%B8%B8%E8%A7%81%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%EF%BC%88%E6%95%B0%E7%BB%84%EF%BC%89.bmp?size=small, https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/collections/%E5%B8%B8%E8%A7%81%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%EF%BC%88%E6%95%B0%E7%BB%84%EF%BC%89.bmp?size=medium 1.5x, https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/collections/%E5%B8%B8%E8%A7%81%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%EF%BC%88%E6%95%B0%E7%BB%84%EF%BC%89.bmp?size=large 2x" sizes="auto" data-title="常见数据结构（数组）" data-alt="常见数据结构（数组）" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></li>
+</ul>
+</li>
+<li>
+<h3 id="链表">链表</h3>
+<ul>
+<li>查询快，增删慢</li>
+<li><img loading="lazy" src="https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/collections/%E5%B8%B8%E8%A7%81%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%EF%BC%88%E9%93%BE%E8%A1%A8%EF%BC%89.bmp" srcset="https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/collections/%E5%B8%B8%E8%A7%81%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%EF%BC%88%E9%93%BE%E8%A1%A8%EF%BC%89.bmp?size=small, https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/collections/%E5%B8%B8%E8%A7%81%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%EF%BC%88%E9%93%BE%E8%A1%A8%EF%BC%89.bmp?size=medium 1.5x, https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/collections/%E5%B8%B8%E8%A7%81%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%EF%BC%88%E9%93%BE%E8%A1%A8%EF%BC%89.bmp?size=large 2x" sizes="auto" data-title="常见数据结构（链表）" data-alt="常见数据结构（链表）" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></li>
+</ul>
+</li>
+<li>
+<h3 id="栈和队列">栈和队列</h3>
+<ul>
+<li>栈：先进后出</li>
+<li>队列：先进先出</li>
+<li><img loading="lazy" src="https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/collections/%E5%B8%B8%E8%A7%81%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%EF%BC%88%E6%A0%88%26%E9%98%9F%E5%88%97%EF%BC%89.bmp" srcset="https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/collections/%E5%B8%B8%E8%A7%81%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%EF%BC%88%E6%A0%88%26%E9%98%9F%E5%88%97%EF%BC%89.bmp?size=small, https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/collections/%E5%B8%B8%E8%A7%81%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%EF%BC%88%E6%A0%88%26%E9%98%9F%E5%88%97%EF%BC%89.bmp?size=medium 1.5x, https://raw.githubusercontent.com/anliux/JAVALearning/master/images/01-java-base/collections/%E5%B8%B8%E8%A7%81%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%EF%BC%88%E6%A0%88%26%E9%98%9F%E5%88%97%EF%BC%89.bmp?size=large 2x" sizes="auto" data-title="常见数据结构（栈和队列）" data-alt="常见数据结构（栈和队列）" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const i of ['style', 'data-title','data-alt','onerror','onload']){this.removeAttribute(i);}"/></li>
+</ul>
+</li>
+</ul>
+<!--GFM-TOC -->
+<ul>
+<li>
+<h3 id="返回目录目录-2"><a href="#%e7%9b%ae%e5%bd%95">返回目录</a></h3>
+</li>
+</ul>
+<!--GFM-TOC -->
+<h2 id="list">List</h2>
+<ul>
+<li>
+<h3 id="list概述">List概述</h3>
+<ul>
+<li>List接口：
+<ul>
+<li>有序的 collection（也称为序列）。</li>
+<li>此接口的用户可以对列表中每个元素的插入位置进行精确地控制。</li>
+<li>用户可以根据元素的整数索引（在列表中的位置）访问元素，并搜索列表中的元素。</li>
+</ul>
+</li>
+<li>List特点：
+<ul>
+<li>有序的(存储和读取的顺序是一样的);</li>
+<li>有整数索引；</li>
+<li>允许重复。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h3 id="list的特有功能">List的特有功能</h3>
+<ul>
+<li>针对Collection父类的特有功能，集中体现为索引值相关的增删改查</li>
+<li>创建可用的List对象：
+<ul>
+<li>示例：<code>List list = new ArrayList();</code></li>
+</ul>
+</li>
+<li>注意：
+<ul>
+<li>涉及到索引值，需要注意越界异常
+<ul>
+<li><code>java.lang.IndexOutOfBoundsException</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>void add(int index, E element)</code>:
+<ul>
+<li>在指定索引位置添加指定元素</li>
+<li>指定索引位置已有元素时，会将已有元素向 索引值+1 的位置移动一位，将新元素放在指定索引位置。</li>
+<li>示例：<code>list.add(1,&quot;hello&quot;);</code></li>
+</ul>
+</li>
+<li><code>E get(int index)</code>:
+<ul>
+<li>根据索引返回元素</li>
+<li>需要注意越界异常</li>
+<li>示例：<code>System.out.println(list.get(1));</code></li>
+</ul>
+</li>
+<li><code>E remove(int index)</code>:
+<ul>
+<li>删除指定元素并返回</li>
+<li>注意越界异常</li>
+<li>示例：<code>System.out.println(list.remove(1));//删除索引1处的元素，并将这个被删除的元素返回</code></li>
+</ul>
+</li>
+<li><code>E set(int index, E element)</code>:
+<ul>
+<li>将指定索引位置的元素替换为新的指定元素，并将原来的元素返回</li>
+<li>示例：<code>System.out.println(list.set(0,&quot;android&quot;));//返回值为原索引0处的元素</code></li>
+</ul>
+</li>
+<li>代码示例：</li>
+</ul>
+<div class="highlight" id="id-6"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="w">    </span><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.ArrayList</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">ListDemo</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">List</span><span class="w"> </span><span class="n">list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">0</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;hello&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">0</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;java&#34;</span><span class="p">);</span><span class="c1">//将原索引0位置的元素向后移动一位，将新元素放在索引0的位置</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">1</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;world&#34;</span><span class="p">);</span><span class="c1">//同上</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">list</span><span class="p">);</span><span class="c1">//[java, world, hello]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">list</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">1</span><span class="p">));</span><span class="c1">//world</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">//System.out.println(list.get(3));//java.lang.IndexOutOfBoundsException</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">list</span><span class="p">.</span><span class="na">remove</span><span class="p">(</span><span class="n">0</span><span class="p">));</span><span class="c1">//java</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">list</span><span class="p">);</span><span class="c1">//[world, hello]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">list</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="n">1</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;android&#34;</span><span class="p">));</span><span class="c1">//hello</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">list</span><span class="p">);</span><span class="c1">//[world, android]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">  </span></span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<h3 id="list的子类">List的子类</h3>
+<ul>
+<li>ArrayList:
+<ul>
+<li>底层是数组结构，查询快，增删慢；</li>
+</ul>
+</li>
+<li>LinkedList
+<ul>
+<li>底层是链表结构，查询慢，增删快。</li>
+</ul>
+</li>
+<li>如何选择使用不同的集合？
+<ul>
+<li>如果查询多，增删少：使用ArrayList</li>
+<li>如果查询少，增删多：使用LinkedList</li>
+<li>如果不知道使用什么：则使用ArrayList</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h3 id="linkedlist的特有功能">LinkedList的特有功能</h3>
+<ul>
+<li>void addFirst(E e):
+<ul>
+<li>将元素添加到索引为0的位置</li>
+<li>示例：<code>list.addFirst(&quot;java&quot;);</code></li>
+</ul>
+</li>
+<li>void addLast(E e):
+<ul>
+<li>将元素添加到索引为size()-1的位置</li>
+<li>示例：<code>list.addLast(&quot;android&quot;);</code></li>
+</ul>
+</li>
+<li>E getFirst():
+<ul>
+<li>获取索引为0的元素</li>
+<li>示例：<code>System.out.println(list.getFirst());//java</code></li>
+</ul>
+</li>
+<li>E getLast():
+<ul>
+<li>获取索引为size()-1的元素</li>
+<li>示例：<code>System.out.println(list.getLast());//android</code></li>
+</ul>
+</li>
+<li>E removeFirst():
+<ul>
+<li>删除索引为0的元素并返回该元素</li>
+<li>示例：<code>System.out.println(list.removeFirst());//java</code></li>
+</ul>
+</li>
+<li>E removeLast():
+<ul>
+<li>删除索引为size()-1的元素并返回该元素</li>
+<li>示例：<code>System.out.println(list.removeLast());//android</code></li>
+</ul>
+</li>
+<li>LinkedList这些功能的作用：
+<ul>
+<li>可以模拟栈和队列的特性</li>
+</ul>
+</li>
+<li>代码示例：</li>
+</ul>
+<div class="highlight" id="id-7"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="w">    </span><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.LinkedList</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">LinkedListDemo</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">LinkedList</span><span class="w"> </span><span class="n">list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">LinkedList</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;hello&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;world&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">list</span><span class="p">);</span><span class="c1">//[hello, world]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">list</span><span class="p">.</span><span class="na">addFirst</span><span class="p">(</span><span class="s">&#34;java&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">list</span><span class="p">.</span><span class="na">addLast</span><span class="p">(</span><span class="s">&#34;android&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">list</span><span class="p">);</span><span class="c1">//[java, hello, world, android]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">list</span><span class="p">.</span><span class="na">getFirst</span><span class="p">());</span><span class="c1">//java</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">list</span><span class="p">.</span><span class="na">getLast</span><span class="p">());</span><span class="c1">//android</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">list</span><span class="p">.</span><span class="na">removeFirst</span><span class="p">());</span><span class="c1">//java</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">list</span><span class="p">.</span><span class="na">removeLast</span><span class="p">());</span><span class="c1">//android</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">list</span><span class="p">);</span><span class="c1">//[hello, world]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">  </span></span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<h3 id="番外由小题目引入源码查阅">番外：由小题目引入源码查阅</h3>
+<ul>
+<li>题目：
+<ul>
+<li>
+<ol>
+<li>定义一个方法，返回指定列表中指定元素的位置</li>
+</ol>
+</li>
+<li>
+<ol start="2">
+<li>在1的基础上，定义方法，判断元素是否存在</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>步骤：
+<ul>
+<li>
+<ol>
+<li>定义index()方法，for循环遍历集合，get获取每个元素，然后equals比较是否与目标相同，并返回相应的Boolean值。</li>
+</ol>
+</li>
+<li>
+<ol start="2">
+<li>定义contains()方法，调用1的index()获取索引值，然后判断<code>index &gt;= 0</code>是否为真，为真则存在，否则不存在</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>查阅源码：contains()方法
+<ul>
+<li>会发现源码的判断方法，同样是调用索引值的方法，然后判断索引值是否大于等于0</li>
+</ul>
+</li>
+<li>感悟：
+<ul>
+<li>java源码也并没有多么高深，是一步一步建立起来的</li>
+<li>Java源码是代码规范和学习的良好教材，多读多想。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<!--GFM-TOC -->
+<ul>
+<li>
+<h3 id="返回目录目录-3"><a href="#%e7%9b%ae%e5%bd%95">返回目录</a></h3>
+</li>
+</ul>
+<!--GFM-TOC -->
+<h2 id="set">Set</h2>
+<ul>
+<li>
+<h3 id="set接口的特点">Set接口的特点</h3>
+<ul>
+<li>无序：
+<ul>
+<li>存储和读取的顺序有可能不一样</li>
+</ul>
+</li>
+<li>不允许重复：
+<ul>
+<li>要求元素唯一</li>
+</ul>
+</li>
+<li>没有索引</li>
+</ul>
+</li>
+<li>
+<h3 id="hashset的add方法添加元素">HashSet的add()方法添加元素</h3>
+<ul>
+<li>HashSet的add()方法判断是否重复的原理：
+<ul>
+<li>第一步：使用当前集合中的每一个元素和新添加元素的hash值进行比较
+<ul>
+<li>如果hash值不一样，则直接添加新的元素；</li>
+<li>如果hash值一样，则比较地址值或使用equals方法进行比较</li>
+</ul>
+</li>
+<li>第二步：比较地址值或使用equals方法
+<ul>
+<li>如果比较结果一样，则认为是重复不添加</li>
+</ul>
+</li>
+<li>所有比较结果都不一样，则添加</li>
+</ul>
+</li>
+<li>使用HashSet存储自定义对象
+<ul>
+<li>以Student为例，每个Student对象的hash值/地址值都不一样，即使姓名+年龄相同，也不会判为重复；</li>
+<li>研究add()添加判重复原理之后，可以尝试重写hashCode()和equals()方法
+<ul>
+<li>hashCode(): 返回确定值，跳过hash值判断，直接进入equals重写的方法进行姓名/年龄的比较</li>
+<li>equals()：分别比较成员变量是否相同</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>hashCode()和equals()方法的优化：
+<ul>
+<li>参考eclipse直接生成的这两个方法</li>
+<li>hashCode():
+<ul>
+<li>以上方法中，有一些对象的成员变量完全不同，仍然进行了equals比较，效率较低；</li>
+<li>可以让成员变量不同的对象，他们的hash值也不同，可以减少一部分equals比较，从而提高效率</li>
+<li>示例:<code>return age + name.hashCode();</code></li>
+</ul>
+</li>
+<li>equals():
+<ul>
+<li>比较是否为同一个对象，提高效率：<code>if(this == obj) return true;</code></li>
+<li>比较是否为同一类，因为后面有Object向下转型，提高健壮性：<code>if(this.getClass() ! = obj.getClass()) return false;</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>代码示例：
+<div class="highlight" id="id-8"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="w">  </span><span class="nd">@Override</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">hashCode</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">final</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">prime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">31</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">1</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">prime</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">age</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">prime</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">((</span><span class="n">name</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">0</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">name</span><span class="p">.</span><span class="na">hashCode</span><span class="p">());</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//加入一些额外的计算，在hash值比较阶段筛掉一些对象</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nd">@Override</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">equals</span><span class="p">(</span><span class="n">Object</span><span class="w"> </span><span class="n">obj</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//判断是否为同一对象，提高效率</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">obj</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//判断比较对象是否为空，提高效率</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">obj</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//判断类型，提高健壮性</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">getClass</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">obj</span><span class="p">.</span><span class="na">getClass</span><span class="p">())</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">Student</span><span class="w"> </span><span class="n">other</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">Student</span><span class="p">)</span><span class="w"> </span><span class="n">obj</span><span class="p">;</span><span class="c1">//向下转型</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">//比较成员变量的是否一致</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">age</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">other</span><span class="p">.</span><span class="na">age</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">other</span><span class="p">.</span><span class="na">name</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">name</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="n">other</span><span class="p">.</span><span class="na">name</span><span class="p">))</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="p">}</span><span class="w">    </span></span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+</li>
+</ul>
+<!--GFM-TOC -->
+<ul>
+<li>
+<h3 id="返回目录目录-4"><a href="#%e7%9b%ae%e5%bd%95">返回目录</a></h3>
+</li>
+</ul>
+<!--GFM-TOC -->
+<h2 id="collections工具类">Collections工具类</h2>
+<ul>
+<li>
+<h3 id="常见面试题">常见面试题：</h3>
+<ul>
+<li>Collection和Collections有什么区别？</li>
+<li>Collection:
+<ul>
+<li>集合体系的最顶层，包含了集合体系的共性</li>
+</ul>
+</li>
+<li>Collections:
+<ul>
+<li>一个工具类，方法都是用于操作Collection的</li>
+<li>工具类不需要创建对象，方法是静态的，直接用类名调用。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h3 id="collections的常见方法">Collections的常见方法</h3>
+<ul>
+<li><code>static int binarySearch(List list, T key)</code>:
+<ul>
+<li>使用二分搜索法搜索指定列表，以获得指定对象。</li>
+<li>参数只能是List: 数据要求是有序的
+<ul>
+<li>set是无序的，不行；Collection也不行，可能是set</li>
+</ul>
+</li>
+<li>注意：
+<ul>
+<li>对象需要是List类型</li>
+<li>泛型位置不能是int, 而应该是Integer，因为ArrayList存放的是对象元素</li>
+</ul>
+</li>
+<li>代码示例：</li>
+</ul>
+<div class="highlight" id="id-9"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="w">    </span><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.ArrayList</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Collections</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">CollectionsDemo</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">//二分查找</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span><span class="w"> </span><span class="n">list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span><span class="p">();</span><span class="c1">//Integer，不是int</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">1</span><span class="p">);</span><span class="c1">//自动装箱</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">2</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">4</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">6</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Collections</span><span class="p">.</span><span class="na">binarySearch</span><span class="p">(</span><span class="n">list</span><span class="p">,</span><span class="w"> </span><span class="n">4</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">index</span><span class="p">);</span><span class="c1">//2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">    </span></span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li><code>static void copy(List dest, List src)</code>:
+<ul>
+<li>将所有元素从一个列表复制到另一个列表，即把原列表中的数据覆盖到目标列表。</li>
+<li>目标列表在前，源列表在后，不要搞混!!</li>
+<li>注意：目标列表的长度至少等于源列表的长度
+<ul>
+<li>新建目标列表的长度为空，可以先添加空串或任意内容到目标列表，使其长度大于源列表。</li>
+</ul>
+</li>
+<li>代码示例：</li>
+</ul>
+<div class="highlight" id="id-10"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="c1">//copy</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">src</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="n">src</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;hello&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="n">src</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;world&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="n">src</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;java&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">dest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="n">dest</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;&#34;</span><span class="p">);</span><span class="c1">//为保证目标长度大于源长度，可以添加空串</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="n">dest</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="n">dest</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="n">Collections</span><span class="p">.</span><span class="na">copy</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span><span class="w"> </span><span class="n">src</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">dest</span><span class="p">);</span><span class="c1">//[hello, world, java]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w"> </span></span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li><code>static void fill(List list, Object obj) </code>
+<ul>
+<li>使用指定元素替换指定列表中的所有元素。</li>
+<li>代码示例：</li>
+</ul>
+<div class="highlight" id="id-11"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;hello&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;world&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;java&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">list</span><span class="p">);</span><span class="c1">//[hello, world, java]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">Collections</span><span class="p">.</span><span class="na">fill</span><span class="p">(</span><span class="n">list</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;android&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">list</span><span class="p">);</span><span class="c1">//[android, android, android]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">    </span></span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li><code>static void reverse(List list)</code>:
+<ul>
+<li>反转指定列表中元素的顺序。</li>
+<li>代码示例：<code>Collections.reverse(list);//反转后的[1，2，3，4]列表变为[4,3,2,1]</code></li>
+</ul>
+</li>
+<li><code>static void shuffle(List list)</code>:
+<ul>
+<li>使用默认随机源对指定列表进行置换。</li>
+<li>&ldquo;傻否&rdquo;，随机置换：每次运行后的结果可能都不一样。</li>
+<li>代码示例: <code>Collections.shuffle(list);//随机置换后的结果为任意排列</code></li>
+</ul>
+</li>
+<li><code>static void sort(List list)</code>:
+<ul>
+<li>根据元素的自然顺序对指定列表按升序进行排序。</li>
+<li>注：String类也能排，可能是按首字母对应的int</li>
+<li>代码示例：<code>Collections.sort(list);</code></li>
+</ul>
+</li>
+<li><code>static void swap(List list, int i, int j)</code>:
+<ul>
+<li>在指定列表的指定位置处交换元素。</li>
+<li>代码示例：``Collections.swap(list, 0, 2);</li>
+</ul>
+</li>
+<li>小结：
+<ul>
+<li>方法返回值是void:
+<ul>
+<li>大概率传入的列表发生了变化</li>
+</ul>
+</li>
+<li>方法返回值是具体的值，非void:
+<ul>
+<li>大概率传入的列表没有变化，而是从其中取了某个元素等返回了</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h3 id="模拟斗地主发牌">模拟斗地主发牌</h3>
+<ul>
+<li>步骤：
+<ul>
+<li>买牌：创建存放卡牌的box容器，并将54张牌放入box中；</li>
+<li>洗牌：调用Collections的洗牌方法shuffle();</li>
+<li>发牌：(创建三个玩家集合) 遍历box元素，并将这些牌分给三个玩家。</li>
+</ul>
+</li>
+<li>代码示例：</li>
+</ul>
+<div class="highlight" id="id-12"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="w">      </span><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.ArrayList</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Collections</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">CollectionsTest</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="c1">//买牌</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">arr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="s">&#34;红桃&#34;</span><span class="p">,</span><span class="s">&#34;方块&#34;</span><span class="p">,</span><span class="s">&#34;黑桃&#34;</span><span class="p">,</span><span class="s">&#34;梅花&#34;</span><span class="p">};</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">arr2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="s">&#34;A&#34;</span><span class="p">,</span><span class="s">&#34;2&#34;</span><span class="p">,</span><span class="s">&#34;3&#34;</span><span class="p">,</span><span class="s">&#34;4&#34;</span><span class="p">,</span><span class="s">&#34;5&#34;</span><span class="p">,</span><span class="s">&#34;6&#34;</span><span class="p">,</span><span class="s">&#34;7&#34;</span><span class="p">,</span><span class="s">&#34;8&#34;</span><span class="p">,</span><span class="s">&#34;9&#34;</span><span class="p">,</span><span class="s">&#34;10&#34;</span><span class="p">,</span><span class="s">&#34;J&#34;</span><span class="p">,</span><span class="s">&#34;Q&#34;</span><span class="p">,</span><span class="s">&#34;K&#34;</span><span class="p">};</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">box</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">arr</span><span class="p">.</span><span class="na">length</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">0</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">arr2</span><span class="p">.</span><span class="na">length</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">              </span><span class="n">box</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">]+</span><span class="n">arr2</span><span class="o">[</span><span class="n">j</span><span class="o">]</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">}</span><span class="w">			
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="n">box</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;大王&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="n">box</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&#34;小王&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">box</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">box</span><span class="p">.</span><span class="na">size</span><span class="p">());</span><span class="c1">//54</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="c1">//洗牌</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="n">Collections</span><span class="p">.</span><span class="na">shuffle</span><span class="p">(</span><span class="n">box</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="c1">//发牌</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">player1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">player2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">player3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">box</span><span class="p">.</span><span class="na">size</span><span class="p">()</span><span class="o">-</span><span class="n">3</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="c1">//留三张底牌给地主</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="c1">//对取模，余数为0，1，2分别派给三个玩家</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">3</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">              </span><span class="n">player1</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">box</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">i</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">}</span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">3</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">              </span><span class="n">player2</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">box</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">i</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">}</span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">3</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">              </span><span class="n">player3</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">box</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">i</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="c1">//看牌</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;玩家1&#34;</span><span class="o">+</span><span class="n">player1</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;玩家2&#34;</span><span class="o">+</span><span class="n">player2</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34;玩家3&#34;</span><span class="o">+</span><span class="n">player3</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="cm">/*
+</span></span></span><span class="line"><span class="cl"><span class="cm">           * [红桃A, 红桃2, 红桃3, 红桃4, 红桃5, 红桃6, 红桃7, 红桃8, 红桃9, 红桃10, 红桃J, 红桃Q, 红桃K, 方块A, 方块2, 方块3, 方块4, 方块5, 方块6, 方块7, 方块8, 方块9, 方块10, 方块J, 方块Q, 方块K, 黑桃A, 黑桃2, 黑桃3, 黑桃4, 黑桃5, 黑桃6, 黑桃7, 黑桃8, 黑桃9, 黑桃10, 黑桃J, 黑桃Q, 黑桃K, 梅花A, 梅花2, 梅花3, 梅花4, 梅花5, 梅花6, 梅花7, 梅花8, 梅花9, 梅花10, 梅花J, 梅花Q, 梅花K, 大王, 小王]
+</span></span></span><span class="line"><span class="cl"><span class="cm">            54
+</span></span></span><span class="line"><span class="cl"><span class="cm">            玩家1[黑桃Q, 梅花J, 方块4, 梅花9, 梅花7, 黑桃10, 方块7, 红桃6, 红桃9, 梅花3, 方块K, 梅花Q, 黑桃3, 黑桃K, 梅花4, 黑桃7, 方块2]
+</span></span></span><span class="line"><span class="cl"><span class="cm">            玩家2[梅花6, 红桃10, 方块8, 梅花K, 红桃3, 梅花2, 红桃J, 方块A, 红桃8, 方块6, 大王, 黑桃J, 黑桃2, 小王, 红桃7, 黑桃A, 梅花10]
+</span></span></span><span class="line"><span class="cl"><span class="cm">            玩家3[梅花5, 梅花A, 方块5, 方块3, 黑桃5, 黑桃8, 红桃2, 方块J, 黑桃9, 黑桃6, 红桃5, 方块9, 红桃A, 红桃Q, 黑桃4, 方块10, 红桃K] 
+</span></span></span><span class="line"><span class="cl"><span class="cm">           * */</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">  </span></span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+<!--GFM-TOC -->
+<ul>
+<li>
+<h3 id="返回目录目录-5"><a href="#%e7%9b%ae%e5%bd%95">返回目录</a></h3>
+</li>
+</ul>
+<!--GFM-TOC -->
+<h2 id="map">Map</h2>
+<ul>
+<li>
+<h3 id="map接口概述">Map接口概述</h3>
+<ul>
+<li>Map:
+<ul>
+<li>一种用于存储对应关系的集合</li>
+<li>例如：姓名-学号这样的对应关系</li>
+</ul>
+</li>
+<li><code>Map&lt;K,V&gt;接口</code>：
+<ul>
+<li>Map接口，独立于Collection的另一种集合形式</li>
+<li>将键映射到值的对象。</li>
+<li>一个映射不能包含重复的键，每一个键最多只能映射到一个值。
+<ul>
+<li>一对一：一个学号对应一个姓名</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Map和Collection的区别？
+<ul>
+<li>Map:
+<ul>
+<li>是一个双列集合，常用于处理有对应关系的集合，key不可以重复</li>
+<li>又称为“夫妻对集合”。</li>
+</ul>
+</li>
+<li>Collection:
+<ul>
+<li>单列集合</li>
+<li>Collection有不同的子体系，有的允许重复有索引有序，有的不允许重复而且无序</li>
+<li>又称为“单身汉集合”</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h3 id="map的功能">Map的功能</h3>
+<ul>
+<li>Map类型对象：
+<ul>
+<li>多态创建：
+<ul>
+<li>代码示例：<code>Map&lt;String,String&gt; map = new HashMap&lt;String,String&gt;();//创建HashMap对象</code></li>
+</ul>
+</li>
+<li>输出Map对象：大括号中存放键值对，且键值对用等号连接。
+<ul>
+<li>代码示例：<code>System.out.println(map);//{IT002=李四, IT001=王五}</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>映射功能：
+<ul>
+<li><code>V	put(K key, V value)</code>：
+<ul>
+<li>添加或修改映射关系：
+<ul>
+<li>将key值映射到value，如果key存在，则覆盖value，并将原value返回。</li>
+</ul>
+</li>
+<li>返回值：
+<ul>
+<li>添加成功返回null，key重复时覆盖并返回key对应的原value值。</li>
+</ul>
+</li>
+<li>代码示例：
+<ul>
+<li>添加成功返回null： <code>System.out.println(map.put(&quot;IT002&quot;, &quot;李四&quot;));//null</code></li>
+<li>key值重复返回关联的原value值：<code>System.out.println(map.put(&quot;IT001&quot;, &quot;王五&quot;));//张三</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>获取功能
+<ul>
+<li><code>V	get(Object key)</code>:
+<ul>
+<li>根据指定的key返回对应的value</li>
+<li>代码示例：<code>System.out.println(map.get(&quot;IT001&quot;));//王五</code></li>
+<li>get与remove：返回值看着差不多，但是get只做了获取的动作，remove是删除后获取，对map集合进行了修改</li>
+</ul>
+</li>
+<li><code>int	size()</code>
+<ul>
+<li>返回对应关系的个数</li>
+<li>代码示例: <code>System.out.println(map.size());//2</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>判断功能
+<ul>
+<li><code>boolean	containsKey(Object key)</code>:
+<ul>
+<li>判断某个key值是否存在</li>
+<li>代码示例：<code>System.out.println(map.containsKey(&quot;IT001&quot;));//true</code></li>
+</ul>
+</li>
+<li><code>boolean	containsValue(Object value)</code>:
+<ul>
+<li>判断某个value值是否存在</li>
+<li>代码示例：<code>System.out.println(map.containsValue(&quot;张三&quot;));//false</code></li>
+</ul>
+</li>
+<li>以上两个功能注意：
+<ul>
+<li>键值需要与方法对应，如果判key，传入了value值，也是不匹配的；</li>
+<li>特别是键值对类型相同时，注意不要混淆</li>
+</ul>
+</li>
+<li><code>boolean	isEmpty()</code>:
+<ul>
+<li>判断是否有对应关系，即判空</li>
+<li>注：清空clear()后的map必为空</li>
+<li>代码示例：`map.clear(); System.out.println(map.isEmpty());//true</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>删除功能
+<ul>
+<li><code>void	clear()</code>:
+<ul>
+<li>清空所有对应关系</li>
+<li>代码示例：<code>map.clear();</code></li>
+</ul>
+</li>
+<li><code>V	remove(Object key)</code>:
+<ul>
+<li>根据指定的key删除对应关系，并返回key对应的value，如果没有删除成功则返回null</li>
+<li>代码示例：<code>System.out.println(map.remove(&quot;IT001&quot;));//null</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>获取所有元素的方法
+<ul>
+<li><code>Set&lt;K&gt;	keySet()</code>:
+<ul>
+<li>以Set的形式返回所有的key
+<ul>
+<li>key值不允许重复，所以用Set装正好</li>
+</ul>
+</li>
+<li>注意：Set的泛型是什么类型，需要看定义的key值是什么类型</li>
+<li>代码示例：<code>Set&lt;String&gt; keys = map.keySet();</code>
+<ul>
+<li>之后可以用foreach遍历此集合：<code>for (String key : keys) { System.out.println(key); }</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>Collection&lt;V&gt;	values()</code>
+<ul>
+<li>以Collection的形式返回所有的value值
+<ul>
+<li>value值允许重复，因此没有使用Set装</li>
+</ul>
+</li>
+<li>查看values()方法的源码发现：底层并不是List, 因此不能强转为List类型</li>
+<li>代码示例：<code>Collection&lt;String&gt; values = map.values();</code>
+<ul>
+<li>之后可以用foreach遍历此集合：<code>for (String value : values) { System.out.println(value); }</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h3 id="map的遍历">Map的遍历</h3>
+<ul>
+<li>
+<p>遍历方法1：</p>
+<ul>
+<li>思路：
+<ul>
+<li>先获取所有的Key，然后遍历所有Key，并根据每个Key值依次获取对应的value值</li>
+</ul>
+</li>
+<li>涉及方法：
+<ul>
+<li>map.keySet(); map.get(key);</li>
+</ul>
+</li>
+<li>代码示例：</li>
+</ul>
+<div class="highlight" id="id-13"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="w">      </span><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.HashMap</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Map</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Set</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">MapDemo</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="n">map</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&#34;IT001&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;张三&#34;</span><span class="p">);</span><span class="c1">//null</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="n">map</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&#34;IT002&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;李四&#34;</span><span class="p">);</span><span class="c1">//null</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="n">map</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&#34;IT003&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;王五&#34;</span><span class="p">);</span><span class="c1">//张三</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">map</span><span class="p">);</span><span class="c1">//{IT002=李四, IT001=王五}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="n">Set</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">keys</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">map</span><span class="p">.</span><span class="na">keySet</span><span class="p">();</span><span class="c1">//获取所有key值</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">keys</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="c1">//遍历所有key值，并获取对应的value值</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">String</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">map</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">key</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">key</span><span class="o">+</span><span class="s">&#34;---&#34;</span><span class="o">+</span><span class="n">value</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="p">}</span><span class="w">    </span></span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p>遍历方法2：</p>
+<ul>
+<li>思路：
+<ul>
+<li>偏面向对象思想；</li>
+<li>通过entrySet()方法获取映射关系，然后通过映射关系里的getKey()和getValue()方法分别获取键值对的值。</li>
+</ul>
+</li>
+<li><code>Set&lt;Map.Entry&lt;K,V&gt;&gt;	entrySet()</code>:
+<ul>
+<li>返回此映射中包含的映射关系的 Set 视图。</li>
+<li>包含getKey()和getValue()方法，可以通过此entry对象调用获取对应的键值对的值。</li>
+</ul>
+</li>
+<li>优势：
+<ul>
+<li>相比两层for循环，效率提升了很多</li>
+</ul>
+</li>
+<li>代码示例：</li>
+</ul>
+<div class="highlight" id="id-14"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="c1">//entrySet()相当于结婚证对象，通过结婚证对象来获取丈夫和媳妇</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">class</span> <span class="nc">结婚证</span><span class="o">&lt;</span><span class="n">K</span><span class="p">,</span><span class="n">V</span><span class="o">&gt;</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">K</span><span class="w"> </span><span class="n">丈夫</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">V</span><span class="w"> </span><span class="n">媳妇</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">public</span><span class="w"> </span><span class="nf">结婚证</span><span class="p">(</span><span class="n">K</span><span class="w"> </span><span class="n">丈夫</span><span class="p">,</span><span class="w"> </span><span class="n">V</span><span class="w"> </span><span class="n">媳妇</span><span class="p">){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">this</span><span class="p">.</span><span class="na">丈夫</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">丈夫</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">this</span><span class="p">.</span><span class="na">媳妇</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">媳妇</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">public</span><span class="w"> </span><span class="n">K</span><span class="w"> </span><span class="nf">get丈夫</span><span class="p">(){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">丈夫</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">public</span><span class="w"> </span><span class="n">V</span><span class="w"> </span><span class="nf">get媳妇</span><span class="p">(){</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">媳妇</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight" id="id-15"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="w">    </span><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.HashMap</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Map</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Set</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">MapDemo</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">map</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&#34;IT001&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;张三&#34;</span><span class="p">);</span><span class="c1">//null</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">map</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&#34;IT002&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;李四&#34;</span><span class="p">);</span><span class="c1">//null</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">map</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&#34;IT003&#34;</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;王五&#34;</span><span class="p">);</span><span class="c1">//张三</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">map</span><span class="p">);</span><span class="c1">//{IT002=李四, IT001=王五}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">Set</span><span class="o">&lt;</span><span class="n">Map</span><span class="p">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">entrys</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">map</span><span class="p">.</span><span class="na">entrySet</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Map</span><span class="p">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">entry</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">entrys</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="n">String</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">entry</span><span class="p">.</span><span class="na">getKey</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="n">String</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">entry</span><span class="p">.</span><span class="na">getValue</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">key</span><span class="o">+</span><span class="s">&#34;---&#34;</span><span class="o">+</span><span class="n">value</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">    </span></span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+</li>
+<li>
+<h3 id="hashmap存储对象并遍历">HashMap存储对象并遍历</h3>
+<ul>
+<li>字符串对象作为key
+<ul>
+<li>同上一节的Map遍历</li>
+<li>包含以上两种遍历方法</li>
+</ul>
+</li>
+<li>自定义对象作为key
+<ul>
+<li>同样包括两种遍历方法</li>
+<li>不同点：
+<ul>
+<li>以Student为例: <code>new Student(&quot;张三&quot;,18);</code>与<code>new Student(&quot;张三&quot;,18);</code></li>
+<li>Key值需要具有唯一性，自定义对象作为key值时，默认的方法不会判定成员变量相同的为重复(new了不同的对象)</li>
+<li>解决方法：与之前类似，定义对象的代码中重写hashCode(), equals()方法</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<!--GFM-TOC -->
+<ul>
+<li>
+<h3 id="返回目录目录-6"><a href="#%e7%9b%ae%e5%bd%95">返回目录</a></h3>
+</li>
+</ul>
+<!--GFM-TOC -->
+<h3 id="end">END</h3>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod">
+        <span title="更新于 2024-03-25 21:57:50">更新于 2024-03-25&nbsp;</span>
+      </div><div class="post-info-license">
+          <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span>
+        </div></div>
+    <div class="post-info-line">
+      <div class="post-info-md"><span><a href="/articles/2024/03/java%E9%9B%86%E5%90%88%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/index.md" title="阅读原始文档" class="link-to-markdown">阅读原始文档</a></span></div>
+      <div class="post-info-share">
+        <span><a href="javascript:void(0);" title="分享到 Twitter" data-sharer="twitter" data-url="https://alextang.top/articles/2024/03/java%E9%9B%86%E5%90%88%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" data-title="Java集合与数据结构" data-via="a1extang" data-hashtags="Java,语法"><i class="fa-brands fa-twitter fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 Facebook" data-sharer="facebook" data-url="https://alextang.top/articles/2024/03/java%E9%9B%86%E5%90%88%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" data-hashtag="Java"><i class="fa-brands fa-facebook-square fa-fw" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="分享到 微博" data-sharer="weibo" data-url="https://alextang.top/articles/2024/03/java%E9%9B%86%E5%90%88%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" data-title="Java集合与数据结构"><i class="fa-brands fa-weibo fa-fw" aria-hidden="true"></i></a>
+  </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags fa-fw me-1" aria-hidden="true"></i><a href='/tags/java/' class="post-tag">Java</a><a href='/tags/%E8%AF%AD%E6%B3%95/' class="post-tag">语法</a></section>
+    <section>
+      <span><a href="javascript:void(0);" onclick="window.history.back();">返回</a></span>&nbsp;|&nbsp;<span><a href="/">主页</a></span>
+    </section>
+  </div>
+
+  <div class="post-nav"><a href="/articles/2024/03/java%E5%B8%B8%E7%94%A8api/" class="post-nav-item" rel="prev" title="Java常用api"><i class="fa-solid fa-angle-left fa-fw" aria-hidden="true"></i>Java常用api</a>
+      <a href="/articles/2024/03/java-io%E6%B5%81/" class="post-nav-item" rel="next" title="Java IO流">Java IO流<i class="fa-solid fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+</article></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright fa-fw" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2024</span><span class="author" itemprop="copyrightHolder">
+              <a href="/">alextang</a></span><span class="license footer-divider"><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div><div class="footer-line statistics"></div><div class="footer-line visitor">
+          <span id="busuanzi_container_site_uv" title='总访客数'><i class="fa-regular fa-user fa-fw" aria-hidden="true"></i>&nbsp;<span id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span></span><span id="busuanzi_container_site_pv" class="footer-divider" title='总访问量'><i class="fa-regular fa-eye fa-fw" aria-hidden="true"></i>&nbsp;<span id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span></span>
+        </div><div class="footer-line beian"><span class="icp footer-divider"><a href="https://icp.gov.moe/?keyword=20238299" target="_blank">萌ICP备20238299号</a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons animate__faster d-none"><div class="fixed-button back-to-top" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up fa-fw" aria-hidden="true"></i><span class="variant-numeric d-none">0%</span>
+        </div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">FixIt 主题在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js" defer></script><script src="/lib/lunr/lunr.stemmer.support.min.js" defer></script><script src="/lib/lunr/lunr.zh.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js" async defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/copy-tex.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/mhchem.min.js" defer></script><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async defer></script><script>window.config={"code":{"copyTitle":"复制到剪贴板","editLockTitle":"锁定可编辑代码块","editUnLockTitle":"解锁可编辑代码块","editable":true,"maxShownLines":10},"comment":{"enable":false},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script src="/js/theme.min.js" defer></script></body>
+</html>

@@ -1,0 +1,16 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>Vscode - 标签 - 好好学习</title>
+    <link>https://alextang.top/tags/vscode/</link>
+    <description>Vscode - 标签 - 好好学习</description>
+    <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>alextang@sdu.edu.cn (alextang)</managingEditor>
+      <webMaster>alextang@sdu.edu.cn (alextang)</webMaster><lastBuildDate>Thu, 20 Jun 2024 15:57:20 &#43;0800</lastBuildDate><atom:link href="https://alextang.top/tags/vscode/" rel="self" type="application/rss+xml" /><item>
+  <title>Monokai Pro主题破解</title>
+  <link>https://alextang.top/articles/2024/06/monokai-pro/</link>
+  <pubDate>Thu, 20 Jun 2024 15:57:20 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2024/06/monokai-pro/</guid>
+  <description><![CDATA[使用一个Linux终端，输入： 1 2 email=yourMail@mail.com echo -n fd330f6f-3f41-421d-9fe5-de742d0c54c0$email | md5sum | cut -c1-25 | sed &#39;s/.\{5\}/&amp;-/g;s/-$//g&#39; 其中，将 yourMail@mai.com 替换成任意的邮箱名称（不一定要可用）。第二行将输出相应邮件对应的序列号。]]></description>
+</item>
+</channel>
+</rss>

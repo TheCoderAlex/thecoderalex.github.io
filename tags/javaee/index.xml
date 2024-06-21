@@ -1,0 +1,88 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>JavaEE - 标签 - 好好学习</title>
+    <link>https://alextang.top/tags/javaee/</link>
+    <description>JavaEE - 标签 - 好好学习</description>
+    <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>alextang@sdu.edu.cn (alextang)</managingEditor>
+      <webMaster>alextang@sdu.edu.cn (alextang)</webMaster><lastBuildDate>Mon, 06 May 2024 22:17:49 &#43;0800</lastBuildDate><atom:link href="https://alextang.top/tags/javaee/" rel="self" type="application/rss+xml" /><item>
+  <title>Spring基础:生命周期和继承</title>
+  <link>https://alextang.top/articles/2024/05/spring-life/</link>
+  <pubDate>Mon, 06 May 2024 22:17:49 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2024/05/spring-life/</guid>
+  <description><![CDATA[Bean的生命周期 除了直接修改构造函数，同时可以为Bean指定初始化方法和销毁方法，让其在对象创建和销毁的时候执行一些其他的任务： init-method ：初始化]]></description>
+</item>
+<item>
+  <title>Spring基础:适配工厂设计模式</title>
+  <link>https://alextang.top/articles/2024/05/spring-factory/</link>
+  <pubDate>Mon, 06 May 2024 22:17:49 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2024/05/spring-factory/</guid>
+  <description><![CDATA[工厂模式和工厂Bean 如果某个类的设计模式是工厂模式，Spring将无法构造出类的实例，而是只能通过该类的Factory 构造方法拿到实例化的]]></description>
+</item>
+<item>
+  <title>Spring基础:自动装配</title>
+  <link>https://alextang.top/articles/2024/05/spring-autowire/</link>
+  <pubDate>Sun, 05 May 2024 11:02:49 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2024/05/spring-autowire/</guid>
+  <description><![CDATA[Java自动装配 当我们的类中存在其他类的成员的时候，可以使用自动装配来自动进行实例化： 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 package org.alextang.entity.student; import org.alextang.entity.teacher.Teacher; public class Student { private Teacher]]></description>
+</item>
+<item>
+  <title>Spring基础:依赖注入</title>
+  <link>https://alextang.top/articles/2024/04/spring-injection/</link>
+  <pubDate>Mon, 15 Apr 2024 16:07:49 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2024/04/spring-injection/</guid>
+  <description><![CDATA[依赖注入 依赖注入(Dependency Injection, DI)是一种设计模式，也是Spring框架的核心概念之一。现在我们已经了解了如何注册和使用一个Bea]]></description>
+</item>
+<item>
+  <title>Spring基础:创建项目和Bean</title>
+  <link>https://alextang.top/articles/2024/04/spring-test/</link>
+  <pubDate>Mon, 15 Apr 2024 11:18:14 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2024/04/spring-test/</guid>
+  <description><![CDATA[创建第一个Spring项目 使用Spring框架的目的在于解耦合，而非简化代码。 Spring框架由很多模块组成： 其中最核心的框架就是：Core]]></description>
+</item>
+<item>
+  <title>Spring基础:IoC理论</title>
+  <link>https://alextang.top/articles/2024/04/spring-ioc/</link>
+  <pubDate>Sun, 14 Apr 2024 22:10:40 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2024/04/spring-ioc/</guid>
+  <description><![CDATA[IoC容器基础 Spring框架最核心的其实它的IoC容器，Spring框架使用IoC容器管理各个不同的组件。 IoC理论介绍 在Java的应用程]]></description>
+</item>
+<item>
+  <title>使用Maven管理项目</title>
+  <link>https://alextang.top/articles/2024/04/maven/</link>
+  <pubDate>Sun, 07 Apr 2024 15:59:24 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2024/04/maven/</guid>
+  <description><![CDATA[使用Maven管理项目 注意： 开始之前，看看你C盘空间够不够，最好预留2GB空间以上！ 吐槽： 很多电脑预装系统C盘都给得巨少，就算不装软件，一些]]></description>
+</item>
+<item>
+  <title>Junit</title>
+  <link>https://alextang.top/articles/2024/03/junit/</link>
+  <pubDate>Sun, 31 Mar 2024 23:32:24 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2024/03/junit/</guid>
+  <description><![CDATA[使用JUnit进行单元测试 首先一问：我们为什么需要单元测试？ 随着我们的项目逐渐变大，比如我们之前编写的图书管理系统，我们都是边在写边在测试，]]></description>
+</item>
+<item>
+  <title>Lombok</title>
+  <link>https://alextang.top/articles/2024/03/lombok/</link>
+  <pubDate>Sun, 31 Mar 2024 22:32:24 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2024/03/lombok/</guid>
+  <description><![CDATA[使用Lombok 我们发现，在以往编写项目时，尤其是在类进行类内部成员字段封装时，需要编写大量的get/set方法，这不仅使得我们类定义中充满]]></description>
+</item>
+<item>
+  <title>使用Mybatis的注解系统</title>
+  <link>https://alextang.top/articles/2024/03/mybatis-5/</link>
+  <pubDate>Fri, 29 Mar 2024 22:10:50 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2024/03/mybatis-5/</guid>
+  <description><![CDATA[使用注解开发 Mybatis支持直接在方法上使用注解添加SQL语句从而完成数据库和对象的映射。使用XML进行映射器编写时，需要现在XML中定义]]></description>
+</item>
+</channel>
+</rss>

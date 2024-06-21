@@ -1,0 +1,16 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>Junit - 标签 - 好好学习</title>
+    <link>https://alextang.top/tags/junit/</link>
+    <description>Junit - 标签 - 好好学习</description>
+    <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>alextang@sdu.edu.cn (alextang)</managingEditor>
+      <webMaster>alextang@sdu.edu.cn (alextang)</webMaster><lastBuildDate>Sun, 31 Mar 2024 23:32:24 &#43;0800</lastBuildDate><atom:link href="https://alextang.top/tags/junit/" rel="self" type="application/rss+xml" /><item>
+  <title>Junit</title>
+  <link>https://alextang.top/articles/2024/03/junit/</link>
+  <pubDate>Sun, 31 Mar 2024 23:32:24 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2024/03/junit/</guid>
+  <description><![CDATA[使用JUnit进行单元测试 首先一问：我们为什么需要单元测试？ 随着我们的项目逐渐变大，比如我们之前编写的图书管理系统，我们都是边在写边在测试，]]></description>
+</item>
+</channel>
+</rss>

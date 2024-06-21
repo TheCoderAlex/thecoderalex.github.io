@@ -1,0 +1,48 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>Leetcode - 标签 - 好好学习</title>
+    <link>https://alextang.top/tags/leetcode/</link>
+    <description>Leetcode - 标签 - 好好学习</description>
+    <generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>alextang@sdu.edu.cn (alextang)</managingEditor>
+      <webMaster>alextang@sdu.edu.cn (alextang)</webMaster><lastBuildDate>Wed, 08 May 2024 13:57:49 &#43;0800</lastBuildDate><atom:link href="https://alextang.top/tags/leetcode/" rel="self" type="application/rss+xml" /><item>
+  <title>leetcode整理：链表</title>
+  <link>https://alextang.top/articles/2024/05/leetcode-linkedlist/</link>
+  <pubDate>Wed, 08 May 2024 13:57:49 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2024/05/leetcode-linkedlist/</guid>
+  <description><![CDATA[移除链表 建议是直接加上虚拟头节点，也就是头元素指向链表的第一个元素。这样每次删除只需要找到待删除元素的前一个点pre ，然后删除节点node 。]]></description>
+</item>
+<item>
+  <title>leetcode整理：数组</title>
+  <link>https://alextang.top/articles/2024/05/leetcode-arr/</link>
+  <pubDate>Tue, 07 May 2024 22:17:49 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2024/05/leetcode-arr/</guid>
+  <description><![CDATA[二分查找 实现lower_bound和upper_bound 关键是掌握循环不变量 以lower_bound为例。我们假设L所指的位置是最终的答案]]></description>
+</item>
+<item>
+  <title>LeetCode-快照数组</title>
+  <link>https://alextang.top/articles/2024/04/leetcode-4.26/</link>
+  <pubDate>Fri, 26 Apr 2024 16:07:49 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2024/04/leetcode-4.26/</guid>
+  <description><![CDATA[1146. 快照数组 题目 实现支持下列接口的「快照数组」- SnapshotArray： SnapshotArray(int length) - 初始化一个与指定长度相等的 类数组 的数据结构。初始时，每个元素]]></description>
+</item>
+<item>
+  <title>LeetCode-总行驶距离</title>
+  <link>https://alextang.top/articles/2024/04/leetcode-4.25/</link>
+  <pubDate>Thu, 25 Apr 2024 16:07:49 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2024/04/leetcode-4.25/</guid>
+  <description><![CDATA[2739. 总行驶距离-Easy 题目 卡车有两个油箱。给你两个整数，mainTank 表示主油箱中的燃料（以升为单位），additionalTank 表示副]]></description>
+</item>
+<item>
+  <title>LeetCode-感染二叉树需要的总时间</title>
+  <link>https://alextang.top/articles/2024/04/leetcode-4-24/</link>
+  <pubDate>Wed, 24 Apr 2024 16:07:49 &#43;0800</pubDate>
+  <author>alextang</author>
+  <guid>https://alextang.top/articles/2024/04/leetcode-4-24/</guid>
+  <description><![CDATA[2385. 感染二叉树需要的总时间-Medium 题目 给你一棵二叉树的根节点 root ，二叉树中节点的值 互不相同 。另给你一个整数 start 。在第 0 分钟，感染 将会从值为 start]]></description>
+</item>
+</channel>
+</rss>
